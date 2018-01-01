@@ -1,0 +1,207 @@
+relation:
+  in_os_project:
+    relation:
+      default: project
+  in_os_net:
+    relation:
+      default: network
+  use_os_port:
+    relation:
+      default: port
+      os_server: network
+  use_os_image:
+    relation:
+      os_server: image
+  use_os_flavor:
+    relation:
+      os_server: flavor
+  use_os_key_pair:
+    relation:
+      default: key_pair
+  on_os_hypervisor:
+    relation:
+      os_server: hypervisor
+      os_port: hypervisor
+  in_os_aggregate:
+    relation:
+      os_hypervisor: aggregate
+resource:
+  os_aggregate:
+    resource: OS::Nova::Aggregate
+    client: nova
+    name: Aggregate
+    icon: fa:cube
+  os_flavor:
+    resource: OS::Nova::Flavor
+    client: nova
+    name: Flavor
+    icon: fa:cube
+  os_floating_ip:
+    resource: OS::Neutron::FloatingIP
+    client: neutron
+    name: Floating IP
+    icon: fa:cube
+    model:
+      project:
+        type: relationship_to
+        model: in_os_project
+        target: os_project
+      port:
+        type: relationship_to
+        model: use_os_port
+        target: os_port
+  os_floating_ip_association:
+    resource: OS::Neutron::FloatingIPAssociation
+    client: neutron
+    name: Floating IP Association
+    icon: fa:cube
+  os_group:
+    resource: OS::Keystone::Group
+    client: keystone
+    name: Group
+    icon: fa:cube
+  os_hypervisor:
+    resource: OS::Nova::Hypervisor
+    client: nova
+    name: Hypervisor
+    icon: fa:server  
+    model:
+      aggregate:
+        type: relationship_to
+        model: in_os_aggregate
+        target: os_aggregate
+  os_image:
+    resource: Glance::Image
+    client: glance
+    name: Image
+    icon: fa:cube
+  os_key_pair:
+    resource: OS::Nova::KeyPair
+    client: nova
+    name: Key Pair
+    icon: fa:key
+  os_net:
+    resource: OS::Neutron::Net
+    client: neutron
+    name: Net
+    icon: fa:share-alt
+    model:
+      project:
+        type: relationship_to
+        model: in_os_project
+        target: os_project
+      subnets:
+        type: relationship_from
+        model: in_os_net
+        target: os_subnet
+  os_port:
+    resource: OS::Neutron::Port
+    client: neutron
+    name: Port
+    icon: fa:cube
+    model:
+      project:
+        type: relationship_to
+        model: in_os_project
+        target: os_project
+      hypervisor:
+        type: relationship_to
+        model: on_os_hypervisor
+        target: os_hypervisor
+      network:
+        type: relationship_to
+        model: in_os_net
+        target: os_net
+  os_project:
+    resource: OS::Keystone::Tenant
+    client: keystone
+    name: Project
+    icon: fa:cube
+  os_resource_type:
+    resource: OS::Heat::ResourceType
+    client: heat
+    name: Resource Type
+    icon: fa:cube
+  os_router:
+    resource: OS::Neutron::Router
+    client: neutron
+    name: Router
+    icon: fa:arrows-alt
+    model:
+      project:
+        type: relationship_to
+        model: in_os_project
+        target: os_project
+      port:
+        type: relationship_to
+        model: use_os_port
+        target: os_port
+  os_server:
+    resource: OS::Nova::Server
+    client: nova
+    name: Server
+    icon: fa:server
+    model:
+      project:
+        type: relationship_to
+        model: in_os_project
+        target: os_project
+      network:
+        type: relationship_to
+        model: use_os_port
+        target: os_port
+      hypervisor:
+        type: relationship_to
+        model: on_os_hypervisor
+        target: os_hypervisor
+      key_pair:
+        type: relationship_to
+        model: use_os_key_pair
+        target: os_key_pair
+      image:
+        type: relationship_to
+        model: use_os_image
+        target: os_image
+      flavor:
+        type: relationship_to
+        model: use_os_flavor
+        target: os_flavor
+  os_stack:
+    resource: OS::Heat::Stack
+    client: heat
+    name: Stack
+    icon: fa:cubes
+    model:
+      project:
+        type: relationship_to
+        model: in_os_project
+        target: os_project
+  os_subnet:
+    resource: OS::Neutron::Subnet
+    client: neutron
+    name: Subnet
+    icon: fa:share-alt
+    model:
+      project:
+        type: relationship_to
+        model: in_os_project
+        target: os_project
+      network:
+        type: relationship_to
+        model: in_os_net
+        target: os_net
+  os_user:
+    resource: OS::Keystone::User
+    client: keystone
+    name: User
+    icon: fa:cube
+  os_volume:
+    resource: OS::Cinder::Volume
+    client: cinder
+    name: Volume
+    icon: fa:cube
+    model:
+      project:
+        type: relationship_to
+        model: in_os_project
+        target: os_project

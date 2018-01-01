@@ -1,0 +1,195 @@
+relation:
+  in_k8s_namespace:
+    relation:
+      default: namespace
+  in_k8s_deployment:
+    relation:
+      default: deployment
+  in_k8s_pod:
+    relation:
+      default: pod
+  use_k8s_replication:
+    relation:
+      default: replication_control
+      k8s_replication_controller: pod
+      k8s_replica_set: pod
+  use_k8s_secret:
+    relation:
+      default: secret
+  on_k8s_node:
+    relation:
+      default: node
+resource:
+  k8s_config_map:
+    client: ''
+    icon: fa:file-text-o
+    name: Config Map
+    resource: ConfigMap
+  k8s_container:
+    client: ''
+    icon: fa:cube
+    name: Container
+    resource: Container
+    model:
+      pod:
+        type: relationship_to
+        model: in_k8s_pod
+        target: k8s_pod
+  k8s_cron_job:
+    client: ''
+    icon: fa:cube
+    name: Cron Job
+    resource: CronJob
+  k8s_deployment:
+    client: ''
+    icon: fa:cubes
+    name: Deployment
+    resource: Deployment
+    model:
+      namespace:
+        type: relationship_to
+        model: in_k8s_namespace
+        target: k8s_namespace
+  k8s_endpoint:
+    client: ''
+    icon: fa:cube
+    name: Endpoint
+    resource: Endpoint
+    model:
+      namespace:
+        type: relationship_to
+        model: in_k8s_namespace
+        target: k8s_namespace
+  k8s_event:
+    client: ''
+    icon: fa:cube
+    name: Event
+    resource: Event
+    model:
+      namespace:
+        type: relationship_to
+        model: in_k8s_namespace
+        target: k8s_namespace
+  k8s_job:
+    client: ''
+    icon: fa:cube
+    name: Job
+    resource: Job
+  k8s_namespace:
+    client: ''
+    icon: fa:cube
+    name: Namespace
+    resource: Namespace
+  k8s_node:
+    client: ''
+    icon: fa:server
+    name: Node
+    resource: Node
+  k8s_persistent_volume:
+    client: ''
+    icon: fa:hdd-o
+    name: Persistent Volume
+    resource: PersistentVolume
+  k8s_persistent_volume_claim:
+    client: ''
+    icon: fa:hdd-o
+    name: Persistent Volume Claim
+    resource: PersistentVolumeClaim
+    model:
+      namespace:
+        type: relationship_to
+        model: in_k8s_namespace
+        target: k8s_namespace
+  k8s_pod:
+    client: ''
+    icon: fa:cubes
+    name: Pod
+    resource: Pod
+    model:
+      namespace:
+        type: relationship_to
+        model: in_k8s_namespace
+        target: k8s_namespace
+      node:
+        type: relationship_to
+        model: on_k8s_node
+        target: k8s_node
+  k8s_replica_set:
+    client: ''
+    icon: fa:cubes
+    name: Replica Set
+    resource: ReplicaSet
+    model:
+      pod:
+        type: relationship_from
+        model: use_k8s_replication
+        target: k8s_pod
+      namespace:
+        type: relationship_to
+        model: in_k8s_namespace
+        target: k8s_namespace
+      deployment:
+        type: relationship_to
+        model: in_k8s_deployment
+        target: k8s_deployment
+  k8s_replication_controller:
+    client: ''
+    icon: fa:cubes
+    name: Replication Controller
+    resource: ReplicationController
+    model:
+      pod:
+        type: relationship_from
+        model: use_k8s_replication
+        target: k8s_pod
+      namespace:
+        type: relationship_to
+        model: in_k8s_namespace
+        target: k8s_namespace
+      deployment:
+        type: relationship_to
+        model: in_k8s_deployment
+        target: k8s_deployment
+  k8s_role:
+    client: ''
+    icon: fa:cube
+    name: Role
+    resource: Role
+  k8s_secret:
+    client: ''
+    icon: fa:lock
+    name: Secret
+    resource: Secret
+    model:
+      namespace:
+        type: relationship_to
+        model: in_k8s_namespace
+        target: k8s_namespace
+  k8s_service:
+    client: ''
+    icon: fa:podcast
+    name: Service
+    resource: Service
+    model:
+      namespace:
+        type: relationship_to
+        model: in_k8s_namespace
+        target: k8s_namespace
+      pod:
+        type: relationship_to
+        model: in_k8s_pod
+        target: k8s_pod
+  k8s_service_account:
+    client: ''
+    icon: fa:user
+    name: Service Account
+    resource: ServiceAccount
+    model:
+      namespace:
+        type: relationship_to
+        model: in_k8s_namespace
+        target: k8s_namespace
+      secret:
+        type: relationship_to
+        model: use_k8s_secret
+        target: k8s_secret

@@ -1,0 +1,9 @@
+Django==1.11.8
+django_neomodel
+django-jsonview
+django-yamlfield
+django-extensions
+django-material
+django-viewflow
+viewflow-extensions
+libmetric

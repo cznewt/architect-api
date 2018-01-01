@@ -1,0 +1,84 @@
+relation:
+  in_ec2_vpc:
+    relation:
+      default: vpc
+  in_ec2_subnet:
+    relation:
+      default: subnet
+  using_ec2_key_pair:
+    relation:
+      default: key_pair
+resource:
+  ec2_elastic_ip:
+    client: ec2
+    icon: fa:cube
+    name: Elastic IP
+    resource: AWS::EC2::EIP
+  ec2_elastic_ip_association:
+    client: ec2
+    icon: fa:cube
+    name: Elastic IP Association
+    resource: AWS::EC2::EIPAssociation
+  ec2_image:
+    client: ec2
+    icon: fa:server
+    name: Image
+    resource: AWS::EC2::Image
+  ec2_instance:
+    client: ec2
+    icon: fa:server
+    name: Instance
+    resource: AWS::EC2::Instance
+    model:
+      vpc:
+        type: relationship_to
+        model: in_ec2_vpc
+        target: ec2_vpc
+      subnet:
+        type: relationship_to
+        model: in_ec2_subnet
+        target: ec2_subnet
+      key_pair:
+        type: relationship_to
+        model: using_ec2_key_pair
+        target: ec2_key_pair
+  ec2_internet_gateway:
+    client: ec2
+    icon: fa:cube
+    name: Internet Gateway
+    resource: AWS::EC2::InternetGateway
+  ec2_key_pair:
+    client: ec2
+    icon: fa:key
+    name: Key Pair
+    resource: AWS::EC2::KeyPair
+  ec2_route_table:
+    client: ec2
+    icon: fa:cube
+    name: Route Table
+    resource: AWS::EC2::RouteTable
+  ec2_security_group:
+    client: ec2
+    icon: fa:cubes
+    name: Security Group
+    resource: AWS::EC2::SecurityGroup
+  ec2_subnet:
+    client: ec2
+    icon: fa:cube
+    name: Subnet
+    resource: AWS::EC2::Subnet
+  ec2_vpc:
+    client: ec2
+    icon: fa:cubes
+    name: VPC
+    resource: AWS::EC2::VPC
+  ec2_vpc_gateway_attachment:
+    client: ec2
+    icon: fa:cube
+    name: VPC Gateway Attachment
+    resource: AWS::EC2::VPCGatewayAttachment
+  s3_bucket:
+    client: s3
+    icon: fa:hdd-o
+    name: Bucket
+    resource: AWS::S3::Bucket

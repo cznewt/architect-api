@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block nav_inventory_cls %}class="active"{% endblock %}
+
+{% block content %}
+<h2 class="center">Available Inventories</h2>
+<div class="row">
+  <div class="col s12 m12 l8 offset-l2">
+    <table id="table" class="table bordered">
+      <thead>
+        <th>Inventory</th>
+        <th class="center-align">Nodes</th>
+        <th class="center-align">Engine</th>
+        <th class="center-align">Status</th>
+      </thead>
+      <tbody>
+        {% for inventory in inventory_list %}
+        <tr>
+          <td>
+            <a href="{% url 'inventory:inventory_detail' inventory.name %}">{{ inventory.name }}</a>
+          </td>
+          <td class="center-align">{{ inventory.nodes }}</td>
+          <td class="center-align">{{ inventory.engine }}</td>
+          <td class="center-align">
+            {% if inventory.status == 'Active' %}
+            <i class="material-icons">check_box</a>
+            {% else %}
+            <i class="material-icons">report_problem</i>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,148 @@
+"""
+Django settings for Architect service.
+"""
+import os
+from .utils import load_yaml_json_file
+
+DEBUG = True
+
+SECRET_KEY = '^0r*t3%t@h-auaqh+gq(bxueqc-7)8jryh#)_l4yd315))$*@z'
+
+ALLOWED_HOSTS = ['*']
+
+INSTALLED_APPS = [
+    'viewflow.frontend',
+    'viewflow',
+    'viewflow_extensions',
+    'material',
+    'material.frontend',
+    'material.admin',
+    'django.contrib.admin',
+    'django.contrib.admindocs',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'django_extensions',
+    'django_neomodel',
+    'architect.inventory',
+    'architect.manager',
+    'architect.manager.engine.saltstack',
+    'architect.manager.engine.ansible',
+]
+
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # 'material.frontend.middleware.SmoothNavigationMiddleware',
+]
+
+ROOT_URLCONF = 'architect.urls'
+
+# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+WEBROOT = '/'
+LOGIN_URL = None
+LOGOUT_URL = None
+LOGIN_REDIRECT_URL = None
+STATIC_ROOT = None
+STATIC_URL = None
+
+BASE_TEMPLATES = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                              'templates')
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [BASE_TEMPLATES],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.request'
+            ],
+        },
+    },
+]
+
+WSGI_APPLICATION = 'architect.wsgi.application'
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    },
+#    'postgres': {
+#        'ENGINE': 'django.db.backends.postgresql',
+#        'NAME': 'architect',
+#        'USER': 'architect',
+#        'PASSWORD': 'architect',
+#        'HOST': '127.0.0.1',
+#        'PORT': '5432',
+#    },
+}
+
+AUTH_PASSWORD_VALIDATORS = [
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',},
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',},
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',},
+]
+
+LANGUAGE_CODE = 'en-us'
+TIME_ZONE = 'UTC'
+USE_I18N = True
+USE_L10N = True
+USE_TZ = True
+
+if LOGIN_URL is None:
+    LOGIN_URL = WEBROOT + 'accounts/login/'
+if LOGOUT_URL is None:
+    LOGOUT_URL = WEBROOT + 'accounts/logout/'
+if LOGIN_REDIRECT_URL is None:
+    LOGIN_REDIRECT_URL = WEBROOT
+
+MEDIA_ROOT = os.path.abspath(os.path.join(BASE_DIR, '..', 'media'))
+MEDIA_URL = WEBROOT + 'media/'
+
+if STATIC_ROOT is None:
+    STATIC_ROOT = os.path.abspath(os.path.join(BASE_DIR, '..', 'static'))
+
+if STATIC_URL is None:
+    STATIC_URL = WEBROOT + 'static/'
+
+RESOURCE_ENGINES = load_yaml_json_file(os.path.join(BASE_DIR,
+                                                    'architect_config.yml'))
+
+MANAGER_ENGINES = RESOURCE_ENGINES['manager']
+INVENTORY_ENGINES = RESOURCE_ENGINES['inventory']
+
+RECLASS_SERVICE_BLACKLIST = [
+    '_param',
+    'private_keys',
+    'public_keys',
+    'known_hosts'
+]
+
+RECLASS_ROLE_BLACKLIST = [
+    '_support',
+    '_orchestrate',
+    'common'
+]
+
+NEOMODEL_NEO4J_BOLT_URL = os.environ.get('NEO4J_BOLT_URL',
+                                         'bolt://neo4j:hovno@localhost:7687')
+NEOMODEL_SIGNALS = True
+NEOMODEL_FORCE_TIMEZONE = False
+NEOMODEL_MAX_POOL_SIZE = 50

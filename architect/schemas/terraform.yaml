@@ -1,0 +1,115 @@
+relation:
+  in_tf_net:
+    relation:
+      default: network
+  in_tf_subnet:
+    relation:
+      default: subnet
+  has_tf_security_group:
+    relation:
+      default: security_group
+  using_tf_key_pair:
+    relation:
+      default: key_pair
+  links_tf_router:
+    relation:
+      default: router
+  links_tf_floating_instance:
+    relation:
+      default: instance
+  links_tf_floating_ip:
+    relation:
+      tf_openstack_compute_floatingip_associate_v2: floating_ip
+      tf_openstack_networking_floatingip_v2: router
+resource:
+  tf_openstack_compute_floatingip_associate_v2:
+    client: ''
+    icon: fa:map-signs
+    name: Floating IP Association
+    resource: openstack_compute_floatingip_associate_v2
+    model:
+      floating_ip:
+        type: relationship_to
+        model: links_tf_floating_ip
+        target: tf_openstack_networking_floatingip_v2
+      instance:
+        type: relationship_to
+        model: links_tf_floating_instance
+        target: tf_openstack_compute_instance_v2
+  tf_openstack_compute_instance_v2:
+    client: ''
+    icon: fa:server
+    name: Instance
+    resource: openstack_compute_instance_v2
+    model:
+      key_pair:
+        type: relationship_to
+        model: using_tf_key_pair
+        target: tf_openstack_compute_keypair_v2
+      security_group:
+        type: relationship_to
+        model: has_tf_security_group
+        target: tf_openstack_compute_secgroup_v2
+      network:
+        type: relationship_to
+        model: in_tf_net
+        target: tf_openstack_networking_network_v2
+  tf_openstack_compute_keypair_v2:
+    client: ''
+    icon: fa:key
+    name: Key Pair
+    resource: openstack_compute_keypair_v2
+  tf_openstack_compute_secgroup_v2:
+    client: ''
+    icon: fa:cube
+    name: Security Group
+    resource: openstack_compute_secgroup_v2
+  tf_openstack_networking_floatingip_v2:
+    client: ''
+    icon: fa:map-signs
+    name: Floating IP
+    resource: openstack_networking_floatingip_v2
+    model:
+      router:
+        type: relationship_to
+        model: links_tf_floating_ip
+        target: tf_openstack_networking_router_interface_v2
+  tf_openstack_networking_network_v2:
+    client: ''
+    icon: fa:share-alt
+    name: Net
+    resource: openstack_networking_network_v2
+    model:
+      key_pair:
+        type: relationship_to
+        model: in_tf_net
+        target: tf_openstack_networking_network_v2
+  tf_openstack_networking_router_interface_v2:
+    client: ''
+    icon: fa:arrows-alt
+    name: Router Interface
+    resource: openstack_networking_router_interface_v2
+    model:
+      subnet:
+        type: relationship_to
+        model: in_tf_subnet
+        target: tf_openstack_networking_subnet_v2
+      router:
+        type: relationship_to
+        model: links_tf_router
+        target: tf_openstack_networking_router_v2
+  tf_openstack_networking_router_v2:
+    client: ''
+    icon: fa:arrows-alt
+    name: Router
+    resource: openstack_networking_router_v2
+  tf_openstack_networking_subnet_v2:
+    client: ''
+    icon: fa:share-alt
+    name: Subnet
+    resource: openstack_networking_subnet_v2
+    model:
+      network:
+        type: relationship_to
+        model: in_tf_net
+        target: tf_openstack_networking_network_v2
