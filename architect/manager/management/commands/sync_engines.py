@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 from django.conf import settings
-from architect.inventory.models import registry
+from architect.manager.models import registry
 
 SaltMasterNode = registry.get_type('salt_master')
 

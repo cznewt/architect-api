@@ -7,9 +7,9 @@ from django.http import HttpResponse
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
-from architect.inventory.engine.reclass import inventory
-from architect.inventory.models import registry
 from neomodel.core import DoesNotExist
+from architect.inventory.engine.reclass import inventory
+from architect.manager.models import registry
 
 SaltMasterNode = registry.get_type('salt_master')
 SaltMinionNode = registry.get_type('salt_minion')
@@ -124,6 +124,30 @@ class ProcessEventView(View):
     def post(self, request, *args, **kwargs):
         data = json.loads(request.body.decode("utf-8"))
         print(yaml.dump(data))
+        for datum_name, datum in data['return'].items():
+            print(datum)
+            uid = '{}|{}'.format(data['id'], datum['__id__'])
+            lowstate = SaltLowstateNode.nodes.get_or_none(uid=uid)
+            to_save = False
+            if lowstate is not None:
+                if 'apply' not in lowstate.metadata:
+                    lowstate.metadata['apply'] = []
+                    lowstate.metadata['apply'].append(datum)
+                    if datum['result']:
+                        lowstate.status = 'Active'
+                    else:
+                        lowstate.status = 'Error'
+                    to_save = True
+                else:
+                    if lowstate.metadata['apply'][-1]['result'] != datum['result']:
+                        lowstate.metadata['apply'].append(datum)
+                        if datum['result']:
+                            lowstate.status = 'Active'
+                        else:
+                            lowstate.status = 'Error'
+                        to_save = True
+            if to_save:
+                lowstate.save()
         return HttpResponse('OK')
 
 
@@ -142,7 +166,9 @@ class ProcessGrainView(View):
         master = SaltMasterNode.nodes.get(uid=master_name)
         for minion_name, minion_data in data.items():
             minion = _get_or_create_salt_minion(minion_name, master)
-            minion.metadata = minion_data
+            if isinstance(minion_data, dict):
+                minion.metadata = minion_data
+                minion.status = 'Active'
             minion.save()
         return HttpResponse('OK')
 
@@ -164,15 +190,18 @@ class ProcessLowstateView(View):
         master = SaltMasterNode.nodes.get(uid=master_name)
         for minion_name, minion_data in data.items():
             minion = _get_or_create_salt_minion(minion_name, master)
-            for minion_datum in minion_data:
-                minion = _get_or_create_salt_minion(minion_name, master)
-                service_key_parts = minion_datum['__sls__'].split('.')
-                service_key = '{}-{}'.format(service_key_parts[0],
-                                             service_key_parts[1])
-                service = _get_or_create_salt_service(service_key, minion, {})
-                lowstate = _get_or_create_salt_lowstate(minion,
-                                                        service,
-                                                        minion_datum)
+            try:
+                for minion_datum in minion_data:
+                    minion = _get_or_create_salt_minion(minion_name, master)
+                    service_key_parts = minion_datum['__sls__'].split('.')
+                    service_key = '{}-{}'.format(service_key_parts[0],
+                                                 service_key_parts[1])
+                    service = _get_or_create_salt_service(service_key, minion, {})
+                    lowstate = _get_or_create_salt_lowstate(minion,
+                                                            service,
+                                                            minion_datum)
+            except TypeError:
+                pass
         return HttpResponse('OK')
 
 
@@ -193,13 +222,16 @@ class ProcessPillarView(View):
         master = SaltMasterNode.nodes.get(uid=master_name)
         for minion_name, minion_data in data.items():
             minion = _get_or_create_salt_minion(minion_name, master)
-            for service_name, service in minion_data.items():
-                if service_name not in settings.RECLASS_SERVICE_BLACKLIST:
-                    for role_name, role in service.items():
-                        if role_name not in settings.RECLASS_ROLE_BLACKLIST:
-                            service_key = '{}-{}'.format(service_name,
-                                                         role_name)
-                            _get_or_create_salt_service(service_key,
-                                                        minion,
-                                                        role)
+            try:
+                for service_name, service in minion_data.items():
+                    if service_name not in settings.RECLASS_SERVICE_BLACKLIST:
+                        for role_name, role in service.items():
+                            if role_name not in settings.RECLASS_ROLE_BLACKLIST:
+                                service_key = '{}-{}'.format(service_name,
+                                                             role_name)
+                                _get_or_create_salt_service(service_key,
+                                                            minion,
+                                                            role)
+            except AttributeError:
+                pass
         return HttpResponse('OK')

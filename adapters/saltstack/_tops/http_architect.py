@@ -43,6 +43,8 @@ def top(**kwargs):
     :rtype: list
     """
     minion_id = kwargs['opts']['id']
+    if 'http_architect' not in kwargs['opts']:
+        raise Exception('http_architect configuration is missing.')
     host = kwargs['opts']['http_architect']['host']
     port = kwargs['opts']['http_architect']['port']
     project = kwargs['opts']['http_architect']['project']
