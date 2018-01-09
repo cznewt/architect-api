@@ -9,47 +9,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from neomodel.core import DoesNotExist
 from architect.inventory.engine.reclass import inventory
-from architect.manager.models import registry
-
-SaltMasterNode = registry.get_type('salt_master')
-SaltMinionNode = registry.get_type('salt_minion')
-SaltServiceNode = registry.get_type('salt_service')
-SaltLowstateNode = registry.get_type('salt_lowstate')
-
-
-def _get_or_create_salt_minion(minion_name, master, metadata={}):
-    try:
-        minion_node = SaltMinionNode.nodes.get(uid=minion_name)
-    except DoesNotExist:
-        minion_kwargs = {
-            'uid': minion_name,
-            'kind': 'salt_minion',
-            'name': minion_name,
-            'metadata': metadata
-        }
-        minion_node = SaltMinionNode(**minion_kwargs)
-        minion_node.save()
-        relation = minion_node.master.build_manager(minion_node, 'master')
-        relation.connect(master, {})
-    return minion_node
-
-
-def _get_or_create_salt_service(service_name, minion, metadata={}):
-    uid = '{}|{}'.format(minion.name, service_name)
-    try:
-        service_node = SaltServiceNode.nodes.get(uid=uid)
-    except DoesNotExist:
-        service_kwargs = {
-            'uid': uid,
-            'kind': 'salt_service',
-            'name': service_name,
-            'metadata': metadata
-        }
-        service_node = SaltServiceNode(**service_kwargs)
-        service_node.save()
-        relation = service_node.minion.build_manager(service_node, 'minion')
-        relation.connect(minion, {})
-    return service_node
+from architect.manager.engine.saltstack.client import SaltStackClient
 
 
 def _get_or_create_salt_lowstate(minion, service, metadata={}):
@@ -123,9 +83,7 @@ class ProcessEventView(View):
 
     def post(self, request, *args, **kwargs):
         data = json.loads(request.body.decode("utf-8"))
-        print(yaml.dump(data))
         for datum_name, datum in data['return'].items():
-            print(datum)
             uid = '{}|{}'.format(data['id'], datum['__id__'])
             lowstate = SaltLowstateNode.nodes.get_or_none(uid=uid)
             to_save = False
@@ -168,7 +126,7 @@ class ProcessGrainView(View):
             minion = _get_or_create_salt_minion(minion_name, master)
             if isinstance(minion_data, dict):
                 minion.metadata = minion_data
-                minion.status = 'Active'
+                minion.status = 'active'
             minion.save()
         return HttpResponse('OK')
 

@@ -6,3 +6,4 @@ from material.frontend.apps import ModuleMixin
 
 class ArchitectInventoryConfig(ModuleMixin, AppConfig):
     name = 'inventory'
+    verbose_name = 'Architect Inventory'

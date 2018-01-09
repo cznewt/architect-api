@@ -1,8 +1,6 @@
 from django.core.management.base import BaseCommand
 from django.conf import settings
-from architect.manager.models import registry
-
-SaltMasterNode = registry.get_type('salt_master')
+from architect.manager.models import Manager
 
 
 class Command(BaseCommand):
@@ -10,12 +8,19 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         for engine_name, engine in settings.MANAGER_ENGINES.items():
-            if engine['engine'] == 'saltstack':
-                resource_meta = {
-                    'uid': engine_name,
-                    'kind': 'salt_master',
+            if Manager.objects.filter(name=engine_name).count() == 0:
+                engine_engine = engine.pop('engine')
+                manager = Manager(**{
+                    'engine': engine_engine,
                     'name': engine_name,
                     'metadata': engine
-                }
-                SaltMasterNode.create_or_update(resource_meta)
-                self.stdout.write(self.style.SUCCESS('Salt Master "%s" resource created/updated.' % engine_name))
+                })
+                manager.save()
+                self.stdout.write(
+                    self.style.SUCCESS(
+                        'Manager "{}" resource created'.format(engine_name)))
+            else:
+                self.stdout.write(
+                    self.style.SUCCESS(
+                        'Manager "{}" resource '
+                        'already exists'.format(engine_name)))

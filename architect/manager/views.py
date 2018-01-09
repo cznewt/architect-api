@@ -1,14 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from django.conf import settings
 from django.views.generic.base import TemplateView
 from neomodel import db
-from architect.manager.models import registry
-
-SaltMasterNode = registry.get_type('salt_master')
-SaltMinionNode = registry.get_type('salt_minion')
-SaltServiceNode = registry.get_type('salt_service')
-SaltLowstateNode = registry.get_type('salt_lowstate')
+from architect.manager.models import Resource, Manager
+from architect.manager.tasks import get_manager_status_task
 
 
 class ManagerListView(TemplateView):
@@ -17,15 +12,7 @@ class ManagerListView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        manager_list = []
-        for manager_name, manager_item in settings.MANAGER_ENGINES.items():
-            manager_list.append({
-                'name': manager_name,
-                'engine': manager_item['engine'],
-                'status': 'OK'
-            })
-
-        context['manager_list'] = manager_list
+        context['manager_list'] = Manager.objects.all()
         return context
 
 
@@ -35,19 +22,20 @@ class ManagerDetailView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        manager = settings.MANAGER_ENGINES[kwargs.get('manager_name')]
-        manager['name'] = kwargs.get('manager_name')
+        manager = Manager.objects.get(name=kwargs.get('manager_name'))
+        host_list = Resource.objects.filter(manager=manager)
         context['manager'] = manager
-        salt_master = SaltMasterNode.nodes.get(name=kwargs.get('manager_name'))
-        salt_minion = SaltMinionNode.nodes.all()
-        context['salt_master'] = salt_master
-
-        query = "match (n:salt_minion)-[]-(m:salt_master) where m.name='{}' return n".format(kwargs.get('manager_name'))
-        results, meta = db.cypher_query(query)
-        host_list = [SaltMinionNode.inflate(row[0]) for row in results]
         context['host_list'] = host_list
 
         return context
+
+
+class ManagerScrapeView(TemplateView):
+
+    template_name = "manager/host_detail.html"
+
+    def get_context_data(self, **kwargs):
+        get_manager_status_task.apply_async((kwargs.get('manager_name'),))
 
 
 class HostDetailView(TemplateView):

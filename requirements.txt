@@ -1,4 +1,4 @@
-Django==1.11.8
+Django
 django_neomodel
 django-jsonview
 django-yamlfield
@@ -7,3 +7,6 @@ django-material
 django-viewflow
 viewflow-extensions
 libmetric
+celery
+redis
+pyaml

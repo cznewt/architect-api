@@ -3,6 +3,10 @@ import os
 import re
 import json
 import yaml
+import importlib
+
+from django.conf import settings
+from architect import exceptions
 
 _schema_dir = os.path.join(
     os.path.dirname(os.path.realpath(__file__)), 'schemas')
@@ -34,6 +38,39 @@ def to_camel_case(snake_str, first=True):
 def to_snake_case(name):
     s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
     return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()
+
+
+def get_module(module_key):
+    class_mapping = settings.MANAGER_CLASS_MAPPINGS
+    if module_key not in class_mapping:
+        raise exceptions.ArchitectException(
+            "Service {module_key} is unkown. Please pass in a client"
+            " constructor or submit a patch to Architect".format(
+                module_key=module_key))
+    mod_name, ctr_name = class_mapping[module_key].rsplit('.', 1)
+    lib_name = mod_name.split('.')[0]
+    try:
+        mod = importlib.import_module(mod_name)
+    except ImportError:
+        raise exceptions.ArchitectException(
+            "Client for '{module_key}' was requested, but"
+            " {mod_name} was unable to be imported. Either import"
+            " the module yourself and pass the constructor in as an argument,"
+            " or perhaps you do not have module {lib_name} installed.".format(
+                module_key=module_key,
+                mod_name=mod_name,
+                lib_name=lib_name))
+    try:
+        ctr = getattr(mod, ctr_name)
+    except AttributeError:
+        raise exceptions.ArchitectException(
+            "Client for '{module_key}' was requested, but although"
+            " {mod_name} imported fine, the constructor at {fullname}"
+            " as not found.".format(
+                module_key=module_key,
+                mod_name=mod_name,
+                fullname=class_mapping[module_key]))
+    return ctr
 
 
 class ClassRegistry:

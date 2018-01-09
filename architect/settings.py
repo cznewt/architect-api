@@ -128,6 +128,16 @@ RESOURCE_ENGINES = load_yaml_json_file(os.path.join(BASE_DIR,
 MANAGER_ENGINES = RESOURCE_ENGINES['manager']
 INVENTORY_ENGINES = RESOURCE_ENGINES['inventory']
 
+MANAGER_CLASS_MAPPINGS = {
+    "amazon": "architect.manager.engine.amazon.client.AmazonWebServicesClient",
+    "ansible": "architect.manager.engine.ansible.client.AnsibleClient",
+    "kubernetes": "architect.manager.engine.kubernetes.client.KubernetesClient",
+    "openstack": "architect.manager.engine.openstack.client.OpenStackClient",
+    "saltstack": "architect.manager.engine.saltstack.client.SaltStackClient",
+    "spinnaker": "architect.manager.engine.spinnaker.client.SpinnakerClient",
+    "terraform": "architect.manager.engine.terraform.client.TerraformClient",
+}
+
 RECLASS_SERVICE_BLACKLIST = [
     '_param',
     'private_keys',
@@ -146,3 +156,10 @@ NEOMODEL_NEO4J_BOLT_URL = os.environ.get('NEO4J_BOLT_URL',
 NEOMODEL_SIGNALS = True
 NEOMODEL_FORCE_TIMEZONE = False
 NEOMODEL_MAX_POOL_SIZE = 50
+
+BROKER_URL = 'redis://localhost:6379'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'Europe/Prague'

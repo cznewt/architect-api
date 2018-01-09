@@ -15,13 +15,6 @@ class GetInventoryView(View):
         for node_name, node in node_list.items():
             service_class = []
             role_class = []
-            for service_name, service in node['parameters'].items():
-                if service_name not in service_black_list:
-                    service_class.append(service_name)
-                    for role_name, role in service.items():
-                        if role_name not in role_black_list:
-                            role_class.append('{}.{}'.format(service_name,
-                                                             role_name))
             result[node_name] = {
                 'roles': role_class,
                 'services': service_class,
