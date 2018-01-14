@@ -28,6 +28,9 @@ class TerraformClient(BaseClient):
         self.client = python_terraform.Terraform(
             working_dir=self.config['dir'])
 
+    def _clean_name(self, name):
+        return name.replace('"', '').replace('[root] ', '').strip()
+
     def update_resources(self, resources=None):
         self.process_resource_metadata()
         self.process_relation_metadata()
@@ -92,6 +95,3 @@ class TerraformClient(BaseClient):
                     relation_mapping['tf_{}-tf_{}'.format(source[0], target[0])],
                     '{}.{}'.format(source[0], source[1]),
                     '{}.{}'.format(target[0], target[1]))
-
-    def _clean_name(self, name):
-        return name.replace('"', '').replace('[root] ', '').strip()

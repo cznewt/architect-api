@@ -1,6 +1,8 @@
 
 from django.db import models
+from django.db.models import Q
 from yamlfield.fields import YAMLField
+from architect import utils
 
 
 class Manager(models.Model):
@@ -12,6 +14,16 @@ class Manager(models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_schema(self):
+        return utils.get_resource_schema(self.engine)
+
+    def resources_by_kind(self):
+        kinds = self.get_schema()['resource']
+        output = {}
+        for kind in kinds:
+            output[kind] = Resource.objects.filter(manager=self, kind=kind)
+        return output
 
     def url(self):
         if self.engine == 'saltstack':
@@ -34,12 +46,14 @@ class Resource(models.Model):
     status = models.CharField(max_length=32, default='unknown')
 
     def __str__(self):
-        return self.name
+        return '{} {}'.format(self.kind, self.name)
 
-
+    def relations(self):
+        return Relationship.objects.filter(Q(source=self) | Q(target=self))
 
 
 class Relationship(models.Model):
+    manager = models.ForeignKey(Manager, on_delete=models.CASCADE)
     source = models.ForeignKey(Resource,
                                on_delete=models.CASCADE,
                                related_name='source')
@@ -52,4 +66,7 @@ class Relationship(models.Model):
     status = models.CharField(max_length=32, default='unknown')
 
     def __str__(self):
-        return self.id
+        return '{} > {}'.format(self.source, self.target)
+
+    def name(self):
+        return self.__str__()

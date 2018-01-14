@@ -39,10 +39,11 @@ class SaltStackClient(BaseClient):
                     # 'salt_job',
                 ]
             for resource in resources:
-                self.process_resource_metadata(
-                    resource,
-                    self.get_resource_metadata(resource)
-                )
+                metadata = self.get_resource_metadata(resource)
+                self.process_resource_metadata(resource, metadata)
+                count = len(self.resources.get(resource, {}))
+                logger.info("Processed {} {} resources".format(count,
+                                                               resource))
             self.process_relation_metadata()
 
     def get_resource_status(self, kind, metadata):
@@ -54,6 +55,7 @@ class SaltStackClient(BaseClient):
         return 'unknown'
 
     def get_resource_metadata(self, kind):
+        logger.info("Getting {} resources".format(kind))
         if kind == 'salt_job':
             metadata = self.api.low([{
                 'client': 'runner',
@@ -85,7 +87,31 @@ class SaltStackClient(BaseClient):
         return metadata
 
     def process_resource_metadata(self, kind, metadata):
-        if kind == 'salt_lowstate':
+        if kind == 'salt_event':
+            for datum_name, datum in metadata.items():
+                uid = '{}|{}'.format(data['id'], datum['__id__'])
+                lowstate = SaltLowstateNode.nodes.get_or_none(uid=uid)
+                to_save = False
+                if lowstate is not None:
+                    if 'apply' not in lowstate.metadata:
+                        lowstate.metadata['apply'] = []
+                        lowstate.metadata['apply'].append(datum)
+                        if datum['result']:
+                            lowstate.status = 'Active'
+                        else:
+                            lowstate.status = 'Error'
+                        to_save = True
+                    else:
+                        if lowstate.metadata['apply'][-1]['result'] != datum['result']:
+                            lowstate.metadata['apply'].append(datum)
+                            if datum['result']:
+                                lowstate.status = 'Active'
+                            else:
+                                lowstate.status = 'Error'
+                            to_save = True
+                if to_save:
+                    lowstate.save()
+        elif kind == 'salt_job':
             for job_id, job in metadata.items():
                 if not isinstance(job, dict):
                     continue
@@ -169,8 +195,7 @@ class SaltStackClient(BaseClient):
                     resource_id,
                     minion_id)
                 if type(result) is list:
-                    pass
-                #     log.error(result[0])
+                    logger.error(result[0])
                 else:
                     for state_id, state in result.items():
                         if '__id__' in state:

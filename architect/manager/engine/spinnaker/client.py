@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 
 from architect.manager.client import BaseClient
+from celery.utils.log import get_logger
+
+logger = get_logger(__name__)
 
 
 class SpinnakerClient(BaseClient):

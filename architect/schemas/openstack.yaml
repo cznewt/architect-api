@@ -2,7 +2,7 @@ relation:
   in_os_project:
     relation:
       default: project
-  in_os_net:
+  in_os_network:
     relation:
       default: network
   use_os_port:
@@ -80,10 +80,10 @@ resource:
     client: nova
     name: Key Pair
     icon: fa:key
-  os_net:
+  os_network:
     resource: OS::Neutron::Net
     client: neutron
-    name: Net
+    name: Network
     icon: fa:share-alt
     model:
       project:
@@ -92,7 +92,7 @@ resource:
         target: os_project
       subnets:
         type: relationship_from
-        model: in_os_net
+        model: in_os_network
         target: os_subnet
   os_port:
     resource: OS::Neutron::Port
@@ -110,8 +110,8 @@ resource:
         target: os_hypervisor
       network:
         type: relationship_to
-        model: in_os_net
-        target: os_net
+        model: in_os_network
+        target: os_network
   os_project:
     resource: OS::Keystone::Tenant
     client: keystone
@@ -188,8 +188,8 @@ resource:
         target: os_project
       network:
         type: relationship_to
-        model: in_os_net
-        target: os_net
+        model: in_os_network
+        target: os_network
   os_user:
     resource: OS::Keystone::User
     client: keystone

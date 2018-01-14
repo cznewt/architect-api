@@ -12,24 +12,6 @@ from architect.inventory.engine.reclass import inventory
 from architect.manager.engine.saltstack.client import SaltStackClient
 
 
-def _get_or_create_salt_lowstate(minion, service, metadata={}):
-    uid = '{}|{}'.format(minion.name, metadata['__id__'])
-    try:
-        lowstate_node = SaltLowstateNode.nodes.get(uid=uid)
-    except DoesNotExist:
-        lowstate_kwargs = {
-            'uid': uid,
-            'kind': 'salt_lowstate',
-            'name': metadata['__id__'],
-            'metadata': metadata
-        }
-        lowstate_node = SaltLowstateNode(**lowstate_kwargs)
-        lowstate_node.save()
-        relation = service.lowstate.build_manager(service, 'lowstate')
-        relation.connect(lowstate_node, {})
-    return lowstate_node
-
-
 class GetInventoryView(View):
 
     def get(self, request, *args, **kwargs):
@@ -82,30 +64,13 @@ class ProcessEventView(View):
         return HttpResponse('Only POST method is supported.')
 
     def post(self, request, *args, **kwargs):
-        data = json.loads(request.body.decode("utf-8"))
-        for datum_name, datum in data['return'].items():
-            uid = '{}|{}'.format(data['id'], datum['__id__'])
-            lowstate = SaltLowstateNode.nodes.get_or_none(uid=uid)
-            to_save = False
-            if lowstate is not None:
-                if 'apply' not in lowstate.metadata:
-                    lowstate.metadata['apply'] = []
-                    lowstate.metadata['apply'].append(datum)
-                    if datum['result']:
-                        lowstate.status = 'Active'
-                    else:
-                        lowstate.status = 'Error'
-                    to_save = True
-                else:
-                    if lowstate.metadata['apply'][-1]['result'] != datum['result']:
-                        lowstate.metadata['apply'].append(datum)
-                        if datum['result']:
-                            lowstate.status = 'Active'
-                        else:
-                            lowstate.status = 'Error'
-                        to_save = True
-            if to_save:
-                lowstate.save()
+        metadata = json.loads(request.body.decode("utf-8"))
+        manager_client = SaltStackClient(**{
+            'name': kwargs.get('master_id'),
+            'engine': 'saltstack',
+        })
+        manager_client.process_resource_metadata('salt_event', metadata)
+        manager_client.save()
         return HttpResponse('OK')
 
 
@@ -119,15 +84,13 @@ class ProcessGrainView(View):
         return HttpResponse('Only POST method is supported.')
 
     def post(self, request, *args, **kwargs):
-        data = json.loads(request.body.decode("utf-8"))
-        master_name = kwargs.get('master_id')
-        master = SaltMasterNode.nodes.get(uid=master_name)
-        for minion_name, minion_data in data.items():
-            minion = _get_or_create_salt_minion(minion_name, master)
-            if isinstance(minion_data, dict):
-                minion.metadata = minion_data
-                minion.status = 'active'
-            minion.save()
+        metadata = json.loads(request.body.decode("utf-8"))
+        manager_client = SaltStackClient(**{
+            'name': kwargs.get('master_id'),
+            'engine': 'saltstack',
+        })
+        manager_client.process_resource_metadata('salt_minion', metadata)
+        manager_client.save()
         return HttpResponse('OK')
 
 
@@ -143,23 +106,13 @@ class ProcessLowstateView(View):
         return HttpResponse('Only POST method is supported.')
 
     def post(self, request, *args, **kwargs):
-        data = json.loads(request.body.decode("utf-8"))
-        master_name = kwargs.get('master_id')
-        master = SaltMasterNode.nodes.get(uid=master_name)
-        for minion_name, minion_data in data.items():
-            minion = _get_or_create_salt_minion(minion_name, master)
-            try:
-                for minion_datum in minion_data:
-                    minion = _get_or_create_salt_minion(minion_name, master)
-                    service_key_parts = minion_datum['__sls__'].split('.')
-                    service_key = '{}-{}'.format(service_key_parts[0],
-                                                 service_key_parts[1])
-                    service = _get_or_create_salt_service(service_key, minion, {})
-                    lowstate = _get_or_create_salt_lowstate(minion,
-                                                            service,
-                                                            minion_datum)
-            except TypeError:
-                pass
+        metadata = json.loads(request.body.decode("utf-8"))
+        manager_client = SaltStackClient(**{
+            'name': kwargs.get('master_id'),
+            'engine': 'saltstack',
+        })
+        manager_client.process_resource_metadata('salt_lowstate', metadata)
+        manager_client.save()
         return HttpResponse('OK')
 
 
@@ -175,21 +128,11 @@ class ProcessPillarView(View):
         return HttpResponse('Only POST method is supported.')
 
     def post(self, request, *args, **kwargs):
-        data = json.loads(request.body.decode("utf-8"))
-        master_name = kwargs.get('master_id')
-        master = SaltMasterNode.nodes.get(uid=master_name)
-        for minion_name, minion_data in data.items():
-            minion = _get_or_create_salt_minion(minion_name, master)
-            try:
-                for service_name, service in minion_data.items():
-                    if service_name not in settings.RECLASS_SERVICE_BLACKLIST:
-                        for role_name, role in service.items():
-                            if role_name not in settings.RECLASS_ROLE_BLACKLIST:
-                                service_key = '{}-{}'.format(service_name,
-                                                             role_name)
-                                _get_or_create_salt_service(service_key,
-                                                            minion,
-                                                            role)
-            except AttributeError:
-                pass
+        metadata = json.loads(request.body.decode("utf-8"))
+        manager_client = SaltStackClient(**{
+            'name': kwargs.get('master_id'),
+            'engine': 'saltstack',
+        })
+        manager_client.process_resource_metadata('salt_service', metadata)
+        manager_client.save()
         return HttpResponse('OK')

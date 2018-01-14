@@ -1,15 +1,18 @@
 
 import time
 from architect import utils
-from architect.manager.models import Resource, Manager
+from architect.manager.models import Resource, Manager, Relationship
+from celery.utils.log import get_logger
+
+logger = get_logger(__name__)
 
 
 class BaseClient(object):
 
     def __init__(self, **kwargs):
         self.name = kwargs['name']
-        self.metadata = dict(kwargs['metadata'])
-        self.kind = kwargs['engine']
+        self.metadata = dict(kwargs.get('metadata', {}))
+        self.kind = kwargs.get('engine')
         self.resources = {}
         self.resource_types = {}
         self.relations = {}
@@ -27,7 +30,8 @@ class BaseClient(object):
         manager = Manager.objects.get(name=self.name)
         for resource_type, resources in self.resources.items():
             for resource_name, resource in resources.items():
-                res, created = Resource.objects.get_or_create(uid=resource['uid'], manager=manager)
+                res, created = Resource.objects.get_or_create(uid=resource['uid'],
+                                                              manager=manager)
                 if created:
                     res.name = resource['name']
                     res.kind = resource_type
@@ -35,6 +39,34 @@ class BaseClient(object):
                     res.metadata = resource['metadata']
                     res.status = self.get_resource_status(resource_type,
                                                           resource['metadata'])
+                    res.save()
+
+        for relation_type, relations in self.relations.items():
+            logger.info('Processed {} {} relations'.format(len(relations),
+                                                           relation_type))
+            for relation in relations:
+                try:
+                    source = Resource.objects.get(uid=relation['source'],
+                                                  manager=manager)
+                except Resource.DoesNotExist:
+                    logger.error('No resource with'
+                                 ' uid {} found'.format(relation['source']))
+                    continue
+                try:
+                    target = Resource.objects.get(uid=relation['target'],
+                                                  manager=manager)
+                except Resource.DoesNotExist:
+                    logger.error('No resource with'
+                                 ' uid {} found'.format(relation['target']))
+                    continue
+                resource = {
+                    'kind': relation['kind'],
+                    'manager': manager,
+                    'source': source,
+                    'target': target
+                }
+                res, created = Relationship.objects.get_or_create(**resource)
+                if created:
                     res.save()
 
     def to_dict(self):

@@ -10,9 +10,9 @@
     <ul class="collection">
       <li class="collection-item"><div>Inventory engine<div class="secondary-content">{{ inventory.engine }}</div></div></li>
       {% if inventory.engine == 'reclass' %}
-      <li class="collection-item"><div>Storage type<div class="secondary-content">{{ inventory.storage_type }}</div></div></li>
-      <li class="collection-item"><div>Class directory<div class="secondary-content">{{ inventory.class_dir }}</div></div></li>
-      <li class="collection-item"><div>Node directory<div class="secondary-content">{{ inventory.node_dir }}</div></div></li>
+      <li class="collection-item"><div>Storage type<div class="secondary-content">{{ inventory.metadata.storage_type }}</div></div></li>
+      <li class="collection-item"><div>Class directory<div class="secondary-content">{{ inventory.metadata.class_dir }}</div></div></li>
+      <li class="collection-item"><div>Node directory<div class="secondary-content">{{ inventory.metadata.node_dir }}</div></div></li>
       {% endif %}
     </ul>
     <h4 class="center">Hosts</h4>

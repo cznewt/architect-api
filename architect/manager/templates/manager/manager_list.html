@@ -9,6 +9,7 @@
     <table id="table" class="table bordered">
       <thead>
         <th>Manager</th>
+        <th>Resources</th>
         <th class="center-align">Engine</th>
         <th class="center-align">Status</th>
       </thead>
@@ -17,6 +18,13 @@
         <tr>
           <td>
             <a href="{% url 'manager:manager_detail' manager.name %}">{{ manager.name }}</a>
+          </td>
+          <td>
+            {% for kind_name, kind_query in manager.resources_by_kind.items %}
+            {% if kind_query.count > 0 %}
+            {{ kind_name }}: {{ kind_query.count }}<br>
+            {% endif %}
+            {% endfor %}
           </td>
           <td class="center-align">{{ manager.engine }}</td>
           <td class="center-align">

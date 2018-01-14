@@ -11,7 +11,7 @@ log = get_task_logger(__name__)
 def get_manager_status_task(manager_name):
     manager = Manager.objects.get(name=manager_name)
     manager_client_class = get_module(manager.engine)
-    log.info('Getting resources of {}'.format(manager_name))
+    log.info('Updating manager {}'.format(manager_name))
     manager_client = manager_client_class(**{
         'name': manager_name,
         'engine': manager.engine,
