@@ -78,7 +78,7 @@ def start(project='default',
                                              method='POST',
                                              decode=False,
                                              data=json.dumps(event))
-                if 'OK' in data['body']:
+                if 'OK' in data.get('body', ''):
                     log.info("Architect Engine request to '{}'"
                              " was successful".format(url))
                 else:

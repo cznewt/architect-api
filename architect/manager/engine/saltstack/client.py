@@ -4,6 +4,7 @@ from django.conf import settings
 from urllib.error import URLError
 from pepper.libpepper import Pepper, PepperException
 from architect.manager.client import BaseClient
+from architect.manager.models import Manager, Resource
 from celery.utils.log import get_logger
 
 logger = get_logger(__name__)
@@ -88,29 +89,54 @@ class SaltStackClient(BaseClient):
 
     def process_resource_metadata(self, kind, metadata):
         if kind == 'salt_event':
-            for datum_name, datum in metadata.items():
-                uid = '{}|{}'.format(data['id'], datum['__id__'])
-                lowstate = SaltLowstateNode.nodes.get_or_none(uid=uid)
+            manager = Manager.objects.get(name=metadata.get('manager'))
+            roles = {}
+            for datum_name, datum in metadata.get('return', {}).items():
+                uid = '{}|{}'.format(metadata['id'], datum['__id__'])
+                try:
+                    lowstate = Resource.objects.get(uid=uid, manager=manager)
+                except Resource.DoesNotExist:
+                    logger.error('No salt_lowstate resource '
+                                 'with UID {} found'.format(uid))
+                    continue
                 to_save = False
-                if lowstate is not None:
-                    if 'apply' not in lowstate.metadata:
-                        lowstate.metadata['apply'] = []
-                        lowstate.metadata['apply'].append(datum)
-                        if datum['result']:
-                            lowstate.status = 'Active'
-                        else:
-                            lowstate.status = 'Error'
-                        to_save = True
+                role_parts = datum['__sls__'].split('.')
+                role_name = "{}-{}".format(role_parts[0], role_parts[1])
+                roles[role_name] = True
+
+                if 'apply' not in lowstate.metadata:
+                    lowstate.metadata['apply'] = {}
+                    lowstate.metadata['apply'][metadata.get('jid')] = datum
+                    if datum['result']:
+                        lowstate.status = 'active'
                     else:
-                        if lowstate.metadata['apply'][-1]['result'] != datum['result']:
-                            lowstate.metadata['apply'].append(datum)
-                            if datum['result']:
-                                lowstate.status = 'Active'
-                            else:
-                                lowstate.status = 'Error'
-                            to_save = True
+                        lowstate.status = 'error'
+                        roles[role_name] = False
+                    to_save = True
+                else:
+                    if metadata.get('jid') not in lowstate.metadata['apply']:
+                        lowstate.metadata['apply'][metadata.get('jid')] = datum
+                        if datum['result']:
+                            lowstate.status = 'active'
+                        else:
+                            lowstate.status = 'error'
+                            roles[role_name] = False
+                        to_save = True
                 if to_save:
                     lowstate.save()
+            for role_name, role_status in roles.items():
+                uid = '{}|{}'.format(metadata['id'], role_name)
+                try:
+                    service = Resource.objects.get(uid=uid, manager=manager)
+                except Resource.DoesNotExist:
+                    logger.error('No salt_service resource '
+                                 'with UID {} found'.format(uid))
+                    continue
+                if role_status:
+                    service.status = 'active'
+                else:
+                    service.status = 'error'
+                service.save()
         elif kind == 'salt_job':
             for job_id, job in metadata.items():
                 if not isinstance(job, dict):

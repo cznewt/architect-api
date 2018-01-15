@@ -21,8 +21,9 @@ class ManagerAdmin(admin.ModelAdmin):
 
 @admin.register(Resource)
 class ResourceAdmin(admin.ModelAdmin):
-    list_display = ('name', 'manager', 'kind', 'relations', 'status')
+    list_display = ('name', 'manager', 'kind', 'status')
     list_filter = ('manager', 'status', 'kind')
+    search_fields = ['uid', 'name']
 
 
 @admin.register(Relationship)
