@@ -25,6 +25,7 @@ relation:
   in_os_aggregate:
     relation:
       os_hypervisor: aggregate
+default_resource: os_server
 resource:
   os_aggregate:
     resource: OS::Nova::Aggregate

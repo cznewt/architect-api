@@ -1,21 +1,15 @@
-from django.conf.urls import url
+from django.urls import path
 from . import views
 
 app_name = 'manager'
 urlpatterns = [
-    url(r'^v1$',
-        views.ManagerListView.as_view(),
-        name='manager_list'),
-    url(r'^v1/(?P<manager_name>[\w\-\.]+)$',
-        views.ManagerDetailView.as_view(),
-        name='manager_detail'),
-    url(r'^v1/(?P<manager_name>[\w\-\.]+)/scrape$',
-        views.ManagerScrapeView.as_view(),
-        name='manager_scrape'),
-    url(r'^v1/(?P<manager_name>[\w\-\.]+)/(?P<host_name>[\w\-\.]+)$',
-        views.HostDetailView.as_view(),
-        name='host_detail'),
-    url(r'^v1/(?P<manager_name>[\w\-\.]+)/(?P<host_name>[\w\-\.]+)/(?P<service_name>[\w\-\.]+)$',
-        views.ServiceDetailView.as_view(),
-        name='service_detail'),
+    path('v1', views.ManagerListView.as_view(),
+         name='manager_list'),
+    path('v1/<manager_name>/detail', views.ManagerDetailView.as_view(),
+         name='manager_detail'),
+    path('v1/<manager_name>/update', views.ManagerUpdateView.as_view(),
+         name='manager_update'),
+    path('v1/<manager_name>/res/<resource_name>',
+         views.ResourceDetailView.as_view(),
+         name='resource_detail'),
 ]

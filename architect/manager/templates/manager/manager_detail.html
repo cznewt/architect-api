@@ -8,18 +8,16 @@
   <div class="col s12 m12 l8 offset-l2">
     <table id="table" class="table bordered">
       <thead>
-        <th>Host</th>
-        <th class="center-align">System</th>
+        <th>Resource</th>
         <th class="center-align">Status</th>
       </thead>
       <tbody>
-        {% for host in host_list %}
+        {% for resource in resource_list %}
         <tr>
           <td>
-            <a href="{% url 'manager:host_detail' manager.name host.name %}">{{ host.name }}</a>
+            <a href="{% url 'manager:resource_detail' manager.name resource.name %}">{{ resource.name }}</a>
           </td>
-          <td class="center-align">{{ host.metadata.osfinger|default:'-' }}</td>
-          <td class="center-align">{{ host.status }}</td>
+          <td class="center-align">{{ resource.status }}</td>
         </tr>
         {% endfor %}
       </tbody>
