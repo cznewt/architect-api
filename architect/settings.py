@@ -125,8 +125,13 @@ if STATIC_URL is None:
 RESOURCE_ENGINES = load_yaml_json_file(os.path.join(BASE_DIR,
                                                     'architect_config.yml'))
 
-MANAGER_ENGINES = RESOURCE_ENGINES['manager']
-INVENTORY_ENGINES = RESOURCE_ENGINES['inventory']
+MANAGER_ENGINES = RESOURCE_ENGINES.get('manager', {})
+INVENTORY_ENGINES = RESOURCE_ENGINES.get('inventory', {})
+
+INVENTORY_CLASS_MAPPINGS = {
+    "architect": "architect.inventory.engine.architect.client.ArchitectClient",
+    "reclass": "architect.inventory.engine.reclass.client.ReclassClient",
+}
 
 MANAGER_CLASS_MAPPINGS = {
     "amazon": "architect.manager.engine.amazon.client.AmazonWebServicesClient",

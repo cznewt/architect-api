@@ -9,9 +9,9 @@ machine world as well as the creator of the Matrix. As the chief administrator
 of the system, he is possibly a collective manifestation, or at the very least
 a virtual representation of the entire Machine mainframe.
 
-In our own reality the Architect is service modeling and management program.
-It's used by humans to create virtual representations of software services and
-allow control thier entire life cycles.
+In our own reality the Architect is service modeling, management and
+visualization platform. It's used by humans to create virtual representations
+of software services and allow control thier entire life cycles.
 
 
 Core Components

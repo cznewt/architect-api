@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from django.conf import settings
 from django.views.generic.base import TemplateView
-from architect.inventory.engine.reclass import inventory
-from architect.inventory.models import Inventory
-
+from architect.views import JSONDataView
+from .models import Inventory
 
 class InventoryListView(TemplateView):
 
@@ -21,42 +19,41 @@ class InventoryDetailView(TemplateView):
     template_name = "inventory/inventory_detail.html"
 
     def get_context_data(self, **kwargs):
-        name = kwargs.get('inventory_name')
-        node_list = inventory(name)
+        inventory = Inventory.objects.get(name=kwargs.get('inventory_name'))
         context = super().get_context_data(**kwargs)
-        context['inventory'] = Inventory.objects.get(name=name)
-        context['node_list'] = {}
-        for node_name, node in node_list.items():
-            role_class = []
-            for service_name, service in node['parameters'].items():
-                if service_name not in settings.RECLASS_SERVICE_BLACKLIST:
-                    for role_name, role in service.items():
-                        if role_name not in settings.RECLASS_ROLE_BLACKLIST:
-                            role_class.append('{}-{}'.format(service_name,
-                                                             role_name))
-            context['node_list'][node_name] = role_class
+        context['inventory'] = inventory
+        context['resource_list'] = inventory.class_list()
+        if inventory.status != 'active' and len(context['resource_list']) > 0:
+            inventory.status = 'active'
+            inventory.save()
         return context
 
 
-class HostDetailView(TemplateView):
-
-    template_name = "inventory/host_detail.html"
+class InventoryDetailJSONView(JSONDataView):
 
     def get_context_data(self, **kwargs):
-        inventory_name = kwargs.get('inventory_name')
+        inventory = Inventory.objects.get(name=kwargs.get('inventory_name'))
+        # context = super().get_context_data(**kwargs)
+        return inventory.inventory()
 
-        node_list = inventory(inventory_name)
+
+class ResourceDetailView(TemplateView):
+
+    template_name = "inventory/resource_detail.html"
+
+    def get_context_data(self, **kwargs):
+        inventory = Inventory.objects.get(name=kwargs.get('inventory_name'))
         context = super().get_context_data(**kwargs)
-        context['inventory'] = Inventory.objects.get(name=inventory_name)
-        context['node_list'] = {}
-
-        for node_name, node in node_list.items():
-            role_class = []
-            for service_name, service in node['parameters'].items():
-                if service_name not in settings.RECLASS_SERVICE_BLACKLIST:
-                    for role_name, role in service.items():
-                        if role_name not in settings.RECLASS_ROLE_BLACKLIST:
-                            role_class.append('{}-{}'.format(service_name,
-                                                             role_name))
-            context['node_list'][node_name] = role_class
+        context['inventory'] = inventory
+        context['resource_name'] = kwargs.get('resource_name')
+        resource_list = inventory.class_list()
+        context['class_list'] = resource_list[context['resource_name']]
         return context
+
+
+class ResourceDetailJSONView(JSONDataView):
+
+    def get_context_data(self, **kwargs):
+        inventory = Inventory.objects.get(name=kwargs.get('inventory_name'))
+        # context = super().get_context_data(**kwargs)
+        return inventory.inventory(kwargs.get('resource_name'))

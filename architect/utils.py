@@ -40,8 +40,11 @@ def to_snake_case(name):
     return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()
 
 
-def get_module(module_key):
-    class_mapping = settings.MANAGER_CLASS_MAPPINGS
+def get_module(module_key, module_type='manager'):
+    if module_type == 'manager':
+        class_mapping = settings.MANAGER_CLASS_MAPPINGS
+    elif module_type == 'inventory':
+        class_mapping = settings.INVENTORY_CLASS_MAPPINGS
     if module_key not in class_mapping:
         raise exceptions.ArchitectException(
             "Service {module_key} is unkown. Please pass in a client"

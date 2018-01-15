@@ -8,7 +8,6 @@ from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from neomodel.core import DoesNotExist
-from architect.inventory.engine.reclass import inventory
 from architect.manager.engine.saltstack.client import SaltStackClient
 
 

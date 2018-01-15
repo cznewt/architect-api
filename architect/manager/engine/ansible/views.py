@@ -3,7 +3,6 @@
 import yaml
 from django.http import HttpResponse
 from django.views import View
-from architect.inventory.engine.reclass import inventory
 
 
 class GetInventoryView(View):

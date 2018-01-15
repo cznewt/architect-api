@@ -19,10 +19,10 @@
           <td>
             <a href="{% url 'inventory:inventory_detail' inventory.name %}">{{ inventory.name }}</a>
           </td>
-          <td class="center-align">{{ inventory.nodes }}</td>
+          <td class="center-align">{{ inventory.resource_count }}</td>
           <td class="center-align">{{ inventory.engine }}</td>
           <td class="center-align">
-            {% if inventory.status == 'Active' %}
+            {% if inventory.status == 'active' %}
             <i class="material-icons">check_box</a>
             {% else %}
             <i class="material-icons">report_problem</i>

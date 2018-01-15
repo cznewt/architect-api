@@ -201,7 +201,7 @@ class SaltStackClient(BaseClient):
                         if '__id__' in state:
                             result_id = '{}|{}'.format(minion_id,
                                                        state['__id__'])
-                            self._scrape_relation(
+                            self._create_relation(
                                 'contains_salt_lowstate',
                                 resource_id,
                                 result_id)

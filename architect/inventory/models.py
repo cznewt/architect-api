@@ -1,6 +1,7 @@
 
 from django.db import models
 from yamlfield.fields import YAMLField
+from architect.utils import get_module
 
 
 class Inventory(models.Model):
@@ -9,6 +10,23 @@ class Inventory(models.Model):
     engine = models.CharField(max_length=32, default='reclass')
     metadata = YAMLField(blank=True, null=True)
     status = models.CharField(max_length=32, default='unknown')
+
+    def client(self):
+
+        client_class = get_module(self.engine, 'inventory')
+        return client_class(**{
+            'name': self.name,
+            'engine': self.engine,
+            'metadata': self.metadata})
+
+    def class_list(self, resource=None):
+        return self.client().class_list(resource=None)
+
+    def inventory(self, resource=None):
+        return self.client().inventory(resource=None)
+
+    def resource_count(self, resource=None):
+        return len(self.client().inventory(resource=None))
 
     def __str__(self):
         return self.name
