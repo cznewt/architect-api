@@ -29,7 +29,7 @@ INSTALLED_APPS = [
     'architect.inventory',
     'architect.manager',
     'architect.manager.engine.saltstack',
-    'architect.manager.engine.ansible',
+    'architect.monitor',
 ]
 
 MIDDLEWARE = [
@@ -113,11 +113,13 @@ if LOGOUT_URL is None:
 if LOGIN_REDIRECT_URL is None:
     LOGIN_REDIRECT_URL = WEBROOT
 
-MEDIA_ROOT = os.path.abspath(os.path.join(BASE_DIR, '..', 'media'))
+MEDIA_ROOT = os.path.abspath(os.path.join(BASE_DIR, 'media'))
 MEDIA_URL = WEBROOT + 'media/'
 
 if STATIC_ROOT is None:
-    STATIC_ROOT = os.path.abspath(os.path.join(BASE_DIR, '..', 'static'))
+    STATIC_ROOT = os.path.abspath(os.path.join(BASE_DIR, 'static'))
+
+print(STATIC_ROOT)
 
 if STATIC_URL is None:
     STATIC_URL = WEBROOT + 'static/'
@@ -155,12 +157,6 @@ RECLASS_ROLE_BLACKLIST = [
     '_orchestrate',
     'common'
 ]
-
-NEOMODEL_NEO4J_BOLT_URL = os.environ.get('NEO4J_BOLT_URL',
-                                         'bolt://neo4j:hovno@localhost:7687')
-NEOMODEL_SIGNALS = True
-NEOMODEL_FORCE_TIMEZONE = False
-NEOMODEL_MAX_POOL_SIZE = 50
 
 BROKER_URL = 'redis://localhost:6379'
 CELERY_RESULT_BACKEND = 'redis://localhost:6379'

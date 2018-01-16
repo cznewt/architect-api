@@ -1,7 +1,7 @@
 
 from django.db import models
 from yamlfield.fields import YAMLField
-from architect.utils import get_module
+from architect import utils
 
 
 class Inventory(models.Model):
@@ -12,8 +12,7 @@ class Inventory(models.Model):
     status = models.CharField(max_length=32, default='unknown')
 
     def client(self):
-
-        client_class = get_module(self.engine, 'inventory')
+        client_class = utils.get_module(self.engine, 'inventory')
         return client_class(**{
             'name': self.name,
             'engine': self.engine,

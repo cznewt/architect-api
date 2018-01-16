@@ -15,6 +15,8 @@ urlpatterns = [
         include('architect.inventory.urls', namespace='inventory')),
     url(r'^manager/',
         include('architect.manager.urls', namespace='manager')),
+    url(r'^monitor/',
+        include('architect.monitor.urls', namespace='monitor')),
     url(r'^salt/',
         include('architect.manager.engine.saltstack.urls')),
     url(r'^ansible/',

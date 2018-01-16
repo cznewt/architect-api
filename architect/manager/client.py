@@ -26,6 +26,36 @@ class BaseClient(object):
     def update_resources(self, resources=None):
         raise NotImplementedError
 
+    def load_resources(self, resources=None):
+        raise NotImplementedError
+
+    def load_resource_metadata(self, resource):
+        if resource not in self.resources:
+            self.resources[resource] = {}
+        resources = Resource.objects.filter(manager=self.manager(),
+                                            kind=resource)
+        for item in resources:
+            self.resources[resource][str(item.id)] = {
+                'uid': item.uid,
+                'name': item.name,
+                'kind': item.kind,
+                'metadata': item.metadata,
+            }
+
+    def load_relations(self):
+        relations = Relationship.objects.filter(manager=self.manager())
+        for item in relations:
+            if item.kind not in self.relations:
+                self.relations[item.kind] = []
+            self.relations[item.kind].append({
+                'source': str(item.source_id),
+                'target': str(item.target_id),
+                'kind': item.kind,
+            })
+
+    def manager(self):
+        return Manager.objects.get(name=self.name)
+
     def save(self):
         manager = Manager.objects.get(name=self.name)
         for resource_type, resources in self.resources.items():
@@ -85,6 +115,12 @@ class BaseClient(object):
         for resource_name, resource in self.resources.items():
             res_map[resource_name] = self._schema['resource'][resource_name]
         return res_map
+
+    def resource_type_list(self):
+        res_list = []
+        for resource in self._schema['resource']:
+            res_list.append(resource)
+        return res_list
 
     def _get_relation_types(self):
         rel_map = {}

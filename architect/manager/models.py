@@ -15,6 +15,13 @@ class Manager(models.Model):
     def __str__(self):
         return self.name
 
+    def client(self):
+        client_class = utils.get_module(self.engine, 'manager')
+        return client_class(**{
+            'name': self.name,
+            'engine': self.engine,
+            'metadata': self.metadata})
+
     def get_schema(self):
         return utils.get_resource_schema(self.engine)
 

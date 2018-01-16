@@ -22,6 +22,17 @@ def load_yaml_json_file(path):
     return {}
 
 
+def get_node_icon(icon):
+    family, character = icon.split(":")
+    icon_file = os.path.join(_schema_dir, '_icon.yaml')
+    icon_mapping = load_yaml_json_file(icon_file)
+    output = icon_mapping['character'][family][character].copy()
+    output["family"] = icon_mapping['family'][family]
+    output['name'] = character
+    output["char"] = int("0x{}".format(output["char"]), 0)
+    return output
+
+
 def get_resource_schema(name):
     schema_file = os.path.join(_schema_dir, '{}.yaml'.format(name))
     return load_yaml_json_file(schema_file)

@@ -9,6 +9,13 @@ from celery.utils.log import get_logger
 
 logger = get_logger(__name__)
 
+DEFAULT_RESOURCES = [
+    'salt_minion',
+    'salt_service',
+    'salt_lowstate',
+    # 'salt_job',
+]
+
 
 class SaltStackClient(BaseClient):
 
@@ -30,15 +37,19 @@ class SaltStackClient(BaseClient):
             status = False
         return status
 
+    def load_resources(self, resources=None):
+        if resources is None:
+            resources = DEFAULT_RESOURCES
+        for resource in resources:
+            self.load_resource_metadata(resource)
+            count = len(self.resources.get(resource, {}))
+            logger.info("Loaded {} {} resources".format(count,
+                                                        resource))
+
     def update_resources(self, resources=None):
         if self.auth():
             if resources is None:
-                resources = [
-                    'salt_minion',
-                    'salt_service',
-                    'salt_lowstate',
-                    # 'salt_job',
-                ]
+                resources = DEFAULT_RESOURCES
             for resource in resources:
                 metadata = self.get_resource_metadata(resource)
                 self.process_resource_metadata(resource, metadata)

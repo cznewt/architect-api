@@ -4,6 +4,6 @@ from django.apps import AppConfig
 from material.frontend.apps import ModuleMixin
 
 
-class ArchitectDashboardConfig(ModuleMixin, AppConfig):
-    name = 'dashboard'
-    verbose_name = 'Architect Dashboard'
+class ArchitectMonitorConfig(ModuleMixin, AppConfig):
+    name = 'monitor'
+    verbose_name = 'Architect Monitor'

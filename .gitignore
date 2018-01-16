@@ -101,3 +101,5 @@ ENV/
 # development DB
 *.sqlite3
 architect_config.yml
+static/
+media/

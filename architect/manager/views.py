@@ -26,7 +26,6 @@ class ManagerDetailView(TemplateView):
         context['manager'] = manager
         context['resource_list'] = Resource.objects.filter(manager=manager,
                                                            kind=kind)
-
         return context
 
 
@@ -47,6 +46,8 @@ class ResourceDetailView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         manager = Manager.objects.get(name=kwargs.get('manager_name'))
+        kind = manager.get_schema()['default_resource']
         context['manager'] = manager
-
+        context['resource'] = Resource.objects.get(manager=manager,
+                                                   uid=kwargs.get('resource_name'))
         return context

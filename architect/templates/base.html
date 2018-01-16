@@ -16,12 +16,18 @@
           </li>
           {% if user.is_authenticated %}
           <li {% block nav_inventory_cls %}{% endblock %}>
-            <a href="{% url 'inventory:inventory_list' %}"><i class="material-icons left">compare</i>Inventory</a>
+            <a href="{% url 'inventory:inventory_list' %}">
+              <i class="material-icons left">compare</i>Inventory
+            </a>
           </li>
           <li {% block nav_manager_cls %}{% endblock %}>
             <a href="{% url 'manager:manager_list' %}">
               <i class="material-icons left">flag</i>Manager
-              {% if queue_count %}<sup class="red" style="padding:0 5px 0 5px">{{ queue_count }}</sup>{% endif %}
+            </a>
+          </li>
+          <li {% block nav_monitor_cls %}{% endblock %}>
+            <a href="{% url 'monitor:monitor_list' %}">
+              <i class="material-icons left">search</i>Monitor
             </a>
           </li>
           {% endif %}
@@ -37,11 +43,11 @@
         </ul>
       </div>
     </nav>
-    <main class="container">
+    <main>
       {% block content %}{% endblock %}
     </main>
-
-    <script src="{% static 'material/js/jquery.js' %}"></script>
-    {% include 'material/includes/material_js.html' %}
+<script src="{% static 'material/js/jquery.js' %}"></script>
+{% include 'material/includes/material_js.html' %}
+{% block extra_js %}{% endblock %}
   </body>
 </html>
