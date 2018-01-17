@@ -27,7 +27,13 @@ class BaseClient(object):
         raise NotImplementedError
 
     def load_resources(self, resources=None):
-        raise NotImplementedError
+        if resources is None:
+            resources = self.resource_type_list()
+        for resource in resources:
+            self.load_resource_metadata(resource)
+            count = len(self.resources.get(resource, {}))
+            logger.info("Loaded {} {} resources".format(count,
+                                                        resource))
 
     def load_resource_metadata(self, resource):
         if resource not in self.resources:
@@ -35,8 +41,8 @@ class BaseClient(object):
         resources = Resource.objects.filter(manager=self.manager(),
                                             kind=resource)
         for item in resources:
-            self.resources[resource][str(item.id)] = {
-                'uid': item.uid,
+            self.resources[resource]['id{}'.format(item.id)] = {
+                'id': 'id{}'.format(item.id),
                 'name': item.name,
                 'kind': item.kind,
                 'metadata': item.metadata,
@@ -48,8 +54,8 @@ class BaseClient(object):
             if item.kind not in self.relations:
                 self.relations[item.kind] = []
             self.relations[item.kind].append({
-                'source': str(item.source_id),
-                'target': str(item.target_id),
+                'source': 'id{}'.format(item.source_id),
+                'target': 'id{}'.format(item.target_id),
                 'kind': item.kind,
             })
 

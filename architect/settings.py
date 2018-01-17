@@ -93,6 +93,13 @@ DATABASES = {
 #    },
 }
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': '127.0.0.1:11211',
+    }
+}
+
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',},
@@ -127,8 +134,9 @@ if STATIC_URL is None:
 RESOURCE_ENGINES = load_yaml_json_file(os.path.join(BASE_DIR,
                                                     'architect_config.yml'))
 
-MANAGER_ENGINES = RESOURCE_ENGINES.get('manager', {})
 INVENTORY_ENGINES = RESOURCE_ENGINES.get('inventory', {})
+MANAGER_ENGINES = RESOURCE_ENGINES.get('manager', {})
+MONITOR_ENGINES = RESOURCE_ENGINES.get('monitor', {})
 
 INVENTORY_CLASS_MAPPINGS = {
     "architect": "architect.inventory.engine.architect.client.ArchitectClient",

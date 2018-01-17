@@ -2,11 +2,11 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
-    <title>The Architect</title>
-    {% include 'material/includes/material_css.html' %}
+<meta charset="utf-8">
+<title>The Architect</title>
+{% include 'material/includes/material_css.html' %}
+{% block extra_css %}{% endblock %}
   </head>
-
   <body>
     <nav>
       <div class="nav-wrapper">
@@ -44,7 +44,7 @@
       </div>
     </nav>
     <main>
-      {% block content %}{% endblock %}
+{% block content %}{% endblock %}
     </main>
 <script src="{% static 'material/js/jquery.js' %}"></script>
 {% include 'material/includes/material_js.html' %}

@@ -10,13 +10,18 @@
     <div class="card">
       <div class="card-content">
         <span class="card-title">{{ widget.name|default:widget_name }}</span>
-        <div class="{{ widget.chart }}" id="chart-{{ widget_name }}"></div>
+        <div class="{{ widget.chart }}" id="chart-{{ widget_name }}" style="height:400px;"></div>
       </div>
 
     </div>
   </div>
   {% endfor %}
 </div>
+{% endblock %}
+
+{% block extra_css %}
+<link href="{% static 'architect/css/layout.css' %}" rel="stylesheet">
+<link href="{% static 'architect/css/font-awesome.css' %}" rel="stylesheet">
 {% endblock %}
 
 {% block extra_js %}
@@ -55,9 +60,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
   src['{{ widget_name }}'] = "/monitor/v1/{{ monitor.name }}/{{ widget_name }}/data.json";
   sel['{{ widget_name }}'] = "#chart-{{ widget_name }}";
   {% endfor %}
-  {% for widget_name, widget in monitor.widgets.items %}{% if widget.chart == 'hive' %}
+  {% for widget_name, widget in monitor.widgets.items %}
+  {% if widget.chart == 'hive' %}
   d3.json(src['{{ widget_name }}'], function(data) {
-    HivePlot.init(sel['{{ widget_name }}'], data);
+    HivePlot.init(sel['{{ widget_name }}'], data, {selector: sel['{{ widget_name }}']});
   });
   {% elif widget.chart == 'arc' %}
   new RelationalPlot.arc(src['{{ widget_name }}'], sel['{{ widget_name }}'], 3600).init();

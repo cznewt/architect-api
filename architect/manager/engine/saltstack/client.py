@@ -37,15 +37,6 @@ class SaltStackClient(BaseClient):
             status = False
         return status
 
-    def load_resources(self, resources=None):
-        if resources is None:
-            resources = DEFAULT_RESOURCES
-        for resource in resources:
-            self.load_resource_metadata(resource)
-            count = len(self.resources.get(resource, {}))
-            logger.info("Loaded {} {} resources".format(count,
-                                                        resource))
-
     def update_resources(self, resources=None):
         if self.auth():
             if resources is None:

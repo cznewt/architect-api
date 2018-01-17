@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 
+from django.core.cache import cache
 from django.views.generic.base import TemplateView
 from architect.views import JSONDataView
 from architect.manager.models import Manager
 from architect.monitor.models import Monitor
-from architect.monitor.transform import default_graph
+from architect.monitor.transform import transform_data, filter_node_types, \
+    filter_lone_nodes, clean_relations
 
 
 class MonitorListView(TemplateView):
@@ -44,11 +46,28 @@ class WidgetDetailJSONView(JSONDataView):
     def get_context_data(self, **kwargs):
         monitor = Monitor.objects.get(name=kwargs.get('monitor_name'))
         widget = monitor.widgets()[kwargs.get('widget_name')]
-        manager_client = Manager.objects.get(name=widget['data_source']
-                                                        ['default']
-                                                        ['manager']).client()
-        manager_client.load_resources()
-        # manager_client.load_relations()
-        data = default_graph(manager_client.to_dict())
+        data_source = widget['data_source']['default']
+        manager_key = data_source['manager']
+        layout = data_source.get('layout', 'graph')
+        raw_data = cache.get(manager_key, None)
+        if raw_data is None:
+            manager_client = Manager.objects.get(name=manager_key).client()
+            manager_client.load_resources()
+            manager_client.load_relations()
+            raw_data = manager_client.to_dict()
+            cache.set(manager_key, raw_data, 300)
+        if layout == 'graph':
+            transform = 'default_graph'
+        elif layout == 'hier':
+            transform = 'default_hier'
+        data = transform_data(raw_data, transform)
+        if data_source.get('filter_node_types', []):
+            data = filter_node_types(data,
+                                     data_source.get('filter_node_types'))
+        if data_source.get('filter_lone_nodes', []):
+            data = filter_lone_nodes(data,
+                                     data_source.get('filter_lone_nodes'))
+        print(data)
+        data = clean_relations(data)
         data['name'] = widget.get('name', kwargs.get('widget_name'))
         return data

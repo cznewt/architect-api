@@ -24,6 +24,7 @@ var HivePlot = {
 
 
     function render(){
+      console.log(selector);
       var container = d3.select(selector),
           targetHeight=height,
           targetWidth=width,
