@@ -24,7 +24,6 @@ var HivePlot = {
 
 
     function render(){
-      console.log(selector);
       var container = d3.select(selector),
           targetHeight=height,
           targetWidth=width,
@@ -90,8 +89,6 @@ var HivePlot = {
       var axes = plotFunctions.createAxes(data.axes);
       var nodes = plotFunctions.createNodes(data.resources);
       var links = plotFunctions.createLinks(nodes, data.relations);
-
-      console.log(nodes);
 
       var angle = function(d) {
         var angle = 0,

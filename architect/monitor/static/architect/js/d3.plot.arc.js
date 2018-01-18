@@ -13,8 +13,9 @@ var RelationalPlot = function(RelationalPlot){
 
         var margin = { top: 0, right: 18, bottom: 18, left: 18 };
 
-        var width = $(graphSelector).innerWidth() - margin.left - margin.right;
-        var height = $(graphSelector).innerWidth() * 2/3 - margin.top - margin.bottom;
+        var width = $(graphSelector).width() - margin.left - margin.right;
+        //var height = $(graphSelector).innerWidth() * 2/3 - margin.top - margin.bottom;
+        var height = $(graphSelector).height() - margin.top - margin.bottom;
 
         var x = d3.scaleLinear().range([0, width]);
 

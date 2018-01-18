@@ -58,16 +58,18 @@ class WidgetDetailJSONView(JSONDataView):
             cache.set(manager_key, raw_data, 300)
         if layout == 'graph':
             transform = 'default_graph'
-        elif layout == 'hier':
+            options = {}
+            data = transform_data(raw_data, transform, options)
+            if data_source.get('filter_node_types', []):
+                data = filter_node_types(data,
+                                         data_source.get('filter_node_types'))
+            if data_source.get('filter_lone_nodes', []):
+                data = filter_lone_nodes(data,
+                                         data_source.get('filter_lone_nodes'))
+            data = clean_relations(data)
+        elif layout == 'hierarchy':
             transform = 'default_hier'
-        data = transform_data(raw_data, transform)
-        if data_source.get('filter_node_types', []):
-            data = filter_node_types(data,
-                                     data_source.get('filter_node_types'))
-        if data_source.get('filter_lone_nodes', []):
-            data = filter_lone_nodes(data,
-                                     data_source.get('filter_lone_nodes'))
-        print(data)
-        data = clean_relations(data)
+            options = data_source.get('hierarchy_layers', {})
+            data = transform_data(raw_data, transform, options)
         data['name'] = widget.get('name', kwargs.get('widget_name'))
         return data

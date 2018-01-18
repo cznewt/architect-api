@@ -81,6 +81,45 @@
   stroke-opacity: 0.7;
 }
 
+.tree .node circle {
+  fill: #fff;
+  stroke: steelblue;
+  stroke-width: 3px;
+}
+
+.tree .node text {
+  font: 12px sans-serif;
+}
+
+.tree .node--internal text {
+  text-shadow: 0 1px 0 #fff, 0 -1px 0 #fff, 1px 0 0 #fff, -1px 0 0 #fff;
+}
+
+.tree .link {
+  fill: none;
+  stroke: #ccc;
+  stroke-width: 2px;
+}
+
+.sunburst .slice {
+  cursor: pointer;
+}
+
+.sunburst .slice .main-arc {
+  stroke: #fff;
+  stroke-width: 1px;
+}
+
+.sunburst .slice .hidden-arc {
+  fill: none;
+}
+
+.sunburst .slice text {
+  pointer-events: none;
+  dominant-baseline: middle;
+  text-anchor: middle;
+}
+
 .tooltip {
   position: absolute;
   padding: 5px 10px;

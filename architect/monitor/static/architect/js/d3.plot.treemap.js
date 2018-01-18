@@ -81,7 +81,6 @@ var RelationalPlot = function(RelationalPlot){
             d3.json(dataUrl, function(res){
                 if(res && res.result === 'ok'){
                     graph._data = res.data;
-                    console.log(graph._data)
                     if(typeof callback === 'function'){
                         callback();
                     }

@@ -18,7 +18,10 @@ class Command(BaseCommand):
                     self.style.SUCCESS(
                         'Monitor "{}" resource created'.format(engine_name)))
             else:
+                monitor = Monitor.objects.get(name=engine_name)
+                monitor.metadata = engine
+                monitor.save()
                 self.stdout.write(
                     self.style.SUCCESS(
                         'Monitor "{}" resource '
-                        'already exists'.format(engine_name)))
+                        'updated'.format(engine_name)))

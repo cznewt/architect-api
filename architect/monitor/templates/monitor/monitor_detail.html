@@ -10,7 +10,7 @@
     <div class="card">
       <div class="card-content">
         <span class="card-title">{{ widget.name|default:widget_name }}</span>
-        <div class="{{ widget.chart }}" id="chart-{{ widget_name }}" style="height:400px;"></div>
+        <div class="{{ widget.chart }}" id="chart-{{ widget_name }}"></div>
       </div>
 
     </div>
@@ -34,6 +34,8 @@
 <script src="{% static 'architect/js/d3.plot.force.js' %}"></script>
 <script src="{% static 'architect/js/d3.plot.hive.js' %}"></script>
 <script src="{% static 'architect/js/d3.plot.matrix.js' %}"></script>
+<script src="{% static 'architect/js/d3.plot.sunburst.js' %}"></script>
+<script src="{% static 'architect/js/d3.plot.tree.js' %}"></script>
 <script src="{% static 'architect/js/d3.plot.treemap.js' %}"></script>
 <script src="{% static 'architect/js/jquery.timeago.js' %}"></script>
 <script>
@@ -59,7 +61,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
   {% for widget_name, widget in monitor.widgets.items %}
   src['{{ widget_name }}'] = "/monitor/v1/{{ monitor.name }}/{{ widget_name }}/data.json";
   sel['{{ widget_name }}'] = "#chart-{{ widget_name }}";
+  $("#chart-{{ widget_name }}").height({{ widget.height|default:1 }} * $("#chart-{{ widget_name }}").width());
   {% endfor %}
+
   {% for widget_name, widget in monitor.widgets.items %}
   {% if widget.chart == 'hive' %}
   d3.json(src['{{ widget_name }}'], function(data) {
@@ -73,10 +77,13 @@ document.addEventListener("DOMContentLoaded", function(event) {
   new RelationalPlot.adjacencyMatrix(src['{{ widget_name }}'], sel['{{ widget_name }}'], 3600).init();
   {% elif widget.chart == 'edge-bundle' %}
   new RelationalPlot.hierarchicalEdgeBundling(src['{{ widget_name }}'], sel['{{ widget_name }}'], 3600).init();
+  {% elif widget.chart == 'sunburst' %}
+  new RelationalPlot.sunburst(src['{{ widget_name }}'], sel['{{ widget_name }}'], 3600).init();
   {% elif widget.chart == 'treemap' %}
   new RelationalPlot.treeMap(src['{{ widget_name }}'], sel['{{ widget_name }}'], 3600).init();
+  {% elif widget.chart == 'tree' %}
+  new RelationalPlot.tree(src['{{ widget_name }}'], sel['{{ widget_name }}'], 3600).init();
   {% endif %}{% endfor %}
-
 });
 
 </script>
