@@ -34,6 +34,9 @@ setup(
         'tests': [
             'pytest',
             'flake8'],
+        'docs': [
+            'sphinx >= 1.4',
+            'sphinx_rtd_theme']
     },
     classifiers=[
         'Intended Audience :: System Administrators',
