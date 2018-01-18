@@ -1,0 +1,10 @@
+scope: global
+cluster:
+  certificate-authority-data: |
+    {{ ca-for-server-and-clients }}
+  server: https://{{ kubernetes-api }}:443
+user:
+  client-certificate-data: |
+    {{ client-cert-public }}
+  client-key-data: |
+    {{ client-cert-private }}

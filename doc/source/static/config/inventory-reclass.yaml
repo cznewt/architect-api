@@ -1,0 +1,3 @@
+class_dir: /srv/salt/reclass/classes
+node_dir: /srv/salt/reclass-nodes/{{ inventory-name }}
+storage_type: yaml_fs

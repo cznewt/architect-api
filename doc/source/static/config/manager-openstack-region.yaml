@@ -1,0 +1,7 @@
+scope: global
+region_name: RegionOne
+auth:
+  username: {{ admin-name }}
+  password: {{ admin-password }}
+  project_name: admin
+  auth_url: https://{{ keystone-api }}:5000/v2.0
