@@ -15,7 +15,7 @@ control over thier entire life-cycle. The name of project comes Architect progra
     at the very least a virtual representation of the entire Machine
     mainframe.
 
-It consists of several main compontents:
+The Architect service consists of several main compontents:
 
 Inventory Component
     Inventory is the Architect's metadata engine. It encapsulates and unifies data
@@ -28,6 +28,12 @@ Manager Component
     infrastructure topology data from any resource provider for further
     relational and quantitative analysis and visualisations.
 
+Monitor Component
+	The structure of infrastructure resources is directed graph that can be
+	subject for further analysis. We can perform several transformation
+	functions on this graph data in Monitor component.
+
+
 Inventory Component
 ===================
 
@@ -36,6 +42,7 @@ from various metadata sources to provide inventory/metadata for various
 orchestration services. Currently supported metadata engines are:
 
 * reclass (python3 version)
+
 
 Manager Component
 =================
@@ -66,9 +73,9 @@ The following resource providers are to be intergrated in near future.
 Monitor Component
 =================
 
-The output of infrastructure provider resources is directed graph that can be
+The structure of infrastructure resources is directed graph that can be
 subject for further analysis. We can perform several transformation functions
-on this graph data.
+on this graph data in Monitor component.
 
 
 Graph Analysis
