@@ -16,30 +16,6 @@ import salt.utils.http
 log = logging.getLogger(__name__)
 
 
-def _get_lowstate_resources():
-    '''
-    Retreive lowstate data of all current Salt resources.
-    '''
-    kwargs = {
-        'timeout': 15,
-        'concurrent': True,
-        'queue': True
-    }
-    data = {}
-
-    try:
-        lowstate_request = __salt__['saltutil.cmd']('*',
-                                                    'state.show_lowstate',
-                                                    **kwargs)
-    except Exception:
-        lowstate_request = {}
-
-    for minion, lowstate_return in lowstate_request.items():
-        if lowstate_return.get('retcode') != 0:
-            continue
-        data[minion] = lowstate_return.get('ret', [])
-
-
 def start(project='default',
           host='127.0.0.1',
           port=8181,
