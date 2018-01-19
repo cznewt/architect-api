@@ -9,13 +9,13 @@ visualization platform agnostic of delivery method. It creates virtual
 representations of any software services or physical resources and allows
 control over thier entire life-cycle. The name of project comes Architect program in Matrix movie series:
 
-    In the Matrix the Architect was a highly specialized, humorless program of
+    In the Matrix the Architect is a highly specialized, humorless program of
     the machine world as well as the creator of the Matrix. As the chief
     administrator of the system, he is possibly a collective manifestation, or
     at the very least a virtual representation of the entire Machine
     mainframe.
 
-The Architect service consists of several main compontents:
+The Architect service consists of several core compontents:
 
 Inventory Component
     Inventory is the Architect's metadata engine. It encapsulates and unifies data
@@ -33,8 +33,11 @@ Monitor Component
 	subject for further analysis. We can perform several transformation
 	functions on this graph data in Monitor component.
 
+
 Architect Components
 ====================
+
+A quick summary of integrations and capabilities of individual modules.
 
 
 Inventory Component
@@ -45,6 +48,14 @@ from various metadata sources to provide inventory/metadata for various
 orchestration services. Currently supported metadata engines are:
 
 * reclass (python3 version)
+
+The following inventory providers are to be intergrated in near future.
+
+* hiera
+* saltstack
+
+There is a plan to integrate workflow (multi-step forms) defitions to simplify
+creation of complex infrastructure models.
 
 
 Manager Component
@@ -80,6 +91,16 @@ The structure of infrastructure resources is directed graph that can be
 subject for further analysis. We can perform several transformation functions
 on this graph data in Monitor component.
 
+Currently supported relational analysis visualizations:
+
+* Adjacency Matrix
+* Arc Diagram
+* Force-directed Layouts
+* Hierarchical Edge Bundling
+* Hive Plot
+* Node-link Trees (Reingold-Tilford, Dendrograms)
+* Partition Layouts (Sunburst, Icicle Diagrams, Treemaps)
+
 
 Installation
 ============
@@ -88,8 +109,8 @@ Following steps show how to deploy various components of the Architect service
 and connections to external services.
 
 
-Service architect-api
----------------------
+Service architect-api Installation
+----------------------------------
 
 The core service responsible for handling HTTP API requests and providing
 simple UI based on Material design. Release version of architect-api is
@@ -111,9 +132,203 @@ commands:
     source venv/bin/activate
     python setup.py install
 
+You provide one configuration file for all service settings. The default
+location is ``/etc/architect/api.yaml``.
 
-Service architect-client
-------------------------
+Following configuration for individual inventories/managers/models can be
+stored in config files or in the database.
+
+
+Architect Inventory Configuration
+---------------------------------
+
+Each manager endpoint expects different configuration. Following samples show
+the required parameters to setup individual invetory backends.
+
+
+Reclass (Inventory Backend)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Following configuration points to the reclass inventory storage on local
+filesystem.
+
+.. code-block:: yaml
+
+	class_dir: /srv/salt/reclass/classes
+	node_dir: /srv/salt/reclass/nodes
+	storage_type: yaml_fs
+	filter_keys:
+	  - _param
+
+
+Architect Manager Configuration
+-------------------------------
+
+Each manager endpoint expects different configuration. Following samples show
+the required parameters to setup each endpoint type.
+
+
+Amazon Web Services (Manager Endpoint)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+AWS manager uses ``boto3`` high level AWS python SDK for accessing and
+manipulating with AWS resources.
+
+
+.. code-block:: yaml
+
+    region: us-west-2
+    aws_access_key_id: {{ access_key_id }}
+    aws_secret_access_key: {{ secret_access_key }}
+
+
+Kubernetes (Manager Endpoint)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Kubernetes requires some information from ``kubeconfig`` file. You provide the
+parameters of the cluster and the user to the scraper. These can be found
+under corresponding keys.
+
+.. code-block:: yaml
+
+    scope: global
+    cluster:
+      certificate-authority-data: |
+        {{ ca-for-server-and-clients }}
+      server: https://{{ kubernetes-api }}:443
+    user:
+      client-certificate-data: |
+        {{ client-cert-public }}
+      client-key-data: |
+        {{ client-cert-private }}
+
+.. note::
+
+    Options ``config.cluster`` and ``config.user`` can be found in your
+    ``kubeconfig`` file. Just copy the config fragment with cluster parameters
+    and fragment with user parameter.
+
+
+OpenStack (Manager Endpoint)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Configuration for keystone ``v2.0`` and keystone ``v3`` clouds. Configuration
+sample for single tenant access.
+
+.. code-block:: yaml
+
+    scope: local
+    region_name: RegionOne
+    compute_api_version: '2.1'
+    auth:
+      username: {{ user-name }}
+      password: {{ user-password }}
+      project_name: {{ project-name }}
+      domain_name: 'default'
+      auth_url: https://{{ keystone-api }}:5000/v3
+
+Config for scraping resources from entire cloud.
+
+.. code-block:: yaml
+
+    scope: global
+    region_name: RegionOne
+    auth:
+      username: {{ admin-name }}
+      password: {{ admin-password }}
+      project_name: admin
+      auth_url: https://{{ keystone-api }}:5000/v2.0
+
+
+SaltStack (Manager Endpoint)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Configuration for connecting to Salt API.
+
+.. code-block:: yaml
+
+    auth_url: http://{{ salt-api }}:8000
+    username: {{ user-name }}
+    password: {{ user-password }}
+
+
+Terraform (Manager Endpoint)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Configuration for parsing Hashicorp Terraform templates.
+
+.. code-block:: yaml
+
+    dir: ~/terraform/{{ terraform-dir }}
+
+
+Architect Monitor Configuration
+-------------------------------
+
+Following config snippets show configuration for supported types of
+visualization. Currently we support Network graphs, hierarchical structures
+for quatitative analysis.
+
+
+Network Graphs
+~~~~~~~~~~~~~~
+
+The manager endpoint is used as source of relational data. The data can be
+sliced and diced as shown in the example.
+
+.. code-block:: yaml
+
+    name: Hive-plot
+    chart: hive
+    data_source:
+      default:
+        manager: openstack-project
+        layout: graph
+        filter_node_types:
+        - os_server
+        - os_key_pair
+        - os_flavor
+        - os_network
+        - os_subnet
+        - os_floating_ip
+        - os_router
+        filter_lone_nodes:
+        - os_key_pair
+        - os_flavor
+
+
+Hiearchical Structures
+~~~~~~~~~~~~~~~~~~~~~~
+
+The manager endpoint is used as source of relational data. This data can be
+traversed to create hiearchies. The hierarchical data has it's own family of
+visualization techniques.
+
+.. code-block:: yaml
+
+    name: Tree Structure (cluster > namespace > pod > service)
+    height: 1
+    chart: tree
+    data_source:
+      default:
+        manager: k8s-demo
+        layout: hierarchy
+        hierarchy_layers:
+          0:
+            name: Kubernetes Root
+            kind:
+          1:
+            kind: k8s_namespace
+          2:
+            kind: k8s_pod
+            target: in_k8s_namespace
+          3:
+            kind: k8s_service
+            target: in_k8s_pod
+
+
+Architect Client Installation
+-----------------------------
 
 Managers that do not expose any form of API can be controlled locally by using
 architect-adapter worker that wrap the local orchestration engine (Ansible,
@@ -157,123 +372,17 @@ is managed through it's HTTP API service.
       port: 8181
 
 
-Configuration
-=============
-
-You provide one configuration file for all settings fixtures. The default
-location is ``/etc/architect/api.yaml``.
-
-
-Manager Configuration
----------------------
-
-Each manager endpoint expects different configuration. Following samples show
-the required parameters to setup individual endpoint kinds.
-
-
-Amazon Web Services
-~~~~~~~~~~~~~~~~~~~
-
-AWS manager uses ``boto3`` high level AWS python SDK for accessing and
-manipulating with AWS resources.
-
-
-.. code-block:: yaml
-
-    region: us-west-2
-    aws_access_key_id: {{ access_key_id }}
-    aws_secret_access_key: {{ secret_access_key }}
-
-
-Kubernetes
-~~~~~~~~~~
-
-Kubernetes requires some information from kubeconfig file. You provide the
-parameters of the cluster and the user to the scraper. These can be found
-under corresponding keys.
-
-.. code-block:: yaml
-
-    scope: global
-    cluster:
-      certificate-authority-data: |
-        {{ ca-for-server-and-clients }}
-      server: https://{{ kubernetes-api }}:443
-    user:
-      client-certificate-data: |
-        {{ client-cert-public }}
-      client-key-data: |
-        {{ client-cert-private }}
-
-.. note::
-
-    Options ``config.cluster`` and ``config.user`` can be found in your
-    ``kubeconfig`` file. Just copy the config fragment with cluster parameters
-    and fragment with user parameter.
-
-
-OpenStack
-~~~~~~~~~
-
-Configuration for keystone v2 and keystone v3 clouds. Configuration sample for
-single tenant access.
-
-.. code-block:: yaml
-
-    scope: local
-    region_name: RegionOne
-    compute_api_version: '2.1'
-    auth:
-      username: {{ user-name }}
-      password: {{ user-password }}
-      project_name: {{ project-name }}
-      domain_name: 'default'
-      auth_url: https://{{ keystone-api }}:5000/v3
-
-Config for scraping resources from entire cloud.
-
-.. code-block:: yaml
-
-    scope: global
-    region_name: RegionOne
-    auth:
-      username: {{ admin-name }}
-      password: {{ admin-password }}
-      project_name: admin
-      auth_url: https://{{ keystone-api }}:5000/v2.0
-
-
-SaltStack
-~~~~~~~~~
-
-Configuration for connecting to Salt API.
-
-.. code-block:: yaml
-
-    auth_url: http://{{ salt-api }}:8000
-    username: {{ user-name }}
-    password: {{ user-password }}
-
-
-Terraform
-~~~~~~~~~
-
-Configuration for parsing terraform templates.
-
-.. code-block:: yaml
-
-    dir: ~/terraform/{{ terraform-dir }}
-
-
 Data Analysis
 =============
 
+The most important part of the Architect is the analysis of the resource
+states provided by the managed/monitored systems.
 
 Relational Analysis
 -------------------
 
-You can alter the scraped strusctured in several ways. Either you want to get
-the subset of the resources (vertices and edges) or you want to combine
+You can analyse the resource models in several ways. Either you want to get
+the subsets of the resources (vertices and edges) or you want to combine
 multiple graphs and link the same nodes in each.
 
 
@@ -296,6 +405,28 @@ For example in OpenStack infrastructure we can show the ``aggregate zone`` -
 ``hypervisor`` - ``instance`` relations and show the quantitative properties
 of hypervisors and instances. The properties can be used RAM or CPU, runtime -
 the age of resources or any other property of value.
+
+.. code-block:: yaml
+
+    name: Tree Structure (aggregate zone > hypervisor > instance)
+    height: 1
+    chart: tree
+    data_source:
+      default:
+        manager: openstack-region
+        layout: hierarchy
+        hierarchy_layers:
+          0:
+            name: Region1
+            kind:
+          1:
+            kind: os_aggregate_zone
+          2:
+            kind: os_hypervisor
+            target: in_os_aggregate_zone
+          3:
+            kind: os_server
+            target: on_os_hypervisor
 
 Another example would be filtering of resources by tenant or stack
 attributions. This reduces the number of nodes to the reasonable amount.
@@ -349,8 +480,8 @@ Having these metrics you can assign numerical properties of your relational
 nodes with these values and use them in correct context.
 
 
-Visualization Layouts
-=====================
+Data Visualization
+==================
 
 Different data require different diagram visualization. Diagrams are symbolic
 representation of information according to some visualization technique. Every
@@ -453,3 +584,4 @@ Tree Graph Layouts
 
 Directed graph traversal can give os acyclic structures suitable for showing
 parent-child relations in your subraphs.
+
