@@ -7,7 +7,8 @@ The Architect API
 The aim of this project is to provide unified service modeling, management and
 visualization platform agnostic of delivery method. It creates virtual
 representations of any software services or physical resources and allows
-control over thier entire life-cycle. The name of project comes Architect program in Matrix movie series:
+control over thier entire life-cycle. The name of project comes from Architect
+program in Matrix movie series:
 
     In the Matrix the Architect is a highly specialized, humorless program of
     the machine world as well as the creator of the Matrix. As the chief
@@ -186,7 +187,7 @@ Kubernetes (Manager Endpoint)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Kubernetes requires some information from ``kubeconfig`` file. You provide the
-parameters of the cluster and the user to the scraper. These can be found
+parameters of the cluster and the user to the manager. These can be found
 under corresponding keys.
 
 .. code-block:: yaml
@@ -227,7 +228,8 @@ sample for single tenant access.
       domain_name: 'default'
       auth_url: https://{{ keystone-api }}:5000/v3
 
-Config for scraping resources from entire cloud.
+Config for managing resources of entire cloud, including hypervisors, tenants,
+etc in given region.
 
 .. code-block:: yaml
 
@@ -243,7 +245,7 @@ Config for scraping resources from entire cloud.
 SaltStack (Manager Endpoint)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Configuration for connecting to Salt API.
+Configuration for manager connection to Salt API.
 
 .. code-block:: yaml
 
@@ -584,4 +586,3 @@ Tree Graph Layouts
 
 Directed graph traversal can give os acyclic structures suitable for showing
 parent-child relations in your subraphs.
-
