@@ -16,11 +16,6 @@ program in Matrix movie series:
     at the very least a virtual representation of the entire Machine
     mainframe.
 
-.. figure:: ./doc/source/static/img/scheme/high_level_arch.svg
-    :figclass: align-center
-
-    High-level achitecture of Architect components
-
 The Architect service consists of several core compontents:
 
 Inventory Component
@@ -38,6 +33,11 @@ Monitor Component
 	The structure of infrastructure resources is directed graph that can be
 	subject for further analysis. We can perform several transformation
 	functions on this graph data in Monitor component.
+
+Following figure shows high-level achitecture of Architect system.
+
+.. figure:: ./doc/source/static/img/scheme/high_level_arch.png
+    :figclass: align-center
 
 
 Architect Components
