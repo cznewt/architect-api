@@ -16,6 +16,11 @@ program in Matrix movie series:
     at the very least a virtual representation of the entire Machine
     mainframe.
 
+.. figure:: ./doc/source/static/img/scheme/high_level_arch.svg
+    :figclass: align-center
+
+    High-level achitecture of Architect components
+
 The Architect service consists of several core compontents:
 
 Inventory Component
@@ -514,7 +519,7 @@ relative positions, and then using these forces either to simulate the motion
 of the edges and nodes or to minimize their energy.
 
 .. figure:: ./doc/source/static/img/monitor/force-directed-plot.png
-    :width: 600px
+    :width: 400px
     :figclass: align-center
 
     Force-directed plot of all OpenStack resources (cca 3000 resources)
@@ -546,7 +551,7 @@ line itself are also allowed as edges, as long as they connect only vertices
 that are consecutive along the line.
 
 .. figure:: ./doc/source/static/img/monitor/arc-diagram.png
-    :width: 600px
+    :width: 400px
     :figclass: align-center
 
     Arc diagram of OpenStack project's resources (cca 100 resources)
@@ -560,7 +565,7 @@ elements of the matrix indicate whether pairs of vertices are adjacent or not
 in the graph.
 
 .. figure:: ./doc/source/static/img/monitor/adjacency-matrix.png
-    :width: 600px
+    :width: 400px
     :figclass: align-center
 
     Adjacency matrix of OpenStack project's resources (cca 100 resources)
@@ -575,7 +580,7 @@ is how he outlines the particular thought process that goes into making a
 visualization.
 
 .. figure:: ./doc/source/static/img/monitor/hiearchical-edge-bundling.png
-    :width: 600px
+    :width: 400px
     :figclass: align-center
 
     Hierarchical edge bundling of SaltStack services (cca 100 resources)
