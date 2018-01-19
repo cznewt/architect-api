@@ -36,7 +36,7 @@ Monitor Component
 
 Following figure shows high-level achitecture of Architect system.
 
-.. figure:: ./doc/source/static/scheme/high_level_arch.png
+.. figure:: ./doc/source/static/scheme/high_level_arch.svg
     :figclass: align-center
 
 
