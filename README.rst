@@ -258,6 +258,13 @@ Configuration for manager connection to Salt API.
     username: {{ user-name }}
     password: {{ user-password }}
 
+Following figure shows how SaltStack integrates with Architect Inventory and
+Manager. Please note that you can use Inventory intergration independetly of
+the Manager intergration.
+
+.. figure:: ./doc/source/static/scheme/manager_salt.png
+    :figclass: align-center
+
 
 Terraform (Manager Endpoint)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -46,8 +46,13 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'architect.urls'
 
+CONFIG_FILE = os.environ.get('ARCHITECT_CONFIG_FILE',
+                             '/etc/architect/api.yml')
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+CONFIG = load_yaml_json_file(CONFIG_FILE)
 
 WEBROOT = '/'
 LOGIN_URL = None
@@ -78,27 +83,25 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'architect.wsgi.application'
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    },
-#    'postgres': {
-#        'ENGINE': 'django.db.backends.postgresql',
-#        'NAME': 'architect',
-#        'USER': 'architect',
-#        'PASSWORD': 'architect',
-#        'HOST': '127.0.0.1',
-#        'PORT': '5432',
-#    },
-}
-
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
-        'LOCATION': '127.0.0.1:11211',
+if 'databases' in CONFIG:
+    DATABASES = CONFIG['databases']
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
     }
-}
+
+if 'caches' in CONFIG:
+    CACHES = CONFIG['caches']
+else:
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+            'LOCATION': '127.0.0.1:11211',
+        }
+    }
 
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',},
@@ -131,27 +134,30 @@ print(STATIC_ROOT)
 if STATIC_URL is None:
     STATIC_URL = WEBROOT + 'static/'
 
-RESOURCE_ENGINES = load_yaml_json_file(os.path.join(BASE_DIR,
-                                                    'architect_config.yml'))
+INVENTORY_ENGINES = CONFIG.get('inventory', {})
+MANAGER_ENGINES = CONFIG.get('manager', {})
+MONITOR_ENGINES = CONFIG.get('monitor', {})
 
-INVENTORY_ENGINES = RESOURCE_ENGINES.get('inventory', {})
-MANAGER_ENGINES = RESOURCE_ENGINES.get('manager', {})
-MONITOR_ENGINES = RESOURCE_ENGINES.get('monitor', {})
+if 'inventory_classes' in CONFIG:
+    INVENTORY_CLASS_MAPPINGS = CONFIG['inventory_classes']
+else:
+    INVENTORY_CLASS_MAPPINGS = {
+        "architect": "architect.inventory.engine.architect.client.ArchitectClient",
+        "reclass": "architect.inventory.engine.reclass.client.ReclassClient",
+    }
 
-INVENTORY_CLASS_MAPPINGS = {
-    "architect": "architect.inventory.engine.architect.client.ArchitectClient",
-    "reclass": "architect.inventory.engine.reclass.client.ReclassClient",
-}
-
-MANAGER_CLASS_MAPPINGS = {
-    "amazon": "architect.manager.engine.amazon.client.AmazonWebServicesClient",
-    "ansible": "architect.manager.engine.ansible.client.AnsibleClient",
-    "kubernetes": "architect.manager.engine.kubernetes.client.KubernetesClient",
-    "openstack": "architect.manager.engine.openstack.client.OpenStackClient",
-    "saltstack": "architect.manager.engine.saltstack.client.SaltStackClient",
-    "spinnaker": "architect.manager.engine.spinnaker.client.SpinnakerClient",
-    "terraform": "architect.manager.engine.terraform.client.TerraformClient",
-}
+if 'manager_classes' in CONFIG:
+    MANAGER_CLASS_MAPPINGS = CONFIG['manager_classes']
+else:
+    MANAGER_CLASS_MAPPINGS = {
+        "amazon": "architect.manager.engine.amazon.client.AmazonWebServicesClient",
+        "ansible": "architect.manager.engine.ansible.client.AnsibleClient",
+        "kubernetes": "architect.manager.engine.kubernetes.client.KubernetesClient",
+        "openstack": "architect.manager.engine.openstack.client.OpenStackClient",
+        "saltstack": "architect.manager.engine.saltstack.client.SaltStackClient",
+        "spinnaker": "architect.manager.engine.spinnaker.client.SpinnakerClient",
+        "terraform": "architect.manager.engine.terraform.client.TerraformClient",
+    }
 
 RECLASS_SERVICE_BLACKLIST = [
     '_param',
