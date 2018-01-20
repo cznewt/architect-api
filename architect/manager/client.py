@@ -45,6 +45,7 @@ class BaseClient(object):
                 'id': 'id{}'.format(item.id),
                 'name': item.name,
                 'kind': item.kind,
+                'status': item.status,
                 'metadata': item.metadata,
             }
 

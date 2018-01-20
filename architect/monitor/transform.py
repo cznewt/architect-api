@@ -2,46 +2,6 @@
 from architect.utils import get_node_icon
 
 
-def openstack_graph(data, options={}):
-    resources = {}
-    relations = []
-    axes = {}
-    i = 0
-    kinds = 0
-    for resource_name, resource_data in data['resources'].items():
-        if resource_name != 'os_port':
-            kinds += 1
-
-    for resource_name, resource_data in data['resources'].items():
-        if resource_name != 'os_port':
-            for resource_id, resource_item in resource_data.items():
-                resource_item.pop('metadata')
-                resources[resource_id] = resource_item
-            icon = get_node_icon(data['resource_types'][resource_name]['icon'])
-            axes[resource_name] = {
-                'x': i,
-                'angle': 360 / kinds * i,
-                'innerRadius': 0.2,
-                'outerRadius': 1.0,
-                'name': data['resource_types'][resource_name]['name'],
-                'items': len(data['resources'][resource_name]),
-                'kind': resource_name,
-                'icon': icon,
-            }
-            i += 1
-
-    for relation_name, relation_data in data['relations'].items():
-        for relation in relation_data:
-            if relation['source'] in resources and \
-               relation['target'] in resources:
-                relations.append(relation)
-
-    data['resources'] = resources
-    data['relations'] = relations
-    data['axes'] = axes
-    return data
-
-
 def default_graph(orig_data, options={}):
     data = orig_data.copy()
     resources = {}
@@ -82,18 +42,6 @@ def default_graph(orig_data, options={}):
     data['axes'] = axes
     return data
 
-"""
-hierarchy_layers:
-  1:
-    kind: salt_minion
-  2:
-    source: on_salt_minion
-    kind: salt_service
-  3:
-    target: contains_salt_lowstate
-    kind: salt_lowstate
-"""
-
 
 def parse_hier_level(resources, relations, resource, layers, level):
     layer = layers[level]
@@ -106,7 +54,6 @@ def parse_hier_level(resources, relations, resource, layers, level):
                     allowed_ids.append(relation['target'])
             if res_id not in allowed_ids:
                 continue
-
         if 'target' in layer:
             allowed_ids = []
             for relation in relations[layer['target']]:
@@ -114,10 +61,10 @@ def parse_hier_level(resources, relations, resource, layers, level):
                     allowed_ids.append(relation['source'])
             if res_id not in allowed_ids:
                 continue
-
         child = {
-            'name': res['name'],
             'id': res_id,
+            'name': res['name'],
+            'status': res['status'],
             'kind': layer['kind']
         }
         if level < len(layers) - 1:
@@ -127,9 +74,12 @@ def parse_hier_level(resources, relations, resource, layers, level):
                                      layers,
                                      level + 1)
         else:
-            child['children'] = []
+            child['size'] = 1
         children.append(child)
-    resource['children'] = children
+    if len(children) > 0:
+        resource['children'] = children
+    else:
+        resource['size'] = 1
     return resource
 
 
@@ -138,16 +88,16 @@ def default_hier(orig_data, layers):
     root_layer = layers[0]
     if root_layer['kind'] is None:
         root_resource = {
+            'id': None,
             'name': root_layer['name'],
-            'uid': None,
-            'id': None
+            'status': 'active',
+            'kind': 'root',
         }
     root_resource = parse_hier_level(data['resources'],
                                      data['relations'],
                                      root_resource,
                                      layers,
                                      1)
-    print(data['relations'])
     data.pop('relations')
     data.pop('relation_types')
     data.pop('resource_types')
@@ -156,11 +106,9 @@ def default_hier(orig_data, layers):
 
 
 def transform_data(data, transform='default_graph', options={}):
-    if transform == 'openstack_graph':
-        return openstack_graph(data, options)
     if transform == 'default_graph':
         return default_graph(data, options)
-    if transform == 'default_hier':
+    elif transform == 'default_hier':
         return default_hier(data, options)
 
 

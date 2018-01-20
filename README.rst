@@ -1,7 +1,7 @@
 
-=================
-The Architect API
-=================
+=====================
+The Architect Project
+=====================
 
 
 The aim of this project is to provide unified service modeling, management and
@@ -37,7 +37,8 @@ Monitor Component
 Following figure shows high-level achitecture of Architect system.
 
 .. figure:: ./doc/source/static/scheme/high_level_arch.png
-    :figclass: align-center
+    :align: center
+    :width: 80%
 
 
 Architect Components
@@ -263,7 +264,8 @@ Manager. Please note that you can use Inventory intergration independetly of
 the Manager intergration.
 
 .. figure:: ./doc/source/static/scheme/manager_salt.png
-    :figclass: align-center
+    :align: center
+    :width: 60%
 
 
 Terraform (Manager Endpoint)

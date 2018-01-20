@@ -88,7 +88,6 @@ class AmazonWebServicesClient(BaseClient):
                 name = resource['data']['NetworkInterfaces'][0]['Association']['PublicDnsName']
             except Exception:
                 name = resource['data']['InstanceId']
-            print(resource['data'])
             self._create_resource(resource['data']['InstanceId'],
                                   name,
                                   'ec2_instance', None, metadata=resource['data'])

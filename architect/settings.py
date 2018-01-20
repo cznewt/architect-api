@@ -129,8 +129,6 @@ MEDIA_URL = WEBROOT + 'media/'
 if STATIC_ROOT is None:
     STATIC_ROOT = os.path.abspath(os.path.join(BASE_DIR, 'static'))
 
-print(STATIC_ROOT)
-
 if STATIC_URL is None:
     STATIC_URL = WEBROOT + 'static/'
 

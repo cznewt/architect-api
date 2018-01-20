@@ -32,8 +32,8 @@ var RelationalPlot = function(RelationalPlot){
 
             graph.svg = d3.select(graphSelector)
                 .append('svg')
-                .style('width', '100vw')
-                .style('height', '100vh')
+                .style('width', width)
+                .style('height', height)
                 .attr('viewBox', -width / 2 + ' ' + -height / 2 + ' ' + width + ' ' + height)
                 .on('click', function () {return graph.focusOn();}); // Reset zoom on canvas click
 
@@ -84,7 +84,14 @@ var RelationalPlot = function(RelationalPlot){
             newSlice.append('path')
                 .attr('class', 'main-arc')
                 .style('fill', function (d) {
-                    return color((d.children ? d : d.parent).data.name);
+                    //return color((d.children ? d : d.parent).data.name);
+                    if(d.data.status == 'active') {
+                        return '#77dd77';
+                    }
+                    if(d.data.status == 'error') {
+                        return '#ff6961';
+                    }
+                    return '#eee';
                 }).attr('d', arc);
 
             newSlice.append('path')

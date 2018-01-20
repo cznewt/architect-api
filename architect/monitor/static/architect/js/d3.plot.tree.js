@@ -70,21 +70,31 @@ var RelationalPlot = function(RelationalPlot){
             var node = g.selectAll(".node")
                 .data(nodes.descendants())
                 .enter().append("g")
-                .attr("class", function(d) { 
-                    return "node" + 
+                .attr("class", function(d) {
+                    return "node" +
                     (d.children ? " node--internal" : " node--leaf"); })
-                .attr("transform", function(d) { 
+                .attr("transform", function(d) {
                     return "translate(" + d.y + "," + d.x + ")"; });
 
             // adds the circle to the node
             node.append("circle")
-                .attr("r", 10);
+                .attr("r", 10)
+                .style("fill", function(d) {
+                    console.log(d.data.status);
+                    if(d.data.status == 'active') {
+                        return '#77dd77';
+                    }
+                    if(d.data.status == 'error') {
+                        return '#ff6961';
+                    }
+                    return '#eee';
+                });
 
             // adds the text to the node
             node.append("text")
                 .attr("dy", ".35em")
                 .attr("x", function(d) { return d.children ? -13 : 13; })
-                .style("text-anchor", function(d) { 
+                .style("text-anchor", function(d) {
                     return d.children ? "end" : "start"; })
                 .text(function(d) { return d.data.name; });
 
