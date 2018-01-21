@@ -94,7 +94,11 @@ class SaltStackClient(BaseClient):
             manager = Manager.objects.get(name=metadata.get('manager'))
             roles = {}
             for datum_name, datum in metadata.get('return', {}).items():
-                uid = '{}|{}'.format(metadata['id'], datum['__id__'])
+                try:
+                    uid = '{}|{}'.format(metadata['id'], datum['__id__'])
+                except KeyError as exception:
+                    logger.error('No key {} in {}'.format(exception, datum))
+                    continue
                 try:
                     lowstate = Resource.objects.get(uid=uid, manager=manager)
                 except Resource.DoesNotExist:

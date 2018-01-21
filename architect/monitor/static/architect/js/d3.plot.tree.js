@@ -80,7 +80,6 @@ var RelationalPlot = function(RelationalPlot){
             node.append("circle")
                 .attr("r", 10)
                 .style("fill", function(d) {
-                    console.log(d.data.status);
                     if(d.data.status == 'active') {
                         return '#77dd77';
                     }
@@ -103,7 +102,6 @@ var RelationalPlot = function(RelationalPlot){
         this.requestData = function(dataUrl, callback){
             d3.json(dataUrl, function(res){
                 console.log(res);
-
                 graph._data = d3.hierarchy(res.resources, function(d) {
                     return d.children;
                 });

@@ -30,19 +30,23 @@ var RelationalPlot = function(RelationalPlot){
 
         this.init = function(alreadyRunning){
 
+            if(alreadyRunning && graph.svg) {
+                graph.svg.remove();
+            }
+
             graph.svg = d3.select(graphSelector)
                 .append('svg')
                 .style('width', width)
                 .style('height', height)
                 .attr('viewBox', -width / 2 + ' ' + -height / 2 + ' ' + width + ' ' + height)
-                .on('click', function () {return graph.focusOn();}); // Reset zoom on canvas click
-
+                .on('click', function () {
+                    return graph.focusOn(); // Reset zoom on canvas click
+                });
 
             if(!alreadyRunning){
 
                 graph.requestData(dataUrl, graph.render);
                 $(window).on('resize', function(ev){
-                    graph.resetPosition();
                     graph.init(true);
                     graph.render();
                 });
@@ -60,7 +64,7 @@ var RelationalPlot = function(RelationalPlot){
 
         this.render = function(){
 
-            graph._data.sum(function (d) {
+            graph._data.sum(function(d){
                 return d.size;
             });
 
@@ -161,9 +165,7 @@ var RelationalPlot = function(RelationalPlot){
 
         this.focusOn = function() {
             var d = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : { x0: 0, x1: 1, y0: 0, y1: 1 };
-
             // Reset to top-level if no data point specified
-
             var transition = graph.svg.transition().duration(750).tween('scale', function () {
                 var xd = d3.interpolate(x.domain(), [d.x0, d.x1]),
                     yd = d3.interpolate(y.domain(), [d.y0, 1]);
@@ -203,9 +205,6 @@ var RelationalPlot = function(RelationalPlot){
                 });
             }
         }
-
     };
     return RelationalPlot;
 }(RelationalPlot || {});
-
-
