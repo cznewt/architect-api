@@ -7,7 +7,7 @@ The Architect Project
 The aim of this project is to provide unified service modeling, management and
 visualization platform agnostic of delivery method. It creates virtual
 representations of any software services or physical resources and allows
-control over thier entire life-cycle. The name of project comes from Architect
+control over their entire life-cycle. The name of project comes from Architect
 program in Matrix movie series:
 
     In the Matrix the Architect is a highly specialized, humorless program of
