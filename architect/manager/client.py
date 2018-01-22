@@ -2,6 +2,8 @@
 import time
 from architect import utils
 from architect.manager.models import Resource, Manager, Relationship
+from django.conf import settings
+from django.core.cache import cache
 from celery.utils.log import get_logger
 
 logger = get_logger(__name__)
@@ -116,6 +118,13 @@ class BaseClient(object):
             'relation_types': self._get_relation_types(),
             'relations': self.relations,
         }
+
+    def refresh_cache(self):
+        self.load_resources()
+        self.load_relations()
+        raw_data = self.to_dict()
+        logger.info('Refreshing manager {} cache'.format(self.name))
+        cache.set(self.name, raw_data, settings.RESOURCE_CACHE_DURATION)
 
     def _get_resource_types(self):
         res_map = {}

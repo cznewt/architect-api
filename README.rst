@@ -600,3 +600,24 @@ Tree Graph Layouts
 
 Directed graph traversal can give os acyclic structures suitable for showing
 parent-child relations in your subraphs.
+
+
+Dendrograms
+^^^^^^^^^^^
+
+Dendrograms are node-link diagrams that place leaf nodes of the tree at the
+same depth. Dendograms are typically less compact than tidy trees, but are
+useful when all the leaves should be at the same level, such as for
+hierarchical clustering or phylogenetic tree diagrams.
+
+
+Partition Layouts
+^^^^^^^^^^^^^^^^^
+
+The partition layout produces adjacency diagrams: a space-filling variant of a
+node-link tree diagram. Rather than drawing a link between parent and child in
+the hierarchy, nodes are drawn as solid areas (either arcs or rectangles), and
+their placement relative to other nodes reveals their position in the
+hierarchy. The size of the nodes encodes a quantitative dimension that would
+be difficult to show in a node-link diagram.
+

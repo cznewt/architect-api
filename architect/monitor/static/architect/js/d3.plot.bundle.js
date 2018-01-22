@@ -15,9 +15,9 @@ var RelationalPlot = function(RelationalPlot){
                 var color = "#C7C7C7";
                 if(d.hasOwnProperty("source") && d.hasOwnProperty("target")){
                     d.source.relations.forEach(function(item){
-                        if(item.status === "success"){
+                        if(item.status === "active"){
                             color = "#00BB00";
-                        }else if(item.status === "failed"){
+                        }else if(item.status === "error"){
                             color = "#FF0000";
                         }
                     });
@@ -39,9 +39,6 @@ var RelationalPlot = function(RelationalPlot){
         this._data = {};
 
         this.init = function(alreadyRunning) {
-            if(!dataUrl || !graphSelector){
-                throw new Error("Cannot init graph, dataUrl or graphSelector not defined");
-            }
 
             graph.cluster = d3.cluster()
                 .size([360, innerRadius]);
@@ -50,6 +47,7 @@ var RelationalPlot = function(RelationalPlot){
                 .curve(d3.curveBundle.beta(0.85))
                 .radius(function(d) { return d.y; })
                 .angle(function(d) { return d.x / 180 * Math.PI; })
+
             if(alreadyRunning && graph.svg) {
                 d3.select(graph.svg.node().parentNode).remove();
             }
@@ -57,8 +55,8 @@ var RelationalPlot = function(RelationalPlot){
             graph.svg = d3.select(graphSelector).append("svg")
                 .attr("width", diameter)
                 .attr("height", diameter)
-              .append("g")
-                .attr("transform", "translate(" + radius + "," + radius + ")");
+                .append("g")
+                    .attr("transform", "translate(" + radius + "," + radius + ")");
 
             if(!alreadyRunning){
                 graph.requestData(dataUrl, graph.render);
@@ -82,10 +80,13 @@ var RelationalPlot = function(RelationalPlot){
         this.render = function() {
             if(graph._data && graph._data.length > 0){
 
-                var root = relationalPlotHelpers.nodeHierarchy(graph._data)
-                    .sum(function(d) { return d.size; });
-                var nodes = graph.cluster(root);
+                //var root = relationalPlotHelpers.nodeHierarchy(graph._data)
+                //    .sum(function(d) { return d.size; });
+                //var nodes = graph.cluster(root);
+                var nodes = graph.cluster(graph._data);
+                console.log(nodes);
                 var links = nodes.links();
+                console.log(links);
                 var rootNode = root.children[0];
                 var groupData = graph.svg.selectAll("g.group")
                     .data(rootNode.children)
@@ -202,10 +203,13 @@ var RelationalPlot = function(RelationalPlot){
 
         this.requestData = function(dataUrl, callback){
             d3.json(dataUrl, function(res){
+//            d3.json('https://gist.githubusercontent.com/mbostock/1044242/raw/3ebc0fde3887e288b4a9979dad446eb434c54d08/flare.json', function(res){
+//                graph._data = res;
                 graph._data = res.resources;
-                relationalPlotHelpers.displayResources(Object.keys(graph._data).length);
-                relationalPlotHelpers.displayRelations();
-                relationalPlotHelpers.displayScrapeTime(res.date);
+                console.log(graph._data);
+           //     relationalPlotHelpers.displayResources(Object.keys(graph._data).length);
+           //     relationalPlotHelpers.displayRelations();
+           //     relationalPlotHelpers.displayScrapeTime(res.date);
                 if(typeof callback === 'function'){
                     callback();
                 }
@@ -223,12 +227,13 @@ var RelationalPlot = function(RelationalPlot){
 
         this.findEndAngle = function(children) {
             var max = children[0].x;
-            children.forEach(function(d) {
+             children.forEach(function(d) {
                 if (d.x > max)
                     max = d.x;
             });
             return max;
         };
+
         this.resetPosition = function(){
             contentWidth = $(graphSelector).innerWidth(),
             diameter = contentWidth,

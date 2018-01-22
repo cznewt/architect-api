@@ -90,7 +90,7 @@ def default_hier(orig_data, layers):
         root_resource = {
             'id': None,
             'name': root_layer['name'],
-            'status': 'active',
+            'status': 'unknown',
             'kind': 'root',
         }
     root_resource = parse_hier_level(data['resources'],

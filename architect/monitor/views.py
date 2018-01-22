@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from django.conf import settings
 from django.core.cache import cache
 from django.views.generic.base import TemplateView
 from architect.views import JSONDataView
@@ -55,7 +56,7 @@ class WidgetDetailJSONView(JSONDataView):
             manager_client.load_resources()
             manager_client.load_relations()
             raw_data = manager_client.to_dict()
-            cache.set(manager_key, raw_data, 300)
+            cache.set(manager_key, raw_data, settings.RESOURCE_CACHE_DURATION)
         if layout == 'graph':
             transform = 'default_graph'
             options = {}

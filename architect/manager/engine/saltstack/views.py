@@ -22,12 +22,15 @@ class ProcessEventView(View):
 
     def post(self, request, *args, **kwargs):
         metadata = json.loads(request.body.decode("utf-8"))
-        manager_client = SaltStackClient(**{
+        manager_kwargs = {
             'name': kwargs.get('master_id'),
             'engine': 'saltstack',
-        })
+        }
+        update_client = SaltStackClient(**manager_kwargs)
         metadata['manager'] = kwargs.get('master_id')
-        manager_client.process_resource_metadata('salt_event', metadata)
+        update_client.process_resource_metadata('salt_event', metadata)
+        cache_client = SaltStackClient(**manager_kwargs)
+        cache_client.refresh_cache()
         return HttpResponse('OK')
 
 

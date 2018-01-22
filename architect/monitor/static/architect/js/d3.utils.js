@@ -168,7 +168,7 @@ var relationalPlotHelpers = {
       if (!node) {
         node = map[name] = data || {name: name, children: []};
         if (name.length) {
-          node.parent = find(name.substring(0, i = name.lastIndexOf("|")));
+          node.parent = find(name.substring(0, i = name.lastIndexOf(".")));
           node.parent.children.push(node);
           node.key = name.substring(i + 1);
         }
@@ -180,7 +180,9 @@ var relationalPlotHelpers = {
       find(d.name, d);
     });
 
-    return d3.hierarchy(map[""]);
+    data = d3.hierarchy(map[""]);
+    console.log(data);
+    return data;
   },
 
   nodeServiceId: function(d){
