@@ -92,7 +92,9 @@ class SaltStackClient(BaseClient):
     def process_resource_metadata(self, kind, metadata):
         if kind == 'salt_event':
             manager = Manager.objects.get(name=metadata.get('manager'))
-            roles = {}
+            roles = []
+            if isinstance(metadata.get('return'), (list, tuple)):
+                return
             for datum_name, datum in metadata.get('return', {}).items():
                 try:
                     uid = '{}|{}'.format(metadata['id'], datum['__id__'])
@@ -108,7 +110,7 @@ class SaltStackClient(BaseClient):
                 to_save = False
                 role_parts = datum['__sls__'].split('.')
                 role_name = "{}-{}".format(role_parts[0], role_parts[1])
-                roles[role_name] = True
+                roles.append(role_name)
 
                 if 'apply' not in lowstate.metadata:
                     lowstate.metadata['apply'] = {}
@@ -117,7 +119,6 @@ class SaltStackClient(BaseClient):
                         lowstate.status = 'active'
                     else:
                         lowstate.status = 'error'
-                        roles[role_name] = False
                     to_save = True
                 else:
                     if metadata.get('jid') not in lowstate.metadata['apply']:
@@ -126,11 +127,10 @@ class SaltStackClient(BaseClient):
                             lowstate.status = 'active'
                         else:
                             lowstate.status = 'error'
-                            roles[role_name] = False
                         to_save = True
                 if to_save:
                     lowstate.save()
-            for role_name, role_status in roles.items():
+            for role_name in set(roles):
                 uid = '{}|{}'.format(metadata['id'], role_name)
                 try:
                     service = Resource.objects.get(uid=uid, manager=manager)
@@ -138,11 +138,26 @@ class SaltStackClient(BaseClient):
                     logger.error('No salt_service resource '
                                  'with UID {} found'.format(uid))
                     continue
-                if role_status:
-                    service.status = 'active'
-                else:
+                errors = 0
+                unknown = 0
+                to_save = False
+                lowstate_links = service.source.filter(kind='contains_salt_lowstate')
+                for lowstate_link in lowstate_links:
+                    if lowstate_link.target.status == 'error':
+                        errors += 1
+                    elif lowstate_link.target.status == 'unknown':
+                        unknown += 1
+                if errors > 0 and service.status != 'error':
                     service.status = 'error'
-                service.save()
+                    to_save = True
+                if unknown > 0 and service.status != 'unknown':
+                    service.status = 'unknown'
+                    to_save = True
+                elif service.status != 'active':
+                    service.status = 'active'
+                    to_save = True
+                if to_save:
+                    service.save()
         elif kind == 'salt_job':
             for job_id, job in metadata.items():
                 if not isinstance(job, dict):

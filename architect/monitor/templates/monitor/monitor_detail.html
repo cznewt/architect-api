@@ -34,6 +34,7 @@
 <script src="{% static 'architect/js/d3.plot.force.js' %}"></script>
 <script src="{% static 'architect/js/d3.plot.hive.js' %}"></script>
 <script src="{% static 'architect/js/d3.plot.matrix.js' %}"></script>
+<script src="{% static 'architect/js/d3.plot.pack.js' %}"></script>
 <script src="{% static 'architect/js/d3.plot.sunburst.js' %}"></script>
 <script src="{% static 'architect/js/d3.plot.tree.js' %}"></script>
 <script src="{% static 'architect/js/d3.plot.treemap.js' %}"></script>
@@ -77,6 +78,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
   new RelationalPlot.forceDirected(src['{{ widget_name }}'], sel['{{ widget_name }}'], upd['{{ widget_name }}']).init();
   {% elif widget.chart == 'matrix' %}
   new RelationalPlot.adjacencyMatrix(src['{{ widget_name }}'], sel['{{ widget_name }}'], upd['{{ widget_name }}']).init();
+  {% elif widget.chart == 'circle-pack' %}
+  new RelationalPlot.circlePack(src['{{ widget_name }}'], sel['{{ widget_name }}'], upd['{{ widget_name }}']).init();
   {% elif widget.chart == 'edge-bundle' %}
   new RelationalPlot.hierarchicalEdgeBundling(src['{{ widget_name }}'], sel['{{ widget_name }}'], upd['{{ widget_name }}']).init();
   {% elif widget.chart == 'sunburst' %}

@@ -19,12 +19,25 @@ class ManagerAdmin(admin.ModelAdmin):
     actions = [get_manager_status]
 
 
+class SourceRelationshipInline(admin.StackedInline):
+    model = Relationship
+    fk_name = 'source'
+
+
+class TargetRelationshipInline(admin.StackedInline):
+    model = Relationship
+    fk_name = 'target'
+
+
 @admin.register(Resource)
 class ResourceAdmin(admin.ModelAdmin):
-    list_display = ('name', 'manager', 'kind', 'status')
+    list_display = ('name', 'uid', 'manager', 'kind', 'status')
     list_filter = ('manager', 'status', 'kind')
     search_fields = ['uid', 'name']
-
+    inlines = [
+        SourceRelationshipInline,
+        TargetRelationshipInline,
+    ]
 
 @admin.register(Relationship)
 class RelationshipAdmin(admin.ModelAdmin):
