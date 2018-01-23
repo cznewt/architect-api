@@ -150,7 +150,7 @@ Architect Inventory Configuration
 ---------------------------------
 
 Each manager endpoint expects different configuration. Following samples show
-the required parameters to setup individual invetory backends.
+the required parameters to setup individual inventory backends.
 
 
 Reclass (Inventory Backend)
@@ -260,8 +260,8 @@ Configuration for manager connection to Salt API.
     password: {{ user-password }}
 
 Following figure shows how SaltStack integrates with Architect Inventory and
-Manager. Please note that you can use Inventory intergration independetly of
-the Manager intergration.
+Manager. Please note that you can use Inventory integration independently of
+the Manager integration.
 
 .. figure:: ./doc/source/static/scheme/manager_salt.png
     :align: center
@@ -283,7 +283,7 @@ Architect Monitor Configuration
 
 Following config snippets show configuration for supported types of
 visualization. Currently we support Network graphs, hierarchical structures
-for quatitative analysis.
+for quantitative analysis.
 
 
 Network Graphs
@@ -317,7 +317,7 @@ Hiearchical Structures
 ~~~~~~~~~~~~~~~~~~~~~~
 
 The manager endpoint is used as source of relational data. This data can be
-traversed to create hiearchies. The hierarchical data has it's own family of
+traversed to create hierarchies. The hierarchical data has it's own family of
 visualization techniques.
 
 .. code-block:: yaml
@@ -374,8 +374,8 @@ and Top modules and add following to the Salt Master configuration files.
 Salt Master (Manager Integration)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-You can control salt master infrasturctue and get the status of managed hosts
-and resources. The Salt engine ``architect`` relays the state outpusts of
+You can control salt master infrastructure and get the status of managed hosts
+and resources. The Salt engine ``architect`` relays the state outputs of
 individual state runs and ``architect`` runners and modules provide the
 capabilities to interface with salt and architect functions. The Salt Master
 is managed through it's HTTP API service.
@@ -461,17 +461,17 @@ Quantitative Analysis
 ---------------------
 
 With the relational information we are now able to corellate resources and
-joined topologies from varius information sources. This gives you the real
+joined topologies from various information sources. This gives you the real
 power, while having the underlying relational structure, you can gather
 unstructured metrics, events, alarms and put them into proper context in you
 managed resources.
 
-The metrics collected from you infrastrucute can be assigned to various
+The metrics collected from you infrastructure can be assigned to various
 vertices and edges in your network. This can give you more insight to the
 utilisation of depicted infrastructures.
 
 You can have the following query to the prometheus server that gives you the
-rate of error response codes goint through a HAproxy for example.
+rate of error response codes going through a HAproxy for example.
 
 .. code-block:: yaml
 
