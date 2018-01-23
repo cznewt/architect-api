@@ -33,7 +33,9 @@ class Manager(models.Model):
         return output
 
     def url(self):
-        if self.engine == 'saltstack':
+        if self.metadata is None:
+            return '-'
+        elif self.engine == 'saltstack':
             return self.metadata.get('auth_url', '-')
         elif self.engine == 'kubernetes':
             return self.metadata.get('cluster', {}).get('server', '-')
@@ -44,8 +46,8 @@ class Manager(models.Model):
 
 
 class Resource(models.Model):
-    uid = models.CharField(max_length=255)
-    name = models.CharField(max_length=255)
+    uid = models.CharField(max_length=511)
+    name = models.CharField(max_length=511)
     manager = models.ForeignKey(Manager, on_delete=models.CASCADE)
     kind = models.CharField(max_length=32)
     size = models.IntegerField(default=1)

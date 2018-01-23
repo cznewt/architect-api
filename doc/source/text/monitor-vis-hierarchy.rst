@@ -1,5 +1,17 @@
 
-==========================
+===========================
+Hierarchical Visualizations
+===========================
+
+Tree graphs are frequently drawn as ``node-link diagrams`` in which the vertices
+are represented as disks, boxes, or textual labels and the edges are
+represented as line segments, polylines, or curves in the Euclidean plane.
+
+Node-link diagrams can be traced back to the 13th century work of Ramon Llull,
+who drew diagrams of this type for complete graphs in order to analyze all
+pairwise combinations among sets of metaphysical concepts.
+
+
 Hierarchical Edge Bundling
 ==========================
 
@@ -18,19 +30,15 @@ edges between their respective child nodes. Furthermore, hierarchical edge
 bundling is a generic method which can be used in conjunction with existing
 tree visualization techniques.
 
-
-Sample Visualizations
-=====================
-
 .. figure:: ../static/img/monitor/hiearchical-edge-bundling.png
-    :width: 100%
+    :width: 80%
     :figclass: align-center
 
-    Hierarchical edge bundling of SaltStack services and their relations (cca 100 nodes)
+    SaltStack services and their relations in Hierarchical edge bundling
 
 
 More Information
-================
+----------------
 
 * http://www.win.tue.nl/vis1/home/dholten/papers/bundles_infovis.pdf
 * https://www.win.tue.nl/vis1/home/dholten/papers/forcebundles_eurovis.pdf

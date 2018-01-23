@@ -30,9 +30,9 @@ Manager Component
     relational and quantitative analysis and visualisations.
 
 Monitor Component
-	The structure of infrastructure resources is directed graph that can be
-	subject for further analysis. We can perform several transformation
-	functions on this graph data in Monitor component.
+    The structure of infrastructure resources is directed graph that can be
+    subject for further analysis. We can perform several transformation
+    functions on this graph data in Monitor component.
 
 Following figure shows high-level achitecture of Architect system.
 
@@ -161,11 +161,11 @@ filesystem.
 
 .. code-block:: yaml
 
-	class_dir: /srv/salt/reclass/classes
-	node_dir: /srv/salt/reclass/nodes
-	storage_type: yaml_fs
-	filter_keys:
-	  - _param
+    class_dir: /srv/salt/reclass/classes
+    node_dir: /srv/salt/reclass/nodes
+    storage_type: yaml_fs
+    filter_keys:
+      - _param
 
 
 Architect Manager Configuration
@@ -527,11 +527,17 @@ assigning forces among the set of edges and the set of nodes, based on their
 relative positions, and then using these forces either to simulate the motion
 of the edges and nodes or to minimize their energy.
 
-.. figure:: ./doc/source/static/img/monitor/force-directed-plot.png
-    :width: 400px
+.. figure:: ./doc/source/static/img/monitor/force-directed-graph.png
+    :width: 50%
     :figclass: align-center
 
-    Force-directed plot of all OpenStack resources (cca 3000 resources)
+    Kubernetes cluster in Force-directed graph
+
+.. figure:: ./doc/source/static/img/monitor/force-directed-graph-huge.png
+    :width: 50%
+    :figclass: align-center
+
+    Whole OpenStack cloud in Force-directed graph (cca 3000 resources)
 
 
 Hive Plot
@@ -542,11 +548,17 @@ are mapped to and positioned on radially distributed linear axes — this
 mapping is based on network structural properties. Edges are drawn as curved
 links. Simple and interpretable.
 
-.. figure:: ./doc/source/static/img/monitor/hive-plot.png
-    :width: 600px
+.. figure:: ../static/img/monitor/hive-plot.png
+    :width: 50%
     :figclass: align-center
 
-    Hive plot of all OpenStack resources (cca 3000 resources)
+    Kubernetes cluster in Hive plot
+
+.. figure:: ../static/img/monitor/hive-plot-huge.png
+    :width: 50%
+    :figclass: align-center
+
+    Whole OpenStack cloud in Hive plot (cca 10 000 resources)
 
 
 Arc Diagram
@@ -560,7 +572,7 @@ line itself are also allowed as edges, as long as they connect only vertices
 that are consecutive along the line.
 
 .. figure:: ./doc/source/static/img/monitor/arc-diagram.png
-    :width: 400px
+    :width: 80%
     :figclass: align-center
 
     Arc diagram of OpenStack project's resources (cca 100 resources)

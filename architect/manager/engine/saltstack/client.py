@@ -178,6 +178,11 @@ class SaltStackClient(BaseClient):
                 if not isinstance(low_states, list):
                     continue
                 for low_state in low_states:
+                    if not isinstance(low_state, dict):
+                        logger.error('Salt lowtate {} parsing problem on '
+                                     '{}'.format(low_state, minion_id))
+                        continue
+
                     low_state['minion'] = minion_id
                     self._create_resource('{}|{}'.format(minion_id,
                                                          low_state['__id__']),
@@ -192,16 +197,20 @@ class SaltStackClient(BaseClient):
                                       'salt_minion',
                                       metadata=minion_data)
         elif kind == 'salt_service':
-            for minion_name, minion_data in metadata.items():
+            for minion_id, minion_data in metadata.items():
                 if not isinstance(minion_data, dict):
                     continue
                 for service_name, service in minion_data.items():
                     if service_name not in settings.RECLASS_SERVICE_BLACKLIST:
+                        if not isinstance(service, dict):
+                            logger.error('Salt service {} parsing problem: '
+                                         '{} on {}'.format(service_name, service, minion_id))
+                            continue
                         for role_name, role in service.items():
                             if role_name not in settings.RECLASS_ROLE_BLACKLIST:
                                 service_key = '{}-{}'.format(service_name,
                                                              role_name)
-                                self._create_resource('{}|{}'.format(minion_name, service_key),
+                                self._create_resource('{}|{}'.format(minion_id, service_key),
                                                       service_key,
                                                       'salt_service',
                                                       metadata=minion_data)

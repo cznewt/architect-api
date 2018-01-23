@@ -25,7 +25,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions',
-    'django_neomodel',
+    'django_select2',
     'architect.inventory',
     'architect.manager',
     'architect.manager.engine.saltstack',
@@ -132,7 +132,7 @@ if STATIC_ROOT is None:
 if STATIC_URL is None:
     STATIC_URL = WEBROOT + 'static/'
 
-RESOURCE_CACHE_DURATION = 300
+RESOURCE_CACHE_DURATION = 600
 
 INVENTORY_ENGINES = CONFIG.get('inventory', {})
 MANAGER_ENGINES = CONFIG.get('manager', {})

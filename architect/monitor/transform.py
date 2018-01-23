@@ -2,6 +2,17 @@
 from architect.utils import get_node_icon
 
 
+def merge_dicts(*dict_args):
+    """
+    Given any number of dicts, shallow copy and merge into a new dict,
+    precedence goes to key value pairs in latter dicts.
+    """
+    result = {}
+    for dictionary in dict_args:
+        result.update(dictionary)
+    return result
+
+
 def default_graph(orig_data, options={}):
     data = orig_data.copy()
     resources = {}
@@ -15,9 +26,7 @@ def default_graph(orig_data, options={}):
 
     for resource_name, resource_data in data['resources'].items():
         if len(resource_data) > 0:
-            for resource_id, resource_item in resource_data.items():
-                resource_item.pop('metadata')
-                resources[resource_id] = resource_item
+            resources = merge_dicts(resources, resource_data)
             icon = get_node_icon(data['resource_types'][resource_name]['icon'])
             axes[resource_name] = {
                 'x': i,
@@ -46,20 +55,22 @@ def default_graph(orig_data, options={}):
 def parse_hier_level(resources, relations, resource, layers, level):
     layer = layers[level]
     children = []
+    if 'source' in layer:
+        allowed_sources = []
+        for relation in relations[layer['source']]:
+            if relation['source'] == resource.get('id'):
+                allowed_sources.append(relation['target'])
+    if 'target' in layer:
+        allowed_targets = []
+        for relation in relations[layer['target']]:
+            if relation['target'] == resource.get('id'):
+                allowed_targets.append(relation['source'])
     for res_id, res in resources[layer['kind']].items():
         if 'source' in layer:
-            allowed_ids = []
-            for relation in relations[layer['source']]:
-                if relation['source'] == resource.get('id'):
-                    allowed_ids.append(relation['target'])
-            if res_id not in allowed_ids:
+            if res_id not in allowed_sources:
                 continue
         if 'target' in layer:
-            allowed_ids = []
-            for relation in relations[layer['target']]:
-                if relation['target'] == resource.get('id'):
-                    allowed_ids.append(relation['source'])
-            if res_id not in allowed_ids:
+            if res_id not in allowed_targets:
                 continue
         child = {
             'id': res_id,

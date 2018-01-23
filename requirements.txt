@@ -5,6 +5,7 @@ django-extensions
 django-material
 django-viewflow
 viewflow-extensions
+django_select2
 celery
 redis
 pyaml

@@ -50,13 +50,20 @@ class WidgetDetailJSONView(JSONDataView):
         data_source = widget['data_source']['default']
         manager_key = data_source['manager']
         layout = data_source.get('layout', 'graph')
-        raw_data = cache.get(manager_key, None)
+        raw_data = cache.get(manager_key)
         if raw_data is None:
             manager_client = Manager.objects.get(name=manager_key).client()
             manager_client.load_resources()
             manager_client.load_relations()
             raw_data = manager_client.to_dict()
             cache.set(manager_key, raw_data, settings.RESOURCE_CACHE_DURATION)
+            print('Saved key {} to cache'.format(manager_key))
+        else:
+            print('Loaded key {} from cache'.format(manager_key))
+        for typum, datum in raw_data['resources'].items():
+            print('{}: {}'.format(typum, len(datum)))
+        for typum, datum in raw_data['relations'].items():
+            print('{}: {}'.format(typum, len(datum)))
         if layout == 'graph':
             transform = 'default_graph'
             options = {}

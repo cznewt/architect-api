@@ -12,6 +12,8 @@ urlpatterns = [
          generic.RedirectView.as_view(url='/manager/v1')),
     path('doc/',
          include('django.contrib.admindocs.urls')),
+    path('select2/',
+         include('django_select2.urls')),
     path('inventory/',
          include('architect.inventory.urls', namespace='inventory')),
     path('manager/',

@@ -7,6 +7,8 @@ The Architect Documentation
    :maxdepth: 3
    :glob:
 
+   text/app-index.rst
+   text/inventory-index.rst
    text/manager-index.rst
    text/monitor-index.rst
 
