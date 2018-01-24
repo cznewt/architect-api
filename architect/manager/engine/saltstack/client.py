@@ -63,25 +63,29 @@ class SaltStackClient(BaseClient):
             metadata = self.api.low([{
                 'client': 'runner',
                 'fun': 'jobs.list_jobs',
-                'arg': "search_function='[\"state.apply\", \"state.sls\"]'"
+                'arg': "search_function='[\"state.apply\", \"state.sls\"]'",
+                'timeout': 60
             }]).get('return')[0]
         elif kind == 'salt_lowstate':
             metadata = self.api.low([{
                 'client': 'local',
                 'tgt': '*',
-                'fun': 'state.show_lowstate'
+                'fun': 'state.show_lowstate',
+                'timeout': 60
             }]).get('return')[0]
         elif kind == 'salt_minion':
             metadata = self.api.low([{
                 'client': 'local',
                 'tgt': '*',
-                'fun': 'grains.items'
+                'fun': 'grains.items',
+                'timeout': 60
             }]).get('return')[0]
         elif kind == 'salt_service':
             metadata = self.api.low([{
                 'client': 'local',
                 'tgt': '*',
-                'fun': 'pillar.data'
+                'fun': 'pillar.data',
+                'timeout': 60
             }]).get('return')[0]
         else:
             metadata = {}
