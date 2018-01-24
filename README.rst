@@ -474,7 +474,7 @@ elements of the matrix indicate whether pairs of vertices are adjacent or not
 in the graph.
 
 .. figure:: ./doc/source/static/img/monitor/adjacency-matrix.png
-    :width: 400px
+    :width: 100%
     :figclass: align-center
 
     Adjacency matrix of OpenStack project's resources (cca 100 resources)
@@ -489,10 +489,10 @@ is how he outlines the particular thought process that goes into making a
 visualization.
 
 .. figure:: ./doc/source/static/img/monitor/hiearchical-edge-bundling.png
-    :width: 400px
+    :width: 100%
     :figclass: align-center
 
-    Hierarchical edge bundling of SaltStack services (cca 100 resources)
+    SaltStack services in Hierarchical edge bundle
 
 
 Tree Graph Layouts
@@ -510,6 +510,12 @@ same depth. Dendograms are typically less compact than tidy trees, but are
 useful when all the leaves should be at the same level, such as for
 hierarchical clustering or phylogenetic tree diagrams.
 
+.. figure:: ./doc/source/static/img/monitor/node-link-tree.png
+    :width: 100%
+    :figclass: align-center
+
+    SaltStack services in Hierarchical edge bundle
+
 
 Partition Layouts
 ^^^^^^^^^^^^^^^^^
@@ -520,4 +526,24 @@ the hierarchy, nodes are drawn as solid areas (either arcs or rectangles), and
 their placement relative to other nodes reveals their position in the
 hierarchy. The size of the nodes encodes a quantitative dimension that would
 be difficult to show in a node-link diagram.
+
+.. figure:: ./doc/source/static/img/monitor/sunburst.png
+    :width: 100%
+    :figclass: align-center
+
+    SaltStack services in Sunburst Diagram
+
+
+Circle Packing
+^^^^^^^^^^^^^^
+
+We display resources as circles with lower-level resources as inner circles.
+Circle packing in a circle is a two-dimensional packing problem with the
+objective of packing unit circles into the smallest possible larger circle.
+
+.. figure:: ./doc/source/static/img/monitor/circle-packing.png
+    :width: 100%
+    :figclass: align-center
+
+    SaltStack services in Circle Packing
 
