@@ -41,6 +41,14 @@ Following figure shows high-level achitecture of Architect system.
     :width: 80%
 
 
+Architect Documentation
+=======================
+
+Installation instructions, getting started guides, and API documentation.
+
+https://architect-api.readthedocs.io/
+
+
 Architect Components
 ====================
 
@@ -388,114 +396,6 @@ is managed through it's HTTP API service.
       port: 8181
 
 
-Data Analysis
-=============
-
-The most important part of the Architect is the analysis of the resource
-states provided by the managed/monitored systems.
-
-Relational Analysis
--------------------
-
-You can analyse the resource models in several ways. Either you want to get
-the subsets of the resources (vertices and edges) or you want to combine
-multiple graphs and link the same nodes in each.
-
-
-Subgraphs - Slicing and Dicing
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-To slice and dice is to break a body of information down into smaller parts or
-to examine it from different viewpoints that we can understand it better.
-
-In cooking, you can slice a vegetable or other food or you can dice it (which
-means to break it down into small cubes). One approach to dicing is to first
-slice and then cut the slices up into dices.
-
-In data analysis, the term generally implies a systematic reduction of a body
-of data into smaller parts or views that will yield more information. The term
-is also used to mean the presentation of information in a variety of different
-and useful ways. In our case we find useful subgraphs of the infrastructures.
-
-For example in OpenStack infrastructure we can show the ``aggregate zone`` -
-``hypervisor`` - ``instance`` relations and show the quantitative properties
-of hypervisors and instances. The properties can be used RAM or CPU, runtime -
-the age of resources or any other property of value.
-
-.. code-block:: yaml
-
-    name: Tree Structure (aggregate zone > hypervisor > instance)
-    height: 1
-    chart: tree
-    data_source:
-      default:
-        manager: openstack-region
-        layout: hierarchy
-        hierarchy_layers:
-          0:
-            name: Region1
-            kind:
-          1:
-            kind: os_aggregate_zone
-          2:
-            kind: os_hypervisor
-            target: in_os_aggregate_zone
-          3:
-            kind: os_server
-            target: on_os_hypervisor
-
-Another example would be filtering of resources by tenant or stack
-attributions. This reduces the number of nodes to the reasonable amount.
-
-
-Inter-graphs
-~~~~~~~~~~~~
-
-On other hand you want to combine several graphs to create one overlaying
-graph. This is very useful to combine in other ways undelated resources. For
-example we can say that ``OpenStack Server`` or ``AWS Instance`` and ``Salt
-Minion`` are really the same resources.
-
-
-Quantitative Analysis
----------------------
-
-With the relational information we are now able to corellate resources and
-joined topologies from varius information sources. This gives you the real
-power, while having the underlying relational structure, you can gather
-unstructured metrics, events, alarms and put them into proper context in you
-managed resources.
-
-The metrics collected from you infrastrucute can be assigned to various
-vertices and edges in your network. This can give you more insight to the
-utilisation of depicted infrastructures.
-
-You can have the following query to the prometheus server that gives you the
-rate of error response codes goint through a HAproxy for example.
-
-.. code-block:: yaml
-
-    sum(irate(haproxy_http_response_5xx{
-        proxy=~"glance.*",
-        sv="FRONTEND"
-    }[5m]))
-
-Or you can have the query with the same result to the InfluxDB server:
-
-.. code-block:: yaml
-
-    SELECT sum("count")
-        FROM "openstack_glance_http_response_times"
-        WHERE "hostname" =~ /$server/
-            AND "http_status" = '5xx'
-            AND $timeFilter
-        GROUP BY time($interval)
-    fill(0)
-
-Having these metrics you can assign numerical properties of your relational
-nodes with these values and use them in correct context.
-
-
 Data Visualization
 ==================
 
@@ -528,16 +428,10 @@ relative positions, and then using these forces either to simulate the motion
 of the edges and nodes or to minimize their energy.
 
 .. figure:: ./doc/source/static/img/monitor/force-directed-graph.png
-    :width: 50%
+    :width: 100%
     :figclass: align-center
 
     Kubernetes cluster in Force-directed graph
-
-.. figure:: ./doc/source/static/img/monitor/force-directed-graph-huge.png
-    :width: 50%
-    :figclass: align-center
-
-    Whole OpenStack cloud in Force-directed graph (cca 3000 resources)
 
 
 Hive Plot
@@ -548,17 +442,11 @@ are mapped to and positioned on radially distributed linear axes — this
 mapping is based on network structural properties. Edges are drawn as curved
 links. Simple and interpretable.
 
-.. figure:: ../static/img/monitor/hive-plot.png
-    :width: 50%
+.. figure:: ./doc/source/static/img/monitor/hive-plot.png
+    :width: 100%
     :figclass: align-center
 
     Kubernetes cluster in Hive plot
-
-.. figure:: ../static/img/monitor/hive-plot-huge.png
-    :width: 50%
-    :figclass: align-center
-
-    Whole OpenStack cloud in Hive plot (cca 10 000 resources)
 
 
 Arc Diagram
@@ -572,7 +460,7 @@ line itself are also allowed as edges, as long as they connect only vertices
 that are consecutive along the line.
 
 .. figure:: ./doc/source/static/img/monitor/arc-diagram.png
-    :width: 80%
+    :width: 100%
     :figclass: align-center
 
     Arc diagram of OpenStack project's resources (cca 100 resources)
