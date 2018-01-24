@@ -1,7 +1,7 @@
 
-====================
-Graph Visualizations
-====================
+============================
+Network Graph Visualizations
+============================
 
 ``Graph drawing`` or ``network diagram`` is a pictorial representation of the
 vertices and edges of a graph. This drawing should not be confused with the

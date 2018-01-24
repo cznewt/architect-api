@@ -1,0 +1,18 @@
+relation:
+  in_jenkins_pipeline:
+    relation:
+      default: pipeline
+  in_jenkins_stage:
+    relation:
+      default: stage
+resource:
+  jenkins_pipeline:
+    client: jenkins
+    icon: fa:cube
+    name: Pipeline
+    resource: Jenkins::Pipeline
+  jenkins_stage:
+    client: jenkins
+    icon: fa:cube
+    name: Stage
+    resource: Jenkins::Pipeline

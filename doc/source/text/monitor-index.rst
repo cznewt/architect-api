@@ -11,3 +11,4 @@ Architect Monitor
    monitor-analysis-quantitative.rst
    monitor-vis-network.rst
    monitor-vis-hierarchy.rst
+   monitor-vis-directed-acyclic.rst
