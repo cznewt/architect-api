@@ -28,9 +28,9 @@ INSTALLED_APPS = [
     'django_select2',
     'architect.inventory',
     'architect.manager',
-    'architect.manager.engine.saltstack',
     'architect.monitor',
     'compressor'
+    'architect.manager.engine.saltstack',
 ]
 
 MIDDLEWARE = [
@@ -105,19 +105,12 @@ else:
         }
     }
 
-if 'TRAVIS' in os.environ:
-    CACHES = {
-        'default': {
-            'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-        }
-    }
-elif 'caches' in CONFIG:
+if 'caches' in CONFIG:
     CACHES = CONFIG['caches']
 else:
     CACHES = {
         'default': {
-            'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
-            'LOCATION': '127.0.0.1:11211',
+            'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
         }
     }
 

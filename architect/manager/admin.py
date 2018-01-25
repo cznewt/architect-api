@@ -75,10 +75,10 @@ class ResourceAdmin(admin.ModelAdmin):
     list_display = ('name', 'uid', 'manager', 'kind', 'status')
     list_filter = ('manager', 'status', 'kind')
     search_fields = ['uid', 'name']
-    inlines = [
-        SourceRelationshipInline,
-        TargetRelationshipInline,
-    ]
+#    inlines = [
+#        SourceRelationshipInline,
+#        TargetRelationshipInline,
+#    ]
 
 
 @admin.register(Relationship)

@@ -114,11 +114,6 @@ class SaltStackClient(BaseClient):
                     continue
                 to_save = False
 
-                if '__sls__' in datum:
-                    role_parts = datum['__sls__'].split('.')
-                    role_name = "{}-{}".format(role_parts[0], role_parts[1])
-                    roles.append(role_name)
-
                 if 'apply' not in lowstate.metadata:
                     lowstate.metadata['apply'] = {}
                     lowstate.metadata['apply'][metadata.get('jid')] = datum
@@ -137,6 +132,11 @@ class SaltStackClient(BaseClient):
                         to_save = True
                 if to_save:
                     lowstate.save()
+                    role_parts = lowstate.metadata['__sls__'].split('.')
+                    role_name = "{}-{}".format(role_parts[0],
+                                               role_parts[1])
+                    roles.append(role_name)
+
             for role_name in set(roles):
                 uid = '{}|{}'.format(metadata['id'], role_name)
                 try:
