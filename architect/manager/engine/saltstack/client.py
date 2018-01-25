@@ -95,6 +95,7 @@ class SaltStackClient(BaseClient):
 
     def process_resource_metadata(self, kind, metadata):
         if kind == 'salt_event':
+            print(metadata)
             manager = Manager.objects.get(name=metadata.get('manager'))
             roles = []
             if isinstance(metadata.get('return'), (list, tuple)):
@@ -112,9 +113,11 @@ class SaltStackClient(BaseClient):
                                  'with UID {} found'.format(uid))
                     continue
                 to_save = False
-                role_parts = datum['__sls__'].split('.')
-                role_name = "{}-{}".format(role_parts[0], role_parts[1])
-                roles.append(role_name)
+
+                if '__sls__' in datum:
+                    role_parts = datum['__sls__'].split('.')
+                    role_name = "{}-{}".format(role_parts[0], role_parts[1])
+                    roles.append(role_name)
 
                 if 'apply' not in lowstate.metadata:
                     lowstate.metadata['apply'] = {}

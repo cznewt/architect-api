@@ -10,8 +10,8 @@ env:
   - TRAVIS: true
 
 before_install:
-  - export DJANGO_SETTINGS_MODULE=architect.settings
-  - export PYTHONPATH=$HOME/builds/cznewt/architect-api
+  - export DJANGO_SETTINGS_MODULE="architect.settings"
+  - export PYTHONPATH="$HOME/build/cznewt/architect-api"
   - export PIP_USE_MIRRORS=true
 
 install:

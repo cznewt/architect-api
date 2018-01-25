@@ -50,7 +50,7 @@ class WidgetDetailJSONView(JSONDataView):
         data_source = widget['data_source']['default']
         manager_key = data_source['manager']
         layout = data_source.get('layout', 'graph')
-        raw_data = cache.get(manager_key)
+        raw_data = None # cache.get(manager_key)
         if raw_data is None:
             manager_client = Manager.objects.get(name=manager_key).client()
             manager_client.load_resources()
