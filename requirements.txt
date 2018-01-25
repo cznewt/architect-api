@@ -25,3 +25,7 @@ python-terraform
 pydot
 graphviz
 juju
+
+pytest
+pytest-django
+pytest-cov
