@@ -1,0 +1,25 @@
+
+language: python
+
+python:
+  - 3.5
+
+services: postgresql
+
+env:
+  - TRAVIS: true
+
+before_install:
+  - export DJANGO_SETTINGS_MODULE=architect.settings
+  - export PYTHONPATH=$HOME/builds/cznewt/architect-api
+  - export PIP_USE_MIRRORS=true
+
+install:
+  - pip install -r requirements.txt
+  - pip install psycopg2 --quiet
+
+before_script:
+  - psql -c "CREATE DATABASE mydb;" -U postgres
+
+script:
+  - python manage.py syncdb --noinput

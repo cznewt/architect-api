@@ -83,7 +83,18 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'architect.wsgi.application'
 
-if 'databases' in CONFIG:
+if 'TRAVIS' in os.environ:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'travisci',
+            'USER': 'postgres',
+            'PASSWORD': '',
+            'HOST': 'localhost',
+            'PORT': '',
+        }
+    }
+elif 'databases' in CONFIG:
     DATABASES = CONFIG['databases']
 else:
     DATABASES = {
@@ -132,7 +143,7 @@ if STATIC_ROOT is None:
 if STATIC_URL is None:
     STATIC_URL = WEBROOT + 'static/'
 
-RESOURCE_CACHE_DURATION = 600
+RESOURCE_CACHE_DURATION = 10
 
 INVENTORY_ENGINES = CONFIG.get('inventory', {})
 MANAGER_ENGINES = CONFIG.get('manager', {})
