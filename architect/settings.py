@@ -104,7 +104,13 @@ else:
         }
     }
 
-if 'caches' in CONFIG:
+if 'TRAVIS' in os.environ:
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        }
+    }
+elif 'caches' in CONFIG:
     CACHES = CONFIG['caches']
 else:
     CACHES = {
