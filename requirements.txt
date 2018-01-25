@@ -1,3 +1,9 @@
+python-memcached
+celery
+redis
+pyaml
+pyyaml
+
 Django
 django-jsonview
 django-yamlfield
@@ -6,10 +12,7 @@ django-material
 django-viewflow
 viewflow-extensions
 django_select2
-celery
-redis
-pyaml
-pyyaml
+
 os_client_config
 python-cinderclient
 python-glanceclient
