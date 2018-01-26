@@ -11,12 +11,6 @@ SECRET_KEY = '^0r*t3%t@h-auaqh+gq(bxueqc-7)8jryh#)_l4yd315))$*@z'
 ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
-    'viewflow.frontend',
-    'viewflow',
-    'viewflow_extensions',
-    'material',
-    'material.frontend',
-    'material.admin',
     'django.contrib.admin',
     'django.contrib.admindocs',
     'django.contrib.auth',
@@ -26,10 +20,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_extensions',
     'django_select2',
+    'compressor',
     'architect.inventory',
     'architect.manager',
     'architect.monitor',
-    'compressor'
     'architect.manager.engine.saltstack',
 ]
 

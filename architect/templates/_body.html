@@ -1,0 +1,8 @@
+{% load compress %}
+{% load static %}
+
+{% compress js %}
+<script src="{% static 'jquery/dist/jquery.js' %}"></script>
+<script src="{% static 'bootstrap/dist/js/bootstrap.js' %}"></script>
+<script src="{% static 'd3/build/d3.js' %}"></script>
+{% endcompress %}

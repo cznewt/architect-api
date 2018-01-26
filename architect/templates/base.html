@@ -8,48 +8,36 @@
     {% block extra_css %}{% endblock %}
   </head>
   <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-      <a class="navbar-brand" href="#">Navbar</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item {% block nav_home_cls%}{% endblock %}">
-            <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
-          </li>
-          {% if user.is_authenticated %}
-          <li class="nav-item {% block nav_inventory_cls %}{% endblock %}">
-            <a class="nav-link" href="{% url 'inventory:inventory_list' %}">Inventory</a>
-          </li>
-          <li class="nav-item {% block nav_manager_cls %}{% endblock %}">
-            <a class="nav-link" href="{% url 'manager:manager_list' %}">Manager</a>
-          </li>
-          <li class="nav-item {% block nav_monitor_cls %}{% endblock %}">
-            <a class="nav-link" href="{% url 'monitor:monitor_list' %}">Monitor</a>
-          </li>
-          {% endif %}
-        </ul>
-        <ul class="navbar-nav ml-auto">
-          <li class="nav-item {% block nav_login_cls%}{% endblock %}">
-            {% if user.is_authenticated %}
-            <a class="nav-link" href="{% url 'logout' %}">Logout</a>
-            {% else %}
-            <a class="nav-link" href="{% url 'login' %}">Login</a>
-            {% endif %}
-          </li>
-        </ul>
-      </div>
-    </nav>
-
-    <div class="container">
-    {% block content %}{% endblock %}
+<div class="container-fluid">
+    <div class="row d-flex d-md-block flex-nowrap wrapper">
+        <div class="col-md-3 float-left col-1 pl-0 pr-0 collapse width show" id="sidebar">
+            <div class="list-group border-0 card text-center text-md-left">
+                {% if user.is_authenticated %}
+                <a href="{% url 'inventory:inventory_list' %}" class="list-group-item d-inline-block collapsed" data-parent="#sidebar">
+                    <i class="fa fa-film"></i> 
+                    <span class="d-none d-md-inline">Inventories</span>
+                </a>
+                <a href="{% url 'manager:manager_list' %}" class="list-group-item d-inline-block collapsed" data-parent="#sidebar">
+                    <i class="fa fa-heart"></i> 
+                    <span class="d-none d-md-inline">Managers</span>
+                </a>
+                <a href="{% url 'monitor:monitor_list' %}" class="list-group-item d-inline-block collapsed" data-parent="#sidebar">
+                    <i class="fa fa-list"></i> 
+                    <span class="d-none d-md-inline">Monitors</span>
+                </a>
+                {% endif %}
+            </div>
+        </div>
+        <main class="col-md-9 float-left col px-5 pl-md-2 pt-2 main">
+            <a href="#" data-target="#sidebar" data-toggle="collapse">
+                <i class="fa fa-navicon fa-2x py-2 p-1"></i>
+            </a>
+            {% block content %}{% endblock %}
+        </main>
     </div>
+</div>
+{% include "_body.html" %}
+{% block extra_js %}{% endblock %}
 
-    <script src="{% static 'material/js/jquery.js' %}"></script>
-    <script src="{% static 'bootstrap/dist/js/bootstrap.min.js' %}"></script>
-    <script src="{% static 'd3/build/d3.js' %}"></script>
-    {% block extra_js %}{% endblock %}
   </body>
 </html>

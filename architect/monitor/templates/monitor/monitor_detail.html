@@ -19,26 +19,20 @@
 </div>
 {% endblock %}
 
-{% block extra_css %}
-<link href="{% static 'architect/css/layout.css' %}" rel="stylesheet">
-<link href="{% static 'architect/css/font-awesome.css' %}" rel="stylesheet">
-{% endblock %}
-
 {% block extra_js %}
-<script src="https://d3js.org/d3.v4.min.js"></script>
-<script src="{% static 'architect/js/d3.layout.hive.js' %}"></script>
-<script src="{% static 'architect/js/d3.layout.matrix.js' %}"></script>
-<script src="{% static 'architect/js/d3.utils.js' %}"></script>
-<script src="{% static 'architect/js/d3.plot.arc.js' %}"></script>
-<script src="{% static 'architect/js/d3.plot.bundle.js' %}"></script>
-<script src="{% static 'architect/js/d3.plot.force.js' %}"></script>
-<script src="{% static 'architect/js/d3.plot.hive.js' %}"></script>
-<script src="{% static 'architect/js/d3.plot.matrix.js' %}"></script>
-<script src="{% static 'architect/js/d3.plot.pack.js' %}"></script>
-<script src="{% static 'architect/js/d3.plot.sunburst.js' %}"></script>
-<script src="{% static 'architect/js/d3.plot.tree.js' %}"></script>
-<script src="{% static 'architect/js/d3.plot.treemap.js' %}"></script>
-<script src="{% static 'architect/js/jquery.timeago.js' %}"></script>
+<script src="{% static 'architect-monitor/js/d3.layout.hive.js' %}"></script>
+<script src="{% static 'architect-monitor/js/d3.layout.matrix.js' %}"></script>
+<script src="{% static 'architect-monitor/js/d3.utils.js' %}"></script>
+<script src="{% static 'architect-monitor/js/d3.plot.arc.js' %}"></script>
+<script src="{% static 'architect-monitor/js/d3.plot.bundle.js' %}"></script>
+<script src="{% static 'architect-monitor/js/d3.plot.force.js' %}"></script>
+<script src="{% static 'architect-monitor/js/d3.plot.hive.js' %}"></script>
+<script src="{% static 'architect-monitor/js/d3.plot.matrix.js' %}"></script>
+<script src="{% static 'architect-monitor/js/d3.plot.pack.js' %}"></script>
+<script src="{% static 'architect-monitor/js/d3.plot.sunburst.js' %}"></script>
+<script src="{% static 'architect-monitor/js/d3.plot.tree.js' %}"></script>
+<script src="{% static 'architect-monitor/js/d3.plot.treemap.js' %}"></script>
+<script src="{% static 'architect-monitor/js/jquery.timeago.js' %}"></script>
 <script>
 document.addEventListener("DOMContentLoaded", function(event) {
   console.log('Page DOM loaded.');
