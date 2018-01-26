@@ -5,6 +5,7 @@ pyaml
 pyyaml
 
 Django
+django-compressor
 django-jsonview
 django-yamlfield
 django-extensions
