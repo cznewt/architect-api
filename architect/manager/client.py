@@ -31,6 +31,7 @@ class BaseClient(object):
     def load_resources(self, resources=None):
         if resources is None:
             resources = self.resource_type_list()
+        print(resources)
         for resource in resources:
             self.load_resource_metadata(resource)
             count = len(self.resources.get(resource, {}))
@@ -41,14 +42,16 @@ class BaseClient(object):
         if resource not in self.resources:
             self.resources[resource] = {}
         resources = Resource.objects.filter(manager=self.manager(),
-                                            kind=resource)
+                                            kind=resource).only('id',
+                                                                'name',
+                                                                'kind',
+                                                                'status')
         for item in resources:
             self.resources[resource]['id{}'.format(item.id)] = {
                 'id': 'id{}'.format(item.id),
                 'name': item.name,
                 'kind': item.kind,
                 'status': item.status,
-                'metadata': item.metadata,
             }
 
     def load_relations(self):
@@ -80,32 +83,41 @@ class BaseClient(object):
                                                           resource['metadata'])
                     res.save()
 
+        res_list = {}
+        res_list_rev = {}
+        reses = Resource.objects.filter(manager=manager)
+        for res in reses:
+            res_list[res.uid] = res
+            res_list_rev[res.id] = res.uid
+
+        rel_list = {}
+        rels = Relationship.objects.filter(manager=manager)
+        for rel in rels:
+            rel_list['{}-{}'.format(res_list_rev[rel.source_id],
+                                    res_list_rev[rel.source_id])] = rel
+
         for relation_type, relations in self.relations.items():
             logger.info('Processed {} {} relations'.format(len(relations),
                                                            relation_type))
             for relation in relations:
-                try:
-                    source = Resource.objects.get(uid=relation['source'],
-                                                  manager=manager)
-                except Resource.DoesNotExist:
+                if relation['source'] not in res_list:
                     logger.error('No resource with'
                                  ' uid {} found'.format(relation['source']))
                     continue
-                try:
-                    target = Resource.objects.get(uid=relation['target'],
-                                                  manager=manager)
-                except Resource.DoesNotExist:
+                if relation['target'] not in res_list:
                     logger.error('No resource with'
                                  ' uid {} found'.format(relation['target']))
                     continue
-                resource = {
-                    'kind': relation['kind'],
-                    'manager': manager,
-                    'source': source,
-                    'target': target
-                }
-                res, created = Relationship.objects.get_or_create(**resource)
-                if created:
+                rel_key = '{}-{}'.format(relation['source'],
+                                         relation['target'])
+                if rel_key not in rel_list:
+                    resource = {
+                        'kind': relation['kind'],
+                        'manager': manager,
+                        'source': res_list[relation['source']],
+                        'target': res_list[relation['target']]
+                    }
+                    res = Relationship.objects.create(**resource)
                     res.save()
 
     def to_dict(self):

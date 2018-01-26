@@ -25,11 +25,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions',
-    'django_neomodel',
+    'django_select2',
     'architect.inventory',
     'architect.manager',
     'architect.manager.engine.saltstack',
     'architect.monitor',
+    'compressor'
 ]
 
 MIDDLEWARE = [
@@ -83,7 +84,18 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'architect.wsgi.application'
 
-if 'databases' in CONFIG:
+if 'TRAVIS' in os.environ:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'travisci',
+            'USER': 'postgres',
+            'PASSWORD': '',
+            'HOST': 'localhost',
+            'PORT': '',
+        }
+    }
+elif 'databases' in CONFIG:
     DATABASES = CONFIG['databases']
 else:
     DATABASES = {
@@ -93,7 +105,13 @@ else:
         }
     }
 
-if 'caches' in CONFIG:
+if 'TRAVIS' in os.environ:
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        }
+    }
+elif 'caches' in CONFIG:
     CACHES = CONFIG['caches']
 else:
     CACHES = {
@@ -132,7 +150,7 @@ if STATIC_ROOT is None:
 if STATIC_URL is None:
     STATIC_URL = WEBROOT + 'static/'
 
-RESOURCE_CACHE_DURATION = 300
+RESOURCE_CACHE_DURATION = 10
 
 INVENTORY_ENGINES = CONFIG.get('inventory', {})
 MANAGER_ENGINES = CONFIG.get('manager', {})
@@ -178,3 +196,27 @@ CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'Europe/Prague'
+
+# Compressor settings
+COMPRESS_ENABLED = True
+COMPRESS_OFFLINE = True
+COMPRESS_ROOT = STATIC_ROOT
+COMPRESS_PRECOMPILERS = (
+    ('text/scss', 'sass {infile} {outfile}'),
+)
+COMPRESS_CSS_FILTERS = (
+    'compressor.filters.css_default.CssAbsoluteFilter',
+)
+COMPRESS_CSS_HASHING_METHOD = 'hash'
+COMPRESS_PARSER = 'compressor.parser.HtmlParser'
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'architect', 'static'),
+]
+
+STATICFILES_FINDERS = (
+    'npm.finders.NpmFinder',
+    'compressor.finders.CompressorFinder',
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+)

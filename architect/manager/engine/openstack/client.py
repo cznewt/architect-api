@@ -12,12 +12,13 @@ from celery.utils.log import get_logger
 
 logger = get_logger(__name__)
 
-NETWORK_RESOURCES = [
+DICT_RESOURCES = [
     'os_router',
     'os_floating_ip',
     'os_network',
     'os_subnet',
-    'os_port'
+    'os_port',
+    'os_stack'
 ]
 
 
@@ -59,6 +60,7 @@ class OpenStackClient(BaseClient):
         if self.auth():
             if resources is None:
                 resources = [
+                    'os_stack',
                     'os_server',
                     # 'os_security_group',
                     'os_key_pair',
@@ -70,14 +72,22 @@ class OpenStackClient(BaseClient):
                     'os_router',
                     'os_floating_ip',
                     'os_port',
-                    # 'os_stack',
                 ]
                 if self.scope == 'global':
-                    resources += ['os_project', 'os_user']
-                    resources += ['os_aggregate', 'os_hypervisor']
+                    resources += [
+                        'os_project',
+                        'os_user',
+                        'os_aggregate',
+                        'os_hypervisor'
+                    ]
 
             for resource in resources:
-                metadata = self.get_resource_metadata(resource)
+                try:
+                    metadata = self.get_resource_metadata(resource)
+                except ConnectFailure as exception:
+                    logger.error('Error getting '
+                                 'resource {}: {}'.format(resource, exception))
+                    continue
                 self.process_resource_metadata(resource, metadata)
                 count = len(self.resources.get(resource, {}))
                 logger.info("Processed {} {} resources".format(count,
@@ -108,7 +118,7 @@ class OpenStackClient(BaseClient):
                                       metadata=resource)
         else:
             for item in metadata:
-                if kind in NETWORK_RESOURCES:
+                if kind in DICT_RESOURCES:
                     resource = item
                 else:
                     resource = item.to_dict()
@@ -179,7 +189,7 @@ class OpenStackClient(BaseClient):
                 resource = stack.to_dict()
                 resource['resources'] = []
                 try:
-                    resources = self.orch_api.resources.list(stack['id'],
+                    resources = self.orch_api.resources.list(resource['id'],
                                                              nested_depth=2)
                     for stack_resource in resources:
                         resource['resources'].append(stack_resource.to_dict())
@@ -215,10 +225,13 @@ class OpenStackClient(BaseClient):
             for ext_res in resource['metadata']['resources']:
                 if ext_res['resource_type'] in self._get_resource_mapping():
                     self._create_relation(
-                        'os_stack-{}'.format(
-                            self._get_resource_mapping()[ext_res['resource_type']]),
-                        resource_id,
-                        ext_res['physical_resource_id'])
+                        'in_os_stack',
+                        ext_res['physical_resource_id'],
+                        resource_id)
+                else:
+                    logger.error('Resource type {} not found at '
+                                 'stack {}'.format(ext_res['resource_type'],
+                                                   resource_id))
 
         # Define relationships between aggregate zone and all hypervisors.
         for resource_id, resource in self.resources.get('os_aggregate',

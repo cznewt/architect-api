@@ -30,15 +30,23 @@ Manager Component
     relational and quantitative analysis and visualisations.
 
 Monitor Component
-	The structure of infrastructure resources is directed graph that can be
-	subject for further analysis. We can perform several transformation
-	functions on this graph data in Monitor component.
+    The structure of infrastructure resources is directed graph that can be
+    subject for further analysis. We can perform several transformation
+    functions on this graph data in Monitor component.
 
 Following figure shows high-level achitecture of Architect system.
 
 .. figure:: ./doc/source/static/scheme/high_level_arch.png
     :align: center
     :width: 80%
+
+
+Architect Documentation
+=======================
+
+Installation instructions, getting started guides, and API documentation.
+
+https://architect-api.readthedocs.io/
 
 
 Architect Components
@@ -161,11 +169,11 @@ filesystem.
 
 .. code-block:: yaml
 
-	class_dir: /srv/salt/reclass/classes
-	node_dir: /srv/salt/reclass/nodes
-	storage_type: yaml_fs
-	filter_keys:
-	  - _param
+    class_dir: /srv/salt/reclass/classes
+    node_dir: /srv/salt/reclass/nodes
+    storage_type: yaml_fs
+    filter_keys:
+      - _param
 
 
 Architect Manager Configuration
@@ -388,114 +396,6 @@ is managed through it's HTTP API service.
       port: 8181
 
 
-Data Analysis
-=============
-
-The most important part of the Architect is the analysis of the resource
-states provided by the managed/monitored systems.
-
-Relational Analysis
--------------------
-
-You can analyse the resource models in several ways. Either you want to get
-the subsets of the resources (vertices and edges) or you want to combine
-multiple graphs and link the same nodes in each.
-
-
-Subgraphs - Slicing and Dicing
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-To slice and dice is to break a body of information down into smaller parts or
-to examine it from different viewpoints that we can understand it better.
-
-In cooking, you can slice a vegetable or other food or you can dice it (which
-means to break it down into small cubes). One approach to dicing is to first
-slice and then cut the slices up into dices.
-
-In data analysis, the term generally implies a systematic reduction of a body
-of data into smaller parts or views that will yield more information. The term
-is also used to mean the presentation of information in a variety of different
-and useful ways. In our case we find useful subgraphs of the infrastructures.
-
-For example in OpenStack infrastructure we can show the ``aggregate zone`` -
-``hypervisor`` - ``instance`` relations and show the quantitative properties
-of hypervisors and instances. The properties can be used RAM or CPU, runtime -
-the age of resources or any other property of value.
-
-.. code-block:: yaml
-
-    name: Tree Structure (aggregate zone > hypervisor > instance)
-    height: 1
-    chart: tree
-    data_source:
-      default:
-        manager: openstack-region
-        layout: hierarchy
-        hierarchy_layers:
-          0:
-            name: Region1
-            kind:
-          1:
-            kind: os_aggregate_zone
-          2:
-            kind: os_hypervisor
-            target: in_os_aggregate_zone
-          3:
-            kind: os_server
-            target: on_os_hypervisor
-
-Another example would be filtering of resources by tenant or stack
-attributions. This reduces the number of nodes to the reasonable amount.
-
-
-Inter-graphs
-~~~~~~~~~~~~
-
-On other hand you want to combine several graphs to create one overlaying
-graph. This is very useful to combine in other ways undelated resources. For
-example we can say that ``OpenStack Server`` or ``AWS Instance`` and ``Salt
-Minion`` are really the same resources.
-
-
-Quantitative Analysis
----------------------
-
-With the relational information we are now able to corellate resources and
-joined topologies from various information sources. This gives you the real
-power, while having the underlying relational structure, you can gather
-unstructured metrics, events, alarms and put them into proper context in you
-managed resources.
-
-The metrics collected from you infrastructure can be assigned to various
-vertices and edges in your network. This can give you more insight to the
-utilisation of depicted infrastructures.
-
-You can have the following query to the prometheus server that gives you the
-rate of error response codes going through a HAproxy for example.
-
-.. code-block:: yaml
-
-    sum(irate(haproxy_http_response_5xx{
-        proxy=~"glance.*",
-        sv="FRONTEND"
-    }[5m]))
-
-Or you can have the query with the same result to the InfluxDB server:
-
-.. code-block:: yaml
-
-    SELECT sum("count")
-        FROM "openstack_glance_http_response_times"
-        WHERE "hostname" =~ /$server/
-            AND "http_status" = '5xx'
-            AND $timeFilter
-        GROUP BY time($interval)
-    fill(0)
-
-Having these metrics you can assign numerical properties of your relational
-nodes with these values and use them in correct context.
-
-
 Data Visualization
 ==================
 
@@ -505,8 +405,8 @@ time you need to emphasise different qualities of displayed resources you can
 choose from several layouts to display the data.
 
 
-Relational Layouts
-------------------
+Relational Visualizations
+-------------------------
 
 
 Network Graph Layouts
@@ -527,11 +427,11 @@ assigning forces among the set of edges and the set of nodes, based on their
 relative positions, and then using these forces either to simulate the motion
 of the edges and nodes or to minimize their energy.
 
-.. figure:: ./doc/source/static/img/monitor/force-directed-plot.png
-    :width: 400px
+.. figure:: ./doc/source/static/img/monitor/force-directed-graph.png
+    :width: 100%
     :figclass: align-center
 
-    Force-directed plot of all OpenStack resources (cca 3000 resources)
+    Kubernetes cluster in Force-directed graph
 
 
 Hive Plot
@@ -543,10 +443,10 @@ mapping is based on network structural properties. Edges are drawn as curved
 links. Simple and interpretable.
 
 .. figure:: ./doc/source/static/img/monitor/hive-plot.png
-    :width: 600px
+    :width: 100%
     :figclass: align-center
 
-    Hive plot of all OpenStack resources (cca 3000 resources)
+    Kubernetes cluster in Hive plot
 
 
 Arc Diagram
@@ -560,7 +460,7 @@ line itself are also allowed as edges, as long as they connect only vertices
 that are consecutive along the line.
 
 .. figure:: ./doc/source/static/img/monitor/arc-diagram.png
-    :width: 400px
+    :width: 100%
     :figclass: align-center
 
     Arc diagram of OpenStack project's resources (cca 100 resources)
@@ -574,7 +474,7 @@ elements of the matrix indicate whether pairs of vertices are adjacent or not
 in the graph.
 
 .. figure:: ./doc/source/static/img/monitor/adjacency-matrix.png
-    :width: 400px
+    :width: 100%
     :figclass: align-center
 
     Adjacency matrix of OpenStack project's resources (cca 100 resources)
@@ -589,14 +489,14 @@ is how he outlines the particular thought process that goes into making a
 visualization.
 
 .. figure:: ./doc/source/static/img/monitor/hiearchical-edge-bundling.png
-    :width: 400px
+    :width: 100%
     :figclass: align-center
 
-    Hierarchical edge bundling of SaltStack services (cca 100 resources)
+    SaltStack services in Hierarchical edge bundle
 
 
-Tree Graph Layouts
-~~~~~~~~~~~~~~~~~~
+Hierarchy Structure Layouts
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Directed graph traversal can give os acyclic structures suitable for showing
 parent-child relations in your subraphs.
@@ -610,6 +510,12 @@ same depth. Dendograms are typically less compact than tidy trees, but are
 useful when all the leaves should be at the same level, such as for
 hierarchical clustering or phylogenetic tree diagrams.
 
+.. figure:: ./doc/source/static/img/monitor/node-link-tree.png
+    :width: 100%
+    :figclass: align-center
+
+    SaltStack services in Hierarchical edge bundle
+
 
 Partition Layouts
 ^^^^^^^^^^^^^^^^^
@@ -621,3 +527,44 @@ their placement relative to other nodes reveals their position in the
 hierarchy. The size of the nodes encodes a quantitative dimension that would
 be difficult to show in a node-link diagram.
 
+.. figure:: ./doc/source/static/img/monitor/sunburst.png
+    :width: 100%
+    :figclass: align-center
+
+    SaltStack services in Sunburst Diagram
+
+
+Circle Packing
+^^^^^^^^^^^^^^
+
+We display resources as circles with lower-level resources as inner circles.
+Circle packing in a circle is a two-dimensional packing problem with the
+objective of packing unit circles into the smallest possible larger circle.
+
+.. figure:: ./doc/source/static/img/monitor/circle-packing.png
+    :width: 100%
+    :figclass: align-center
+
+    SaltStack services in Circle Packing
+
+
+Directed Acyclic Graph Layouts
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+A directed acyclic graph (DAG), is a finite directed graph with no directed
+cycles. That is, it consists of finitely many vertices and edges, with each
+edge directed from one vertex to another, such that there is no way to start
+at any vertex v and follow a consistently-directed sequence of edges that
+eventually loops back to v again. Equivalently, a DAG is a directed graph that
+has a topological ordering, a sequence of the vertices such that every edge is
+directed from earlier to later in the sequence.
+
+
+Layered Graph
+^^^^^^^^^^^^^
+
+Layered graph drawing or hierarchical graph drawing is a type of graph drawing
+in which the vertices of a directed graph are drawn in horizontal rows or
+layers with the edges generally directed downwards. It is also known as
+Sugiyama-style graph drawing after Kozo Sugiyama, who first developed this
+drawing style.

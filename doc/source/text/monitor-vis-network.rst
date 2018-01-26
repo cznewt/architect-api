@@ -1,7 +1,7 @@
 
-====================
-Graph Visualizations
-====================
+============================
+Network Graph Visualizations
+============================
 
 ``Graph drawing`` or ``network diagram`` is a pictorial representation of the
 vertices and edges of a graph. This drawing should not be confused with the
@@ -40,10 +40,10 @@ their layout makes it easy to display multivariate data associated with the
 vertices of the graph.
 
 .. figure:: ../static/img/monitor/arc-diagram.png
-    :width: 100%
+    :width: 80%
     :figclass: align-center
 
-    Arc diagram of OpenStack project's resources (cca 100 nodes)
+    OpenStack project resources in Arc diagram (cca 100 resources)
 
 
 More Information
@@ -74,11 +74,17 @@ following criteria: uniform edge length, uniform vertex distribution and
 showing symmetry. This last criterion is among the most important ones and is
 hard to achieve with any other type of algorithm.
 
-.. figure:: ../static/img/monitor/force-directed-plot.png
-    :width: 600px
+.. figure:: ../static/img/monitor/force-directed-graph.png
+    :width: 50%
     :figclass: align-center
 
-    Force-directed plot of all OpenStack resources (cca 3000 nodes)
+    Kubernetes cluster in Force-directed graph
+
+.. figure:: ../static/img/monitor/force-directed-graph-huge.png
+    :width: 80%
+    :figclass: align-center
+
+    Whole OpenStack cloud in Force-directed graph (cca 3000 resources)
 
 
 More Information
@@ -108,12 +114,8 @@ edges between their respective child nodes. Furthermore, hierarchical edge
 bundling is a generic method which can be used in conjunction with existing
 tree visualization techniques.
 
-
-Sample Visualizations
----------------------
-
 .. figure:: ../static/img/monitor/hiearchical-edge-bundling.png
-    :width: 100%
+    :width: 80%
     :figclass: align-center
 
     Hierarchical edge bundling of SaltStack services and their relations (cca 100 nodes)
@@ -138,14 +140,17 @@ The purpose of the hive plot is to establish a new baseline for visualization
 of large networks — a method that is both general and tunable and useful as a
 starting point in visually exploring network structure.
 
-Sample Visualizations
----------------------
-
 .. figure:: ../static/img/monitor/hive-plot.png
-    :width: 100%
+    :width: 50%
     :figclass: align-center
 
-    Hive plot of all OpenStack resources (cca 3000 nodes)
+    Kubernetes cluster in Hive plot
+
+.. figure:: ../static/img/monitor/hive-plot-huge.png
+    :width: 80%
+    :figclass: align-center
+
+    Whole OpenStack cloud in Hive plot (cca 10 000 resources)
 
 
 More Information
@@ -174,7 +179,7 @@ vertex–edge pairs are incident or not, and degree matrix which contains
 information about the degree of each vertex.
 
 .. figure:: ../static/img/monitor/adjacency-matrix.png
-    :width: 100%
+    :width: 80%
     :figclass: align-center
 
     Adjacency matrix of OpenStack project's resources (cca 100 nodes)
@@ -190,6 +195,7 @@ More Information
 
 Treemap
 =======
+
 
 More Information
 ----------------

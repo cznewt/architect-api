@@ -1,5 +1,7 @@
 
+from django import forms
 from django.contrib import admin
+from django_select2.forms import ModelSelect2Widget
 from architect.manager.models import Resource, Manager, Relationship
 from architect.manager.tasks import get_manager_status_task
 
@@ -19,14 +21,53 @@ class ManagerAdmin(admin.ModelAdmin):
     actions = [get_manager_status]
 
 
-class SourceRelationshipInline(admin.StackedInline):
+class RelationWidget(ModelSelect2Widget):
     model = Relationship
+
+    def label_from_instance(obj):
+        return str(obj.name)
+
+
+class SourceRelationshipForm(forms.ModelForm):
+    class Meta:
+        model = Relationship
+        fields = (
+            'target',
+            'kind',
+            'size',
+            'status',
+        )
+        widgets = {
+            'target': RelationWidget,
+        }
+
+
+class TargetRelationshipForm(forms.ModelForm):
+    class Meta:
+        model = Relationship
+        fields = (
+            'source',
+            'kind',
+            'size',
+            'status',
+        )
+        widgets = {
+            'source': RelationWidget,
+        }
+
+
+class SourceRelationshipInline(admin.TabularInline):
+    model = Relationship
+    form = SourceRelationshipForm
     fk_name = 'source'
+    extra = 1
 
 
-class TargetRelationshipInline(admin.StackedInline):
+class TargetRelationshipInline(admin.TabularInline):
     model = Relationship
+    form = TargetRelationshipForm
     fk_name = 'target'
+    extra = 1
 
 
 @admin.register(Resource)
@@ -38,6 +79,7 @@ class ResourceAdmin(admin.ModelAdmin):
         SourceRelationshipInline,
         TargetRelationshipInline,
     ]
+
 
 @admin.register(Relationship)
 class RelationshipAdmin(admin.ModelAdmin):

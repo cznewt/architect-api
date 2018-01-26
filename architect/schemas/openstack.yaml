@@ -2,6 +2,9 @@ relation:
   in_os_project:
     relation:
       default: project
+  in_os_stack:
+    relation:
+      default: stack
   in_os_network:
     relation:
       default: network
@@ -43,6 +46,10 @@ resource:
     name: Floating IP
     icon: fa:cube
     model:
+      stack:
+        type: relationship_to
+        model: in_os_stack
+        target: os_stack
       project:
         type: relationship_to
         model: in_os_project
@@ -81,12 +88,21 @@ resource:
     client: nova
     name: Key Pair
     icon: fa:key
+    model:
+      stack:
+        type: relationship_to
+        model: in_os_stack
+        target: os_stack
   os_network:
     resource: OS::Neutron::Net
     client: neutron
     name: Network
     icon: fa:share-alt
     model:
+      stack:
+        type: relationship_to
+        model: in_os_stack
+        target: os_stack
       project:
         type: relationship_to
         model: in_os_project
@@ -101,6 +117,10 @@ resource:
     name: Port
     icon: fa:cube
     model:
+      stack:
+        type: relationship_to
+        model: in_os_stack
+        target: os_stack
       project:
         type: relationship_to
         model: in_os_project
@@ -129,6 +149,10 @@ resource:
     name: Router
     icon: fa:arrows-alt
     model:
+      stack:
+        type: relationship_to
+        model: in_os_stack
+        target: os_stack
       project:
         type: relationship_to
         model: in_os_project
@@ -143,6 +167,10 @@ resource:
     name: Server
     icon: fa:server
     model:
+      stack:
+        type: relationship_to
+        model: in_os_stack
+        target: os_stack
       project:
         type: relationship_to
         model: in_os_project
@@ -183,6 +211,10 @@ resource:
     name: Subnet
     icon: fa:share-alt
     model:
+      stack:
+        type: relationship_to
+        model: in_os_stack
+        target: os_stack
       project:
         type: relationship_to
         model: in_os_project
@@ -202,6 +234,10 @@ resource:
     name: Volume
     icon: fa:cube
     model:
+      stack:
+        type: relationship_to
+        model: in_os_stack
+        target: os_stack
       project:
         type: relationship_to
         model: in_os_project

@@ -2,7 +2,7 @@
 
 from setuptools import setup, find_packages
 
-VERSION = '0.1'
+VERSION = '0.2'
 
 with open('README.rst') as readme:
     LONG_DESCRIPTION = ''.join(readme.readlines())
@@ -35,7 +35,7 @@ setup(
             'pytest',
             'flake8'],
         'docs': [
-            'sphinx >= 1.4',
+            'sphinx',
             'sphinx_rtd_theme']
     },
     classifiers=[

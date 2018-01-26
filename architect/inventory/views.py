@@ -4,6 +4,7 @@ from django.views.generic.base import TemplateView
 from architect.views import JSONDataView
 from .models import Inventory
 
+
 class InventoryListView(TemplateView):
 
     template_name = "inventory/inventory_list.html"
