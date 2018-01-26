@@ -158,7 +158,7 @@ Architect Inventory Configuration
 ---------------------------------
 
 Each manager endpoint expects different configuration. Following samples show
-the required parameters to setup individual invetory backends.
+the required parameters to setup individual inventory backends.
 
 
 Reclass (Inventory Backend)
@@ -268,8 +268,8 @@ Configuration for manager connection to Salt API.
     password: {{ user-password }}
 
 Following figure shows how SaltStack integrates with Architect Inventory and
-Manager. Please note that you can use Inventory intergration independetly of
-the Manager intergration.
+Manager. Please note that you can use Inventory integration independently of
+the Manager integration.
 
 .. figure:: ./doc/source/static/scheme/manager_salt.png
     :align: center
@@ -291,7 +291,7 @@ Architect Monitor Configuration
 
 Following config snippets show configuration for supported types of
 visualization. Currently we support Network graphs, hierarchical structures
-for quatitative analysis.
+for quantitative analysis.
 
 
 Network Graphs
@@ -325,7 +325,7 @@ Hiearchical Structures
 ~~~~~~~~~~~~~~~~~~~~~~
 
 The manager endpoint is used as source of relational data. This data can be
-traversed to create hiearchies. The hierarchical data has it's own family of
+traversed to create hierarchies. The hierarchical data has it's own family of
 visualization techniques.
 
 .. code-block:: yaml
@@ -382,8 +382,8 @@ and Top modules and add following to the Salt Master configuration files.
 Salt Master (Manager Integration)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-You can control salt master infrasturctue and get the status of managed hosts
-and resources. The Salt engine ``architect`` relays the state outpusts of
+You can control salt master infrastructure and get the status of managed hosts
+and resources. The Salt engine ``architect`` relays the state outputs of
 individual state runs and ``architect`` runners and modules provide the
 capabilities to interface with salt and architect functions. The Salt Master
 is managed through it's HTTP API service.
