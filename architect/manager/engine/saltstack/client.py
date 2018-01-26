@@ -95,7 +95,6 @@ class SaltStackClient(BaseClient):
 
     def process_resource_metadata(self, kind, metadata):
         if kind == 'salt_event':
-            print(metadata)
             manager = Manager.objects.get(name=metadata.get('manager'))
             roles = []
             if isinstance(metadata.get('return'), (list, tuple)):
@@ -158,7 +157,7 @@ class SaltStackClient(BaseClient):
                     service.status = 'error'
                     to_save = True
                 if unknown > 0 and service.status != 'unknown':
-                    service.status = 'unknown'
+                    service.status = 'build'
                     to_save = True
                 elif service.status != 'active':
                     service.status = 'active'

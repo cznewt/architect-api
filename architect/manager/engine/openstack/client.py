@@ -187,12 +187,26 @@ class OpenStackClient(BaseClient):
                 search_opts=search_opts)
             for stack in stacks:
                 resource = stack.to_dict()
-                resource['resources'] = []
+                resource['resources'] = {}
                 try:
                     resources = self.orch_api.resources.list(resource['id'],
                                                              nested_depth=2)
                     for stack_resource in resources:
-                        resource['resources'].append(stack_resource.to_dict())
+                        res_dict = stack_resource.to_dict()
+                        stack_id = None
+                        nested_stack_id = None
+                        for link in res_dict['links']:
+                            if link['rel'] == 'stack':
+                                stack_id = link['href'].split('/')[-2]
+                            if link['rel'] == 'nested':
+                                nested_stack_id = link['href'].split('/')[-2]
+                        if nested_stack_id is None:
+                            res_stack = stack_id
+                        else:
+                            res_stack = nested_stack_id
+                        if res_stack not in resource['resources']:
+                            resource['resources'][res_stack] = {'res': {}, 'stack': resource}
+                        resource['resources'][res_stack]['res'][res_dict['resource_name']] = res_dict
                 except HTTPBadRequest as exception:
                     logger.error(exception)
                 response.append(resource)
@@ -222,16 +236,21 @@ class OpenStackClient(BaseClient):
 
         for resource_id, resource in self.resources.get('os_stack',
                                                         {}).items():
-            for ext_res in resource['metadata']['resources']:
-                if ext_res['resource_type'] in self._get_resource_mapping():
-                    self._create_relation(
-                        'in_os_stack',
-                        ext_res['physical_resource_id'],
-                        resource_id)
-                else:
-                    logger.error('Resource type {} not found at '
-                                 'stack {}'.format(ext_res['resource_type'],
-                                                   resource_id))
+            for ext_stack, ext_res_dict in resource['metadata']['resources'].items():
+                #if ext_res['physical_resource_id'] == '':
+                logger.info(ext_stack)
+                logger.info(pyaml.dump(ext_res_dict['stack']))
+                logger.info(len(ext_res_dict['res']))
+                for res_name, ext_res in ext_res_dict['res'].items():
+                    if ext_res['resource_type'] in self._get_resource_mapping():
+                        self._create_relation(
+                            'in_os_stack',
+                            ext_res['physical_resource_id'],
+                            resource_id)
+                    else:
+                        logger.error('Resource type {} not found at '
+                                     'stack {}'.format(ext_res['resource_type'],
+                                                       resource_id))
 
         # Define relationships between aggregate zone and all hypervisors.
         for resource_id, resource in self.resources.get('os_aggregate',
