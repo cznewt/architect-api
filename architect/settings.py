@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'architect.manager',
     'architect.manager.engine.saltstack',
     'architect.monitor',
+    'compressor'
 ]
 
 MIDDLEWARE = [
@@ -195,3 +196,27 @@ CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'Europe/Prague'
+
+# Compressor settings
+COMPRESS_ENABLED = True
+COMPRESS_OFFLINE = True
+COMPRESS_ROOT = STATIC_ROOT
+COMPRESS_PRECOMPILERS = (
+    ('text/scss', 'sass {infile} {outfile}'),
+)
+COMPRESS_CSS_FILTERS = (
+    'compressor.filters.css_default.CssAbsoluteFilter',
+)
+COMPRESS_CSS_HASHING_METHOD = 'hash'
+COMPRESS_PARSER = 'compressor.parser.HtmlParser'
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'architect', 'static'),
+]
+
+STATICFILES_FINDERS = (
+    'npm.finders.NpmFinder',
+    'compressor.finders.CompressorFinder',
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+)
