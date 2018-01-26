@@ -10,6 +10,7 @@ django-jsonview
 django-yamlfield
 django-extensions
 django-material
+django-npm
 django-viewflow
 viewflow-extensions
 django_select2
