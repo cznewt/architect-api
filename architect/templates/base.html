@@ -2,52 +2,54 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-<meta charset="utf-8">
-<title>The Architect</title>
-{% include 'material/includes/material_css.html' %}
-{% block extra_css %}{% endblock %}
+    <meta charset="utf-8">
+    <title>The Architect</title>
+    {% include "_head.html" %}
+    {% block extra_css %}{% endblock %}
   </head>
   <body>
-    <nav>
-      <div class="nav-wrapper">
-        <ul>
-          <li {% block nav_home_cls%}{% endblock %}>
-            <a href="/"><i class="material-icons">home</i></a>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <a class="navbar-brand" href="#">Navbar</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item {% block nav_home_cls%}{% endblock %}">
+            <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
           </li>
           {% if user.is_authenticated %}
-          <li {% block nav_inventory_cls %}{% endblock %}>
-            <a href="{% url 'inventory:inventory_list' %}">
-              <i class="material-icons left">compare</i>Inventory
-            </a>
+          <li class="nav-item {% block nav_inventory_cls %}{% endblock %}">
+            <a class="nav-link" href="{% url 'inventory:inventory_list' %}">Inventory</a>
           </li>
-          <li {% block nav_manager_cls %}{% endblock %}>
-            <a href="{% url 'manager:manager_list' %}">
-              <i class="material-icons left">flag</i>Manager
-            </a>
+          <li class="nav-item {% block nav_manager_cls %}{% endblock %}">
+            <a class="nav-link" href="{% url 'manager:manager_list' %}">Manager</a>
           </li>
-          <li {% block nav_monitor_cls %}{% endblock %}>
-            <a href="{% url 'monitor:monitor_list' %}">
-              <i class="material-icons left">search</i>Monitor
-            </a>
+          <li class="nav-item {% block nav_monitor_cls %}{% endblock %}">
+            <a class="nav-link" href="{% url 'monitor:monitor_list' %}">Monitor</a>
           </li>
           {% endif %}
         </ul>
-        <ul class="right">
-            <li {% block nav_login_cls%}{% endblock %}>
-                {% if user.is_authenticated %}
-                <a href="{% url 'logout' %}">Logout</a>
-                {% else %}
-                <a href="{% url 'login' %}">Login</a>
-                {% endif %}
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item {% block nav_login_cls%}{% endblock %}">
+            {% if user.is_authenticated %}
+            <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+            {% else %}
+            <a class="nav-link" href="{% url 'login' %}">Login</a>
+            {% endif %}
           </li>
         </ul>
       </div>
     </nav>
-    <main>
-{% block content %}{% endblock %}
-    </main>
-<script src="{% static 'material/js/jquery.js' %}"></script>
-{% include 'material/includes/material_js.html' %}
-{% block extra_js %}{% endblock %}
+
+    <div class="container">
+    {% block content %}{% endblock %}
+    </div>
+
+    <script src="{% static 'material/js/jquery.js' %}"></script>
+    <script src="{% static 'bootstrap/dist/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'd3/build/d3.js' %}"></script>
+    {% block extra_js %}{% endblock %}
   </body>
 </html>
