@@ -103,3 +103,5 @@ ENV/
 architect_config.yml
 /static/
 /media/
+/node_modules/
+.sass-cache/
