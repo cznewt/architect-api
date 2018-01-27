@@ -7,12 +7,16 @@
     "doc": "doc"
   },
   "dependencies": {
+    "billboard.js": "^1.2.0",
     "bootstrap": "^4.0.0",
+    "bootswatch": "^4.0.0",
     "d3": "^4.12.2",
+    "dagre-d3": "^0.6.1",
     "font-awesome": "^4.7.0",
     "jquery": "^3.3.1",
     "popper.js": "^1.12.9",
-    "timeago": "^1.6.1"
+    "timeago": "^1.6.1",
+    "webcola": "^3.3.7"
   },
   "devDependencies": {},
   "scripts": {

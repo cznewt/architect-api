@@ -1,0 +1,17 @@
+
+.edge-bundle {
+
+  .node {
+    font: 10px sans-serif;
+    cursor: pointer;
+  }
+
+  .link {
+    stroke: #ddd;
+    stroke-width: 1px;
+    stroke-opacity: 0.6;
+    fill: none;
+    pointer-events: none;
+  }
+
+}

@@ -1,15 +1,15 @@
 """
 Architect service URL configuration
 """
-
+from django.contrib import admin
 from django.urls import path
 from django.views import generic
 from django.conf.urls import include
-from material.frontend import urls as frontend_urls
 
 urlpatterns = [
     path('',
          generic.RedirectView.as_view(url='/manager/v1')),
+    path('admin/', admin.site.urls),
     path('doc/',
          include('django.contrib.admindocs.urls')),
     path('select2/',
@@ -22,5 +22,4 @@ urlpatterns = [
          include('architect.monitor.urls', namespace='monitor')),
     path('salt/',
          include('architect.manager.engine.saltstack.urls')),
-    path('workflow/', include(frontend_urls)),
 ]

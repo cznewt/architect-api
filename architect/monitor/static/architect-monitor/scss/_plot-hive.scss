@@ -1,0 +1,36 @@
+
+.hive {
+
+  .link {
+    fill: none;
+    stroke: #ddd;
+    stroke-width: 1px;
+    stroke-opacity: 0.6;
+  }
+
+  .axis {
+    stroke: #666;
+    stroke-width: 1.5px;
+  }
+
+  .axis text {
+    font-family: "Open Sans";
+  }
+
+  .node {
+    fill: #fff;
+    cursor: pointer;
+    stroke: #666;
+    stroke-width: 1.5px;
+  }
+
+  .node text {
+    stroke-width: 0;
+  }
+
+  .active,
+  .selected {
+    stroke: #f00!important;
+  }
+
+}

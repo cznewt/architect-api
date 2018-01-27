@@ -9,35 +9,21 @@
   </head>
   <body>
 <div class="container-fluid">
-    <div class="row d-flex d-md-block flex-nowrap wrapper">
-        <div class="col-md-3 float-left col-1 pl-0 pr-0 collapse width show" id="sidebar">
-            <div class="list-group border-0 card text-center text-md-left">
-                {% if user.is_authenticated %}
-                <a href="{% url 'inventory:inventory_list' %}" class="list-group-item d-inline-block collapsed" data-parent="#sidebar">
-                    <i class="fa fa-film"></i> 
-                    <span class="d-none d-md-inline">Inventories</span>
-                </a>
-                <a href="{% url 'manager:manager_list' %}" class="list-group-item d-inline-block collapsed" data-parent="#sidebar">
-                    <i class="fa fa-heart"></i> 
-                    <span class="d-none d-md-inline">Managers</span>
-                </a>
-                <a href="{% url 'monitor:monitor_list' %}" class="list-group-item d-inline-block collapsed" data-parent="#sidebar">
-                    <i class="fa fa-list"></i> 
-                    <span class="d-none d-md-inline">Monitors</span>
-                </a>
-                {% endif %}
-            </div>
-        </div>
-        <main class="col-md-9 float-left col px-5 pl-md-2 pt-2 main">
-            <a href="#" data-target="#sidebar" data-toggle="collapse">
-                <i class="fa fa-navicon fa-2x py-2 p-1"></i>
-            </a>
-            {% block content %}{% endblock %}
-        </main>
+  <div class="row d-flex d-md-block flex-nowrap wrapper">
+    <div class="col-md-3 float-left col-1 collapse width show" id="sidebar">
+      {% include "_menu.html" %}
     </div>
+    <main class="col-md-9 float-left col pl-0 pr-0 px-5 pl-md-2 pt-2 main">
+      {% comment %}
+      <a href="#" data-target="#sidebar" data-toggle="collapse">
+        <i class="fa fa-navicon fa-2x py-2 p-1"></i>
+      </a>
+      {% endcomment %}
+      {% block content %}{% endblock %}
+    </main>
+  </div>
 </div>
 {% include "_body.html" %}
 {% block extra_js %}{% endblock %}
-
   </body>
 </html>

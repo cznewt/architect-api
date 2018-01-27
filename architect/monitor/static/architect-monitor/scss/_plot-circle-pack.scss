@@ -1,0 +1,28 @@
+
+.circle-pack {
+
+  .node {
+    cursor: pointer;
+  }
+
+  .node:hover {
+  /*   stroke: #000;
+    stroke-width: 0.5px; */
+    opacity: 0.3;
+  }
+
+  .node--leaf {
+    fill: #fff;
+  }
+
+  .label {
+    text-anchor: middle;
+  }
+
+  .label,
+  .node--root,
+  .node--leaf {
+    pointer-events: none;
+  }
+
+}
