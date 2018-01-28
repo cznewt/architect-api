@@ -11,7 +11,10 @@ var RelationalPlot = function(RelationalPlot){
     RelationalPlot.circlePack = function(dataUrl, graphSelector, refreshInterval) {
 
         var margin = 0,
-            diameter = d3.select(graphSelector).node().clientWidth;
+            diameter = Math.min(
+                $(graphSelector).innerWidth(),
+                $(graphSelector).innerHeight()
+            );
 
         var color = d3.scaleLinear()
             .domain([-1, 5])

@@ -10,7 +10,10 @@ var RelationalPlot = function(RelationalPlot){
         var adjacencyMatrix = d3.adjacencyMatrixLayout(),
             colorMapping = d3.scaleOrdinal()
                 .range(d3.schemeCategory20b),
-            width = $(graphSelector).innerWidth(),
+            width = Math.min(
+                $(graphSelector).innerWidth(),
+                $(graphSelector).innerHeight()
+            ),
             graphWidth = width - 10;
 
         var graph = this;
