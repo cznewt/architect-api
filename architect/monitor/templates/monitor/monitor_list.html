@@ -4,14 +4,14 @@
 
 {% block content %}
 <header class="content__title">
-  <h1>Available Monitors</h1>
+  <h1>Available Dashboards</h1>
 </header>
 <div class="row">
   {% for monitor in monitor_list %}
   <div class="col-sm-6 col-md-4 mb-3">
     <div class="card">
       <div class="card-body">
-        <h4 class="card-title">{{ monitor.name }}</h4>
+        <h4 class="card-title">{{ monitor.metadata.name|default:monitor.name }}</h4>
         <h6 class="card-subtitle mb-2 text-muted">{{ monitor.widgets|length }} widgets</h6>
         <a href="{% url 'monitor:monitor_detail' monitor.name %}" class="card-link">Details</a>
       </div>

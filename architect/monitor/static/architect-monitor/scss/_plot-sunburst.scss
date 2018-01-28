@@ -6,8 +6,8 @@
   }
 
   .slice .main-arc {
-    stroke: #fff;
-    stroke-width: 1px;
+    stroke: $plot-link-color;
+    stroke-width: 0.5px;
   }
 
   .slice .hidden-arc {

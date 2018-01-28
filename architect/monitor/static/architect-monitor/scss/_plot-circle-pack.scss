@@ -3,6 +3,8 @@
 
   .node {
     cursor: pointer;
+    stroke: $plot-node-border-color;
+    stroke-width: $plot-node-border-width;
   }
 
   .node:hover {
@@ -12,11 +14,14 @@
   }
 
   .node--leaf {
-    fill: #fff;
+    fill: $plot-node-background-color;
   }
 
   .label {
     text-anchor: middle;
+    font-size: $plot-font-size;
+    font-family: $plot-font-family;
+    fill: $plot-font-color;
   }
 
   .label,

@@ -15,13 +15,13 @@
 
   .axis-label {
     font-family: $plot-axis-family;
+    font-size: $plot-axis-size;
     fill: $plot-axis-color;
-    size: $plot-axis-size;
   }
 
   .node {
-    fill: $plot-node-background-color;
     cursor: pointer;
+    fill: $plot-node-background-color;
     stroke: $plot-node-border-color;
     stroke-width: $plot-node-border-width;
   }

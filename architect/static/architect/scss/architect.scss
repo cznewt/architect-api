@@ -64,7 +64,7 @@
 @import '../../architect-monitor/scss/plot-hive';
 @import '../../architect-monitor/scss/plot-matrix';
 @import '../../architect-monitor/scss/plot-sunburst';
-@import '../../architect-monitor/scss/plot-tree-links';
+@import '../../architect-monitor/scss/plot-tree-node-link';
 
 @import '../../bootswatch/dist/superhero/bootswatch';
 
@@ -75,4 +75,9 @@
   background: #fff;
   border: 1px solid #000;
   pointer-events: none;
+}
+
+
+h4.card-title {
+    font-size: 1rem;
 }

@@ -13,12 +13,12 @@
     fill: $plot-font-color;
   }
 
-  .node--internal text {
+  .node--internal text, .node text {
     text-shadow:
-      0 1px 0 $plot-background-color,
-      0 -1px 0 $plot-background-color,
-      1px 0 0 $plot-background-color,
-      -1px 0 0 $plot-background-color;
+      0 1px 0 $plot-node-background-color,
+      0 -1px 0 $plot-node-background-color,
+      1px 0 0 $plot-node-background-color,
+      -1px 0 0 $plot-node-background-color;
   }
 
   .link {

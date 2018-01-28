@@ -4,6 +4,9 @@
 {% block nav_monitor_cls %} navigation__sub--active{% endblock %}
 
 {% block content %}
+<header class="content__title">
+  <h1>"{{ monitor.metadata.name|default:monitor.name }}" Dashboard</h1>
+</header>
 <div class="row">
   {% for widget_name, widget in monitor.widgets.items %}
   <div class="{{ widget.width }}">
@@ -12,7 +15,6 @@
         <h4 class="card-title">{{ widget.name|default:widget_name }}</h4>
         <div class="{{ widget.chart }} plot-container" id="chart-{{ widget_name }}"></div>
       </div>
-
     </div>
   </div>
   {% endfor %}
