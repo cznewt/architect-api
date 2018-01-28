@@ -72,8 +72,8 @@
   position: absolute;
   padding: 5px 10px;
   font: 12px sans-serif;
-  background: #fff;
-  border: 1px solid #000;
+  font-color: $body-color;
+  background: $body-bg;
   pointer-events: none;
 }
 
