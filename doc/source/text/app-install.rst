@@ -49,7 +49,8 @@ Initial setup for UI
 
 Architect-api uses the ``npm`` to install its JavaScript dependencies, which
 are collected by ``django-npm`` static files collector. You can install all
-static nodesj libraries by following commands.
+static nodesj libraries by following commands. More about installing Node.js
+and NPM can be found at https://www.npmjs.com/get-npm.
 
 .. code-block:: bash
 
@@ -63,7 +64,8 @@ Architect uses the Bootstrap 4 library wich uses SASS 3.5 style preprocessing.
 No python SASS interpreter does it well so we need to get the ruby's gems this
 time. The static file compress utility uses this ruby binary to perform the
 processing of SASS styles. You can install the SASS compiler by following
-commands.
+commands. More about installing SASS can be found at
+http://sass-lang.com/install.
 
 .. code-block:: bash
 
@@ -101,9 +103,9 @@ sourced run following command.
 Initial setup for database
 --------------------------
 
-You must synchronise your database structure with the current migration
-scheme, it will create whole schema and apply all the migrations if run for
-the first time, in architect base dir and sourced run following command.
+You must synchronise your database content with the current migration scheme,
+command will create entire schema and apply all the migrations if run for the
+first time. In architect base dir and sourced run following command.
 
 .. code-block:: bash
 
@@ -150,10 +152,10 @@ location is ``/etc/architect/api.yaml``.
 You can setup basic configuration of database and cache also you can provide
 defaults for your initial inventories, managers and monitors.
 
-You can override the location of the configuration file by setting th
+You can override the default location of the configuration file by setting the
 ``ARCHITECT_CONFIG_FILE`` environmental variable to your custom location.
 
-The configuration file now supports following structure:
+The configuration file currently supports following options:
 
 .. code-block:: yaml
 
@@ -180,7 +182,8 @@ The configuration file now supports following structure:
 
 The ``databases`` and ``caches`` keys are used in the application settings.
 But the ``monitor``, ``manager`` and ``inventory`` configuration settings need
-to be sychnronised by management commands in architect base dir and sourced.
+to be sychronised to database by management commands in architect base dir and
+sourced.
 
 .. code-block:: bash
 
@@ -200,9 +203,9 @@ to be sychnronised by management commands in architect base dir and sourced.
     ...
 
 You can run the configuration multiple times and update existing resources.
-The actual resources used are stored in the database and can be changed in the
-application admininstration available at http://127.0.0.1:8181/admin/ after
-you start the development server.
+The actual resources used are stored in the database and can be changed at the
+architect's admin app available at http://127.0.0.1:8181/admin/ after you
+start the development server.
 
 Look at the the documentation pages for individual inventory, manager or
 monitor configuration options and installation problems.
@@ -357,8 +360,8 @@ the path to the executable.
 .. code-block:: bash
 
     [master]
-      node_terminus = exec
-      external_nodes = /usr/local/bin/architect-puppet-classifier
+    node_terminus = exec
+    external_nodes = /usr/local/bin/architect-puppet-classifier
 
 
 Chef Integration
