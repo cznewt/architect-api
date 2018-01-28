@@ -4,26 +4,53 @@
   <head>
     <meta charset="utf-8">
     <title>The Architect</title>
-    {% include "_head.html" %}
+    {% include "_static_head.html" %}
     {% block extra_css %}{% endblock %}
   </head>
   <body>
-<div class="container-fluid">
-  <div class="row d-flex d-md-block flex-nowrap wrapper">
-    <div class="col-md-3 float-left col-1 collapse width show" id="sidebar">
-      {% include "_menu.html" %}
-    </div>
-    <main class="col-md-9 float-left col pl-0 pr-0 px-5 pl-md-2 pt-2 main">
-      {% comment %}
-      <a href="#" data-target="#sidebar" data-toggle="collapse">
-        <i class="fa fa-navicon fa-2x py-2 p-1"></i>
-      </a>
-      {% endcomment %}
-      {% block content %}{% endblock %}
+    <main class="main">
+      <div class="page-loader">
+        <div class="page-loader__spinner">
+          <svg viewBox="25 25 50 50">
+            <circle cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10" />
+          </svg>
+        </div>
+      </div>
+      <aside class="sidebar">
+        <div class="scrollbar-inner">
+          <div class="user">
+            {% if request.user.is_authenticated %}
+            <div class="user__info" data-toggle="dropdown">
+              <div>
+                <div class="user__name">{{ request.user.name }}</div>
+                <div class="user__email">{{ request.user.email }}</div>
+              </div>
+            </div>
+            <div class="dropdown-menu">
+              <a class="dropdown-item" href="">View Profile</a>
+              <a class="dropdown-item" href="">Settings</a>
+              <a class="dropdown-item" href="">Logout</a>
+            </div>
+            {% else %}
+            <div class="dropdown-menu">
+              <a class="dropdown-item" href="">Login</a>
+            </div>/
+            {% endif %}
+          </div>
+          {% if user.is_authenticated %}
+          <ul class="navigation">
+            <li class="navigation__sub{% block nav_inventory_cls %}{% endblock %}"><a href="{% url 'inventory:inventory_list' %}"><i class="fa fa-film"></i> Inventories</a></li>
+            <li class="navigation__sub{% block nav_manager_cls %}{% endblock %}"><a href="{% url 'manager:manager_list' %}"><i class="fa fa-search"></i> Managers</a></li>
+            <li class="navigation__sub{% block nav_monitor_cls %}{% endblock %}"><a href="{% url 'monitor:monitor_list' %}"><i class="fa fa-list"></i> Monitors</a></li>
+          </ul>
+          {% endif %}
+        </div>
+      </aside>
+      <section class="content">
+        {% block content %}{% endblock %}
+      </section>
     </main>
-  </div>
-</div>
-{% include "_body.html" %}
-{% block extra_js %}{% endblock %}
+  {% include "_static_body.html" %}
+  {% block extra_js %}{% endblock %}
   </body>
 </html>

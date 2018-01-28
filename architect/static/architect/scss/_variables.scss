@@ -1,0 +1,43 @@
+
+// Common action colors
+$bg-hover: rgba($white, 0.06);
+$bg-highlighted-light: rgba($white, 0.08);
+$bg-highlighted-lightest: rgba($white, 0.02);
+$bg-highlighted-dark: rgba($black, 0.2);
+$bg-highlighted-darkest: rgba($black, 0.96);
+$border-light: rgba($white, 0.125);
+$border-lightest: rgba($white, 0.04);
+$color-inverse: #131313;
+
+// Card
+$card-bg: rgba($black, 0.2);
+$card-inner-border-radius: $border-radius;
+$card-border-color: transparent;
+$card-border-radius: $border-radius;
+$card-spacer-x: 2.2rem;
+$card-spacer-y: 2.1rem;
+$card-cap-bg: rgba($black, 0.075);
+$card-img-overlay-padding: 0;
+$card-shadow: 0 1px 5px rgba($black, 0.1);
+$card-columns-margin: 2.3rem;
+
+// Header
+$header-height: 0px;
+$header-shadow: 0 0 13px rgba($black, 0.22);
+$header-z-index: 100;
+$header-bg: rgba($black, 0.3);
+$header-bg-scrolled: $bg-highlighted-darkest;
+
+// Layout
+$content-title-heading-color: $white;
+
+// Sidebars
+$sidebar-bg: rgba($black, 0.125);
+$sidebar-hidden-bg: $bg-highlighted-darkest;
+$sidebar-width: 250px;
+$sidebar-z-index: $header-z-index + 10;
+$navigation-link-color: rgba($white, 0.7);
+$navigation-link-active-color: $white;
+$navigation-link-hover-bg: rgba($white, 0.04);
+$navigation-link-active-bg: rgba($white, 0.06);
+

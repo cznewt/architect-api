@@ -1,0 +1,16 @@
+
+.matrix {
+
+  .am-axis path {
+    stroke: $plot-axis-color;
+  }
+
+  .am-axis line {
+    stroke: $plot-axis-color;
+  }
+
+  .am-axis text {
+    fill: $plot-axis-color;
+  }
+
+}

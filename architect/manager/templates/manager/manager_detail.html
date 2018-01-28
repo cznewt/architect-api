@@ -1,12 +1,16 @@
 {% extends 'base.html' %}
 
-{% block nav_manager_cls %}class="active"{% endblock %}
+{% block nav_manager_cls %} navigation__sub--active{% endblock %}
 
 {% block content %}
-<h2 class="center">Manager {{ manager.name }}</h2>
-<div class="row">
-  <div class="col s12 m12 l8 offset-l2">
-    <table id="table" class="table bordered">
+<header class="content__title">
+  <h1>Manager {{ manager.name }}</h1>
+</header>
+
+<div class="card">
+  <div class="card-body">
+    <h4 class="card-title">Manager Resources</h4>
+    <table class="table mb-0">
       <thead>
         <th>Resource</th>
         <th class="center-align">Status</th>

@@ -1,16 +1,16 @@
 {% extends 'base.html' %}
-{% load static %}
+{% load static compress %}
 
-{% block nav_monitor_cls %}class="active"{% endblock %}
+{% block nav_monitor_cls %} navigation__sub--active{% endblock %}
 
 {% block content %}
 <div class="row">
   {% for widget_name, widget in monitor.widgets.items %}
-  <div class="col {{ widget.width }}">
+  <div class="{{ widget.width }}">
     <div class="card">
-      <div class="card-content">
-        <span class="card-title">{{ widget.name|default:widget_name }}</span>
-        <div class="{{ widget.chart }}" id="chart-{{ widget_name }}"></div>
+      <div class="card-body">
+        <h4 class="card-title">{{ widget.name|default:widget_name }}</h4>
+        <div class="{{ widget.chart }} plot-container" id="chart-{{ widget_name }}"></div>
       </div>
 
     </div>

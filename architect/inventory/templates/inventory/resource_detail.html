@@ -1,8 +1,10 @@
 {% extends 'base.html' %}
 
-{% block nav_inventory_cls %}class="active"{% endblock %}
+{% block nav_inventory_cls %} navigation__sub--active{% endblock %}
 
 {% block content %}
-<h2 class="center">Resource {{ resource_name }}</h2>
-{{ class_list }}
+<header class="content__title">
+  <h1>Resource {{ resource_name }}</h1>
+</header>
+<p>{{ class_list }}</p>
 {% endblock %}

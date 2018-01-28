@@ -1,37 +1,22 @@
 {% extends 'base.html' %}
 
-{% block nav_inventory_cls %}class="active"{% endblock %}
+{% block nav_inventory_cls %} navigation__sub--active{% endblock %}
 
 {% block content %}
-<h2 class="center">Available Inventories</h2>
+<header class="content__title">
+  <h1>Available inventories</h1>
+</header>
 <div class="row">
-  <div class="col s12 m12 l8 offset-l2">
-    <table id="table" class="table bordered">
-      <thead>
-        <th>Inventory</th>
-        <th class="center-align">Nodes</th>
-        <th class="center-align">Engine</th>
-        <th class="center-align">Status</th>
-      </thead>
-      <tbody>
-        {% for inventory in inventory_list %}
-        <tr>
-          <td>
-            <a href="{% url 'inventory:inventory_detail' inventory.name %}">{{ inventory.name }}</a>
-          </td>
-          <td class="center-align">{{ inventory.resource_count }}</td>
-          <td class="center-align">{{ inventory.engine }}</td>
-          <td class="center-align">
-            {% if inventory.status == 'active' %}
-            <i class="material-icons">check_box</a>
-            {% else %}
-            <i class="material-icons">report_problem</i>
-            {% endif %}
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+  {% for inventory in inventory_list %}
+  <div class="col-sm-6 col-md-4 mb-3">
+    <div class="card border-success h-100">
+      <div class="card-body">
+        <h4 class="card-title">{{ inventory.name }}</h4>
+        <h6 class="card-subtitle mb-2 text-muted">{{ inventory.engine }}, {{ inventory.resource_count }} resources</h6>
+        <a href="{% url 'inventory:inventory_detail' inventory.name %}" class="card-link">Details</a>
+      </div>
+    </div>
   </div>
+  {% endfor %}
 </div>
 {% endblock %}

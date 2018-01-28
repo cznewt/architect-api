@@ -3,25 +3,27 @@
 
   .link {
     fill: none;
-    stroke: #ddd;
-    stroke-width: 1px;
-    stroke-opacity: 0.6;
+    stroke: $plot-link-color;
+    stroke-width: $plot-link-width;
+    stroke-opacity: $plot-link-opacity;
   }
 
   .axis {
-    stroke: #666;
+    stroke: $plot-axis-color;
     stroke-width: 1.5px;
   }
 
-  .axis text {
-    font-family: "Open Sans";
+  .axis-label {
+    font-family: $plot-axis-family;
+    fill: $plot-axis-color;
+    size: $plot-axis-size;
   }
 
   .node {
-    fill: #fff;
+    fill: $plot-node-background-color;
     cursor: pointer;
-    stroke: #666;
-    stroke-width: 1.5px;
+    stroke: $plot-node-border-color;
+    stroke-width: $plot-node-border-width;
   }
 
   .node text {

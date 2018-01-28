@@ -3,15 +3,15 @@
 
   .links path {
     fill: none;
-    stroke: #999;
-    stroke-width: 1px;
-    stroke-opacity: 0.6;
+    stroke: $plot-link-color;
+    stroke-width: $plot-link-width;
+    stroke-opacity: $plot-link-opacity;
   }
 
   .nodes circle {
-    fill: #fff;
-    stroke: #666;
-    stroke-width: 1.5px;
+    fill: $plot-node-background-color;
+    stroke: $plot-node-border-color;
+    stroke-width: $plot-node-border-width;
   }
 
 }

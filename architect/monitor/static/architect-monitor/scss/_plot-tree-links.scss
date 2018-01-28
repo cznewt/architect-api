@@ -2,23 +2,30 @@
 .tree {
 
   .node circle {
-    fill: #fff;
-    stroke: steelblue;
-    stroke-width: 3px;
+    fill: $plot-node-background-color;
+    stroke: $plot-node-border-color;
+    stroke-width: $plot-node-border-width;
   }
 
   .node text {
-    font: 12px sans-serif;
+    font-size: $plot-font-size;
+    font-family: $plot-font-family;
+    fill: $plot-font-color;
   }
 
   .node--internal text {
-    text-shadow: 0 1px 0 #fff, 0 -1px 0 #fff, 1px 0 0 #fff, -1px 0 0 #fff;
+    text-shadow:
+      0 1px 0 $plot-background-color,
+      0 -1px 0 $plot-background-color,
+      1px 0 0 $plot-background-color,
+      -1px 0 0 $plot-background-color;
   }
 
   .link {
     fill: none;
-    stroke: #ccc;
-    stroke-width: 2px;
+    stroke: $plot-link-color;
+    stroke-width: $plot-link-width;
+    stroke-opacity: $plot-link-opacity;
   }
 
 }

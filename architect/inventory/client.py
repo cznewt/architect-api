@@ -8,5 +8,5 @@ class BaseClient(object):
 
     def __init__(self, **kwargs):
         self.name = kwargs['name']
-        self.metadata = dict(kwargs.get('metadata', {}))
+        self.metadata = kwargs.get('metadata', {})
         self.kind = kwargs.get('engine')
