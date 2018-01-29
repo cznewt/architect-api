@@ -3,42 +3,69 @@
 {% block nav_inventory_cls %} navigation__sub--active{% endblock %}
 
 {% block sidebar %}
-<ul class="list-group">
-  <li class="list-group-item"><div>Engine<div class="secondary-content">{{ inventory.engine }}</div></div></li>
-  <li class="list-group-item"><div>Status<div class="secondary-content">{{ inventory.status }}</div></div></li>
+<ul class="list-group list-group-flush">
+  <li class="list-group-item">Engine
+    <span class="badge">{{ inventory.engine }}</span></li>
+  <li class="list-group-item">Status
+    <span class="badge">{{ inventory.status }}</span></li>
   {% if inventory.engine == 'reclass' %}
-  <li class="list-group-item"><div>Storage type<div class="secondary-content">{{ inventory.metadata.storage_type }}</div></div></li>
-  <li class="list-group-item"><div>Class directory<div class="secondary-content">{{ inventory.metadata.class_dir }}</div></div></li>
-  <li class="list-group-item"><div>Node directory<div class="secondary-content">{{ inventory.metadata.node_dir }}</div></div></li>
+  <li class="list-group-item">Storage type
+    <span class="badge">{{ inventory.metadata.storage_type }}</span></li>
+  <li class="list-group-item">Class directory
+    <span class="badge">{{ inventory.metadata.class_dir }}</span></li>
+  <li class="list-group-item">Node directory
+    <span class="badge">{{ inventory.metadata.node_dir }}</span></li>
   {% elif inventory.engine == 'architect' %}
-  <li class="list-group-item"><div>Storage type<div class="secondary-content">{{ inventory.metadata.storage_type }}</div></div></li>
+  <li class="list-group-item">Storage type
+    <span class="badge">{{ inventory.metadata.storage_type }}</span></li>
   {% endif %}
 </ul>
 {% endblock %}
 
-
 {% block content %}
 <header class="content__title">
-  <h1>Inventory {{ inventory.name }}</h1>
+  <h1>"{{ inventory.metadata.name|default:inventory.name }}" Inventory</h1>
 </header>
-<table id="table" class="table bordered">
-  <thead>
-    <th>Resource</th>
-    <th class="center-align">Classes</th>
-  </thead>
-  <tbody>
-    {% for resource_name, resource in resource_list.items %}
-    <tr>
-      <td>
-        <a href="#">{{ resource_name }}</a>
-      </td>
-      <td>
-        {% for class in resource %}
-        {{ class }}
+<ul class="nav nav-tabs" role="tablist">
+  <li class="nav-item">
+    <a class="nav-link active" data-toggle="tab" href="#service" role="tab">Service Models</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" data-toggle="tab" href="#system" role="tab">System Models</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" data-toggle="tab" href="#cluster" role="tab">Cluster Definitions</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" data-toggle="tab" href="#node" role="tab">Node Definitions</a>
+  </li>
+</ul>
+<div class="tab-content">
+  <div class="tab-pane active" id="service" role="tabpanel">
+  </div>
+  <div class="tab-pane" id="system" role="tabpanel">c</div>
+  <div class="tab-pane" id="cluster" role="tabpanel">b</div>
+  <div class="tab-pane" id="node" role="tabpanel">
+    <table id="table" class="table bordered">
+      <thead>
+        <th>Resource</th>
+        <th class="center-align">Classes</th>
+      </thead>
+      <tbody>
+        {% for resource_name, resource in resource_list.items %}
+        <tr>
+          <th scope="row">
+            <a href="#">{{ resource_name }}</a>
+          </td>
+          <td>
+            {% for class in resource %}
+            {{ class }}
+            {% endfor %}
+          </td>
+        </tr>
         {% endfor %}
-      </td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+      </tbody>
+    </table>
+  </div>
+</div>
 {% endblock %}

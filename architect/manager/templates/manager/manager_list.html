@@ -11,7 +11,7 @@
   <div class="col-sm-6 col-md-4 mb-3 h-75">
     <div class="card border-{{ manager.color }}">
       <div class="card-body">
-        <h4 class="card-title">{{ manager.name }}</h4>
+        <h4 class="card-title">{{ manager.metadata.name|default:manager.name }}</h4>
         <h6 class="card-subtitle mb-2 text-muted">{{ manager.engine }}</h6>
         <p style="display: none;">
           {% for kind_name, kind_query in manager.resources_by_kind.items %}
@@ -20,7 +20,7 @@
           {% endif %}
           {% endfor %}
         </p>
-        <a href="{% url 'manager:manager_detail' manager.name %}" class="card-link">Details</a>
+        <a href="{% url 'manager:manager_detail' manager.name %}" class="btn btn-outline-primary">Details</a>
       </div>
     </div>
   </div>
