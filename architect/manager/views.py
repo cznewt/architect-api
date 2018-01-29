@@ -11,7 +11,7 @@ class ManagerListView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['manager_list'] = Manager.objects.all()
+        context['manager_list'] = Manager.objects.order_by('name')
         return context
 
 

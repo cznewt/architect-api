@@ -16,7 +16,7 @@ class MonitorListView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['monitor_list'] = Monitor.objects.all()
+        context['monitor_list'] = Monitor.objects.order_by('name')
         return context
 
 

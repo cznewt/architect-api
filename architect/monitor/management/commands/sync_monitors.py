@@ -1,10 +1,11 @@
+
 from django.core.management.base import BaseCommand
 from django.conf import settings
 from architect.monitor.models import Monitor
 
 
 class Command(BaseCommand):
-    help = 'Synchronise core Monitor objects'
+    help = 'Synchronise Monitor objects'
 
     def handle(self, *args, **options):
         for engine_name, engine in settings.MONITOR_ENGINES.items():

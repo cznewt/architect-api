@@ -10,7 +10,7 @@
 <div class="row">
   {% for widget_name, widget in monitor.widgets.items %}
   <div class="{{ widget.width }}">
-    <div class="card">
+    <div class="card border-primary">
       <div class="card-body">
         <h4 class="card-title">{{ widget.name|default:widget_name }}</h4>
         <div class="{{ widget.chart }} plot-container text-center" id="chart-{{ widget_name }}"></div>
@@ -26,13 +26,11 @@
   <li class="list-group-item">Resources<span class="badge" id="plotResources">N/A</span></li>
   <li class="list-group-item">Relations<span class="badge" id="plotRelations">N/A</span></li>
 </ul>
-
 <div class="card">
   <div id="resource-detail" class="card-body">
     <p>No resource selected.</p>
   </div>
 <div>
-
 {% endblock %}
 
 {% block extra_js %}

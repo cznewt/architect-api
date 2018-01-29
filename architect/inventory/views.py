@@ -11,7 +11,7 @@ class InventoryListView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['inventory_list'] = Inventory.objects.all()
+        context['inventory_list'] = Inventory.objects.order_by('name')
         return context
 
 

@@ -1,10 +1,11 @@
+
 from django.core.management.base import BaseCommand
 from django.conf import settings
 from architect.inventory.models import Inventory
 
 
 class Command(BaseCommand):
-    help = 'Synchronise core Inventory objects'
+    help = 'Synchronise Inventory objects'
 
     def handle(self, *args, **options):
         for engine_name, engine in settings.INVENTORY_ENGINES.items():
@@ -20,7 +21,10 @@ class Command(BaseCommand):
                     self.style.SUCCESS(
                         'Inventory "{}" resource created'.format(engine_name)))
             else:
+                inventory = Inventory.objects.get(name=engine_name)
+                inventory.metadata = engine
+                inventory.save()
                 self.stdout.write(
                     self.style.SUCCESS(
                         'Inventory "{}" resource '
-                        'already exists'.format(engine_name)))
+                        'updated'.format(engine_name)))

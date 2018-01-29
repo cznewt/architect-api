@@ -26,11 +26,11 @@ class Manager(models.Model):
         if self.status == 'active':
             return 'success'
         if self.status == 'error':
-            return 'success'
+            return 'danger'
         if self.status == 'build':
             return 'info'
         else:
-            return 'secondary'
+            return 'warning'
 
     def get_schema(self):
         return utils.get_resource_schema(self.engine)

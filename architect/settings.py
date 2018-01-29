@@ -147,6 +147,7 @@ if 'inventory_classes' in CONFIG:
 else:
     INVENTORY_CLASS_MAPPINGS = {
         "architect": "architect.inventory.engine.architect.client.ArchitectClient",
+        "salt-formulas": "architect.inventory.engine.salt_formulas.client.SaltFormulasClient",
         "reclass": "architect.inventory.engine.reclass.client.ReclassClient",
     }
 

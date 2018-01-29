@@ -27,6 +27,16 @@ class Inventory(models.Model):
     def resource_count(self, resource=None):
         return len(self.client().inventory(resource=None))
 
+    def color(self):
+        if self.status == 'active':
+            return 'success'
+        if self.status == 'error':
+            return 'danger'
+        if self.status == 'build':
+            return 'info'
+        else:
+            return 'warning'
+
     def __str__(self):
         return self.name
 

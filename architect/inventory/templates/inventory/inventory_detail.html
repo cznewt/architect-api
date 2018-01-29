@@ -2,23 +2,25 @@
 
 {% block nav_inventory_cls %} navigation__sub--active{% endblock %}
 
+{% block sidebar %}
+<ul class="list-group">
+  <li class="list-group-item"><div>Engine<div class="secondary-content">{{ inventory.engine }}</div></div></li>
+  <li class="list-group-item"><div>Status<div class="secondary-content">{{ inventory.status }}</div></div></li>
+  {% if inventory.engine == 'reclass' %}
+  <li class="list-group-item"><div>Storage type<div class="secondary-content">{{ inventory.metadata.storage_type }}</div></div></li>
+  <li class="list-group-item"><div>Class directory<div class="secondary-content">{{ inventory.metadata.class_dir }}</div></div></li>
+  <li class="list-group-item"><div>Node directory<div class="secondary-content">{{ inventory.metadata.node_dir }}</div></div></li>
+  {% elif inventory.engine == 'architect' %}
+  <li class="list-group-item"><div>Storage type<div class="secondary-content">{{ inventory.metadata.storage_type }}</div></div></li>
+  {% endif %}
+</ul>
+{% endblock %}
+
+
 {% block content %}
 <header class="content__title">
   <h1>Inventory {{ inventory.name }}</h1>
 </header>
-<h4 class="center">Parameters</h4>
-<ul class="collection">
-  <li class="collection-item"><div>Inventory engine<div class="secondary-content">{{ inventory.engine }}</div></div></li>
-  <li class="collection-item"><div>Inventory status<div class="secondary-content">{{ inventory.status }}</div></div></li>
-  {% if inventory.engine == 'reclass' %}
-  <li class="collection-item"><div>Storage type<div class="secondary-content">{{ inventory.metadata.storage_type }}</div></div></li>
-  <li class="collection-item"><div>Class directory<div class="secondary-content">{{ inventory.metadata.class_dir }}</div></div></li>
-  <li class="collection-item"><div>Node directory<div class="secondary-content">{{ inventory.metadata.node_dir }}</div></div></li>
-  {% elif inventory.engine == 'architect' %}
-  <li class="collection-item"><div>Storage type<div class="secondary-content">{{ inventory.metadata.storage_type }}</div></div></li>
-  {% endif %}
-</ul>
-<h4 class="center">Resources</h4>
 <table id="table" class="table bordered">
   <thead>
     <th>Resource</th>
