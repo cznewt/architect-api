@@ -22,6 +22,16 @@ class Manager(models.Model):
             'engine': self.engine,
             'metadata': self.metadata})
 
+    def color(self):
+        if self.status == 'active':
+            return 'success'
+        if self.status == 'error':
+            return 'success'
+        if self.status == 'build':
+            return 'info'
+        else:
+            return 'secondary'
+
     def get_schema(self):
         return utils.get_resource_schema(self.engine)
 

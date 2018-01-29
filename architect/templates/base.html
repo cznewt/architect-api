@@ -19,21 +19,24 @@
       <aside class="sidebar">
         <div class="scrollbar-inner">
           <div class="user">
-            {% if request.user.is_authenticated %}
+            {% if user.is_authenticated %}
             <div class="user__info" data-toggle="dropdown">
               <div>
-                <div class="user__name">{{ request.user.name }}</div>
-                <div class="user__email">{{ request.user.email }}</div>
+                <div class="user__name">{{ user.name }}</div>
+                <div class="user__email">{{ user.email }}</div>
               </div>
             </div>
             <div class="dropdown-menu">
-              <a class="dropdown-item" href="">View Profile</a>
-              <a class="dropdown-item" href="">Settings</a>
-              <a class="dropdown-item" href="">Logout</a>
+              <a class="dropdown-item" href="#">View Profile</a>
+              <a class="dropdown-item" href="#">Settings</a>
+              <a class="dropdown-item" href="#">Logout</a>
             </div>
             {% else %}
+            <div>
+              <div class="user__name">Anonymous User</div>
+           </div>
             <div class="dropdown-menu">
-              <a class="dropdown-item" href="">Login</a>
+              <a class="dropdown-item" href="#">Login</a>
             </div>/
             {% endif %}
           </div>

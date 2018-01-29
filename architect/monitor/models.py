@@ -12,5 +12,15 @@ class Monitor(models.Model):
     def widgets(self):
         return self.metadata.get('widget', {})
 
+    def color(self):
+        if self.status == 'active':
+            return 'success'
+        if self.status == 'error':
+            return 'success'
+        if self.status == 'build':
+            return 'info'
+        else:
+            return 'secondary'
+
     def __str__(self):
         return self.name

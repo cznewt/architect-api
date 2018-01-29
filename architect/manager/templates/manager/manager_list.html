@@ -8,8 +8,8 @@
 </header>
 <div class="row">
   {% for manager in manager_list %}
-  <div class="col-sm-6 col-md-4 mb-3">
-    <div class="card border-success h-100">
+  <div class="col-sm-6 col-md-4 mb-3 h-75">
+    <div class="card border-{{ manager.color }}">
       <div class="card-body">
         <h4 class="card-title">{{ manager.name }}</h4>
         <h6 class="card-subtitle mb-2 text-muted">{{ manager.engine }}</h6>
