@@ -21,6 +21,20 @@
 </div>
 {% endblock %}
 
+{% block sidebar %}
+<ul class="list-group mb-3">
+  <li class="list-group-item">Resources<span class="badge" id="plotResources">N/A</span></li>
+  <li class="list-group-item">Relations<span class="badge" id="plotRelations">N/A</span></li>
+</ul>
+
+<div class="card">
+  <div id="resource-detail" class="card-body">
+    <p>No resource selected.</p>
+  </div>
+<div>
+
+{% endblock %}
+
 {% block extra_js %}
 <script src="{% static 'architect-monitor/js/d3.layout.hive.js' %}"></script>
 <script src="{% static 'architect-monitor/js/d3.layout.matrix.js' %}"></script>

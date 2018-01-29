@@ -117,9 +117,6 @@ var RelationalPlot = function(RelationalPlot){
             d3.json(dataUrl, function(res){
                 console.log(res);
                 graph._data = res.resources;
-//                relationalPlotHelpers.displayResources(Object.keys(graph._data.resources).length);
-//                relationalPlotHelpers.displayRelations(graph._data.relations.length);
-//                relationalPlotHelpers.displayScrapeTime(res.date);
                 if(typeof callback === 'function'){
                     callback();
                 }

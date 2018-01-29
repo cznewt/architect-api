@@ -18,11 +18,6 @@ var HivePlot = {
           return node.name.replace(/[\s\.]/g,"_");
         };
 
-    relationalPlotHelpers.displayResources(Object.keys(data.resources).length);
-    relationalPlotHelpers.displayRelations(data.relations.length);
-    relationalPlotHelpers.displayScrapeTime(data.date);
-
-
     function render(){
       var container = d3.select(selector),
           targetHeight=height,
