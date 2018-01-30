@@ -3,6 +3,7 @@ celery
 redis
 pyaml
 pyyaml
+jsonschema
 
 Django
 django-compressor

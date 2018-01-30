@@ -5,20 +5,39 @@
 {% block sidebar %}
 <ul class="list-group list-group-flush">
   <li class="list-group-item">Engine
-    <span class="badge">{{ inventory.engine }}</span></li>
+    <span class="badge">{{ inventory.engine }}</span>
+  </li>
   <li class="list-group-item">Status
-    <span class="badge">{{ inventory.status }}</span></li>
-  {% if inventory.engine == 'reclass' %}
+    <span class="badge badge-{{ inventory.color }}">{{ inventory.status }}</span>
+  </li>
+{% if inventory.engine == 'reclass' %}
   <li class="list-group-item">Storage type
-    <span class="badge">{{ inventory.metadata.storage_type }}</span></li>
+    <span class="badge">{{ inventory.metadata.storage_type }}</span>
+  </li>
   <li class="list-group-item">Class directory
-    <span class="badge">{{ inventory.metadata.class_dir }}</span></li>
+    <span class="badge">{{ inventory.metadata.class_dir }}</span>
+  </li>
   <li class="list-group-item">Node directory
-    <span class="badge">{{ inventory.metadata.node_dir }}</span></li>
-  {% elif inventory.engine == 'architect' %}
+    <span class="badge">{{ inventory.metadata.node_dir }}</span>
+  </li>
+{% elif inventory.engine == 'salt-formulas' %}
+  <li class="list-group-item">Classes
+    <span class="badge badge-info">{{ inventory.client.formula_class_list|length }} classes</span>
+    <span class="badge">{{ inventory.metadata.class_dir }}</span>
+  </li>
+  <li class="list-group-item">Nodes
+    <span class="badge badge-info">{{ resource_list|length }} nodes</span>
+    <span class="badge">{{ inventory.metadata.node_dir }}</span>
+  </li>
+  <li class="list-group-item">Formulas
+    <span class="badge badge-info">{{ inventory.client.formula_list|length }} formulas</span>
+    <span class="badge">{{ inventory.metadata.formula_dir }}</span>
+  </li>
+{% elif inventory.engine == 'architect' %}
   <li class="list-group-item">Storage type
-    <span class="badge">{{ inventory.metadata.storage_type }}</span></li>
-  {% endif %}
+    <span class="badge">{{ inventory.metadata.storage_type }}</span>
+  </li>
+{% endif %}
 </ul>
 {% endblock %}
 
@@ -26,9 +45,13 @@
 <header class="content__title">
   <h1>"{{ inventory.metadata.name|default:inventory.name }}" Inventory</h1>
 </header>
+{% if inventory.engine == 'salt-formulas' %}
 <ul class="nav nav-tabs" role="tablist">
   <li class="nav-item">
-    <a class="nav-link active" data-toggle="tab" href="#service" role="tab">Service Models</a>
+    <a class="nav-link active" data-toggle="tab" href="#overview" role="tab">Overview</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" data-toggle="tab" href="#service" role="tab">Service Models</a>
   </li>
   <li class="nav-item">
     <a class="nav-link" data-toggle="tab" href="#system" role="tab">System Models</a>
@@ -41,31 +64,138 @@
   </li>
 </ul>
 <div class="tab-content">
-  <div class="tab-pane active" id="service" role="tabpanel">
+  <div class="tab-pane active" id="overview" role="tabpanel">
   </div>
-  <div class="tab-pane" id="system" role="tabpanel">c</div>
-  <div class="tab-pane" id="cluster" role="tabpanel">b</div>
+  <div class="tab-pane" id="service" role="tabpanel">
+<table class="table bordered">
+  <thead>
+    <tr class="row m-0">
+      <th class="d-inline-block col-2">Name</th>
+      <th class="d-inline-block col-4">Metadata</th>
+      <th class="d-inline-block col-2">Schemas</th>
+      <th class="d-inline-block col-4">README</th>
+    </tr>
+  </thead>
+  <tbody>
+{% for formula_name, formula in inventory.client.formula_list.items %}
+    <tr class="row m-0">
+      <th class="d-inline-block col-2" scope="row">
+        <a href="#">{{ formula_name }}</a>
+      </td>
+      <td class="d-inline-block col-4">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">Path
+            <span class="badge">{{ formula.path }}</span>
+          </li>
+          {% if formula.metadata.source %}
+          <li class="list-group-item">Source
+            <span class="badge">{{ formula.metadata.source }}</span>
+          </li>
+          <li class="list-group-item">Version
+            <span class="badge">{{ formula.metadata.version }}</span>
+          </li>
+          <li class="list-group-item">Dependencies
+            <span class="badge">
+              {% for dep in formula.metadata.dependencies %}
+              {{ dep.name }}{% if not forloop.last %}, {% endif %}
+              {% endfor %}
+            </span>
+          </li>
+          {% else %}
+          <div class="alert alert-danger">
+            No <tt>metadata.yml</tt> file found.
+          </div>
+          {% endif %}
+        </ul>
+      </td>
+      <td class="d-inline-block col-2">
+        <ul class="list-group list-group-flush">
+          {% if formula.schemas|length > 0 %}
+          {% for schema in formula.schemas %}
+          <li class="list-group-item">{{ schema }}</li>
+          {% endfor %}
+          {% else %}
+          <div class="alert alert-danger">
+            No schema found.
+          </div>
+          {% endif %}
+
+        </ul>
+      </td>
+      <td class="d-inline-block col-4">
+        <ul class="list-group list-group-flush list-tree">
+          {% for readme_name, readme in formula.readme.items %}
+          <li class="list-tree-item list-tree-level0">
+            <span class="badge">{{ readme_name }} ({{ readme|length }})</span>
+          </li>
+          {% for sub_readme_name, sub_readme in readme.items %}
+          <li class="list-tree-item list-tree-level1">
+            <span class="badge">{{ sub_readme_name }} ({{ sub_readme|length }})</span>
+          </li>
+          {% for sub_sub_readme_name, sub_sub_readme in sub_readme.items %}
+          <li class="list-tree-item list-tree-level2">
+            <span class="badge">{{ sub_sub_readme_name }} ({{ sub_sub_readme|length }})</span>
+          </li>
+          {% endfor %}
+
+          {% endfor %}
+          {% endfor %}
+        </ul>
+      </td>
+    </tr>
+{% endfor %}
+  </tbody>
+</table>
+  </div>
+  <div class="tab-pane" id="system" role="tabpanel">
+TODO
+  </div>
+  <div class="tab-pane" id="cluster" role="tabpanel">
+TODO
+  </div>
   <div class="tab-pane" id="node" role="tabpanel">
-    <table id="table" class="table bordered">
-      <thead>
-        <th>Resource</th>
-        <th class="center-align">Classes</th>
-      </thead>
-      <tbody>
-        {% for resource_name, resource in resource_list.items %}
-        <tr>
-          <th scope="row">
-            <a href="#">{{ resource_name }}</a>
-          </td>
-          <td>
-            {% for class in resource %}
-            {{ class }}
-            {% endfor %}
-          </td>
-        </tr>
+<table id="table" class="table bordered">
+  <thead>
+    <th>Resource</th>
+    <th class="center-align">Classes</th>
+  </thead>
+  <tbody>
+    {% for resource_name, resource in resource_list.items %}
+    <tr>
+      <th scope="row">
+        <a href="#">{{ resource_name }}</a>
+      </td>
+      <td>
+        {% for class in resource %}
+        {{ class }}
         {% endfor %}
-      </tbody>
-    </table>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
   </div>
 </div>
+{% else %}
+<table id="table" class="table bordered">
+  <thead>
+    <th>Resource</th>
+    <th class="center-align">Classes</th>
+  </thead>
+  <tbody>
+    {% for resource_name, resource in resource_list.items %}
+    <tr>
+      <th scope="row">
+        <a href="#">{{ resource_name }}</a>
+      </td>
+      <td>
+        {% for class in resource %}
+        {{ class }}
+        {% endfor %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endif %}
 {% endblock %}

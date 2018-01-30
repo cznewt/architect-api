@@ -52,7 +52,7 @@ https://architect-api.readthedocs.io/
 Architect Components
 ====================
 
-A quick summary of integrations and capabilities of individual modules.
+A quick summary of properties, capabilities and integrations of each component.
 
 
 Inventory Component
@@ -60,17 +60,19 @@ Inventory Component
 
 Inventory is the Architect's metadata engine. It encapsulates and unifies data
 from various metadata sources to provide inventory/metadata for various
-orchestration services. Currently supported metadata engines are:
+orchestration services. Basically serves as metadata proxy with clients.
+Currently supported metadata engines are:
 
 * reclass (python3 version)
+* salt-formulas
 
 The following inventory providers are to be intergrated in near future.
 
+* varstack
 * hiera
-* saltstack
 
-There is a plan to integrate workflow (multi-step forms) defitions to simplify
-creation of complex infrastructure models.
+There is a plan to integrate simple UI workflow (multi-step form wizards)
+defitions to simplify creation of complex service models.
 
 
 Manager Component
