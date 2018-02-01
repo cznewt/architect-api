@@ -10,3 +10,6 @@ class BaseClient(object):
         self.name = kwargs['name']
         self.metadata = kwargs.get('metadata', {})
         self.kind = kwargs.get('engine')
+
+    def check_status(self):
+        raise NotImplementedError

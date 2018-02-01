@@ -11,6 +11,9 @@ class ArchitectClient(BaseClient):
     def __init__(self, **kwargs):
         super(ArchitectClient, self).__init__(**kwargs)
 
+    def check_status(self):
+        return False
+
     def inventory(self, resource=None):
         return {}
 

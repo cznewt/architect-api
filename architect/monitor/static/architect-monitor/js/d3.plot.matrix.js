@@ -100,9 +100,6 @@ var RelationalPlot = function(RelationalPlot){
                     .attr('height', d => d.height)
                     .attr('x', d => d.x)
                     .attr('y', d => d.y)
-                    .style('stroke', 'black')
-                    .style('stroke-width', '1px')
-                    .style('stroke-opacity', .1)
                     .style('fill', d => colorMapping(d.source.group))
                     .style('fill-opacity', d => d.weight * 0.8);
 

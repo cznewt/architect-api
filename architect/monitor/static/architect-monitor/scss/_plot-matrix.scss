@@ -13,4 +13,10 @@
     fill: $plot-axis-color;
   }
 
+  rect {
+    stroke: $plot-axis-color;
+    stroke-width: 1px;
+    stroke-opacity: 0.1;
+  }
+
 }

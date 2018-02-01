@@ -1,0 +1,20 @@
+import re
+from django import template
+
+register = template.Library()
+
+
+@register.filter(name='lcut')
+def lcut(value, pattern):
+    """
+    Cuts 'pattern' in 'value', if 'value' starts with 'pattern'.
+    """
+    return re.sub('^%s' % pattern, '', value)
+
+
+@register.filter(name='rcut')
+def rcut(value, pattern):
+    """
+    Cuts 'pattern' in 'value', if 'value' ends with 'pattern'.
+    """
+    return re.sub('%s$' % pattern, '', value)

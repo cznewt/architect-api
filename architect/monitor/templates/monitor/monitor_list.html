@@ -1,11 +1,12 @@
-{% extends 'base.html' %}
+{% extends TEMPLATE_BASE|default:"content_base.html" %}
 
 {% block nav_monitor_cls %} navigation__sub--active{% endblock %}
 
+{% block title %}
+Available Dashboards
+{% endblock %}
+
 {% block content %}
-<header class="content__title">
-  <h1>Available Dashboards</h1>
-</header>
 <div class="row">
   {% for monitor in monitor_list %}
   <div class="col-sm-6 col-md-4 mb-3">

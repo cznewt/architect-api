@@ -1,12 +1,14 @@
-{% extends 'base.html' %}
+{% extends TEMPLATE_BASE|default:"content_base.html" %}
+
 {% load static compress %}
 
 {% block nav_monitor_cls %} navigation__sub--active{% endblock %}
 
+{% block title %}
+"{{ monitor.metadata.name|default:monitor.name }}" Dashboard
+{% endblock %}
+
 {% block content %}
-<header class="content__title">
-  <h1>"{{ monitor.metadata.name|default:monitor.name }}" Dashboard</h1>
-</header>
 <div class="row">
   {% for widget_name, widget in monitor.widgets.items %}
   <div class="{{ widget.width }}">
@@ -35,7 +37,7 @@
 </ul>
 <div class="card">
   <div id="resource-detail" class="card-body">
-    <p>No resource selected.</p>
+    <div>No resource selected.</div>
   </div>
 <div>
 {% endblock %}
@@ -87,6 +89,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
     }
     $(this).closest('.card').toggleClass('card-fullscreen');
   });
+
+  $("#chart-{{ widget_name }}")
+    .height({{ widget.height|default:1 }} * $("#chart-{{ widget_name }}").width());
+
   {% endfor %}
 
 
@@ -98,7 +104,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
   src['{{ widget_name }}'] = "/monitor/v1/{{ monitor.name }}/{{ widget_name }}/data.json";
   sel['{{ widget_name }}'] = "#chart-{{ widget_name }}";
   upd['{{ widget_name }}'] = {{ widget.update_interval|default:600 }};
-  //$("#chart-{{ widget_name }}").parent().height({{ widget.height|default:1 }} * $("#chart-{{ widget_name }}").width());
   {% endfor %}
 
   {% for widget_name, widget in monitor.widgets.items %}

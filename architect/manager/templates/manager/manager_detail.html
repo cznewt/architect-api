@@ -1,12 +1,12 @@
-{% extends 'base.html' %}
+{% extends TEMPLATE_BASE|default:"content_base.html" %}
 
 {% block nav_manager_cls %} navigation__sub--active{% endblock %}
 
-{% block content %}
-<header class="content__title">
-  <h1>Manager {{ manager.name }}</h1>
-</header>
+{% block title %}
+Manager {{ manager.name }}
+{% endblock %}
 
+{% block content %}
 <div class="card">
   <div class="card-body">
     <h4 class="card-title">Manager Resources</h4>

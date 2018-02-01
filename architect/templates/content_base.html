@@ -1,11 +1,12 @@
-{% load static %}
-<!DOCTYPE html>
+{% load static compress %}<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>The Architect</title>
-    {% include "_static_head.html" %}
+    <title>The Architect : {% block page_title %}{% endblock %}</title>
+    {% compress css %}
+    <link rel="stylesheet" type="text/scss" href="{% static 'architect/scss/architect.scss' %}">
     {% block extra_css %}{% endblock %}
+    {% endcompress %}
   </head>
   <body>
     <main class="main">
@@ -45,19 +46,36 @@
           {% endcomment %}
           {% if user.is_authenticated %}
           <ul class="navigation">
-            <li class="navigation__sub{% block nav_inventory_cls %}{% endblock %}"><a href="{% url 'inventory:inventory_list' %}"><i class="fa fa-film"></i> Inventories</a></li>
-            <li class="navigation__sub{% block nav_manager_cls %}{% endblock %}"><a href="{% url 'manager:manager_list' %}"><i class="fa fa-search"></i> Managers</a></li>
-            <li class="navigation__sub{% block nav_monitor_cls %}{% endblock %}"><a href="{% url 'monitor:monitor_list' %}"><i class="fa fa-list"></i> Dashboards</a></li>
+            <li class="navigation__sub{% block nav_inventory_cls %}{% endblock %}">
+              <a href="{% url 'inventory:inventory_list' %}"><i class="fa fa-film"></i>Inventories</a>
+            </li>
+            <li class="navigation__sub{% block nav_manager_cls %}{% endblock %}">
+              <a href="{% url 'manager:manager_list' %}"><i class="fa fa-search"></i>Managers</a>
+            </li>
+            <li class="navigation__sub{% block nav_monitor_cls %}{% endblock %}">
+              <a href="{% url 'monitor:monitor_list' %}"><i class="fa fa-list"></i>Dashboards</a>
+            </li>
           </ul>
           {% endif %}
           {% block sidebar %}{% endblock %}
         </div>
       </aside>
       <section class="content">
+        <header class="content__title">
+          <h1>{% block title %}{% endblock %} <div class="float-sm-right">{% block actions %}</div>{% endblock %}</h1>
+        </header>
         {% block content %}{% endblock %}
       </section>
     </main>
-  {% include "_static_body.html" %}
-  {% block extra_js %}{% endblock %}
+    {% compress js %}
+    <script src="{% static 'jquery/dist/jquery.js' %}"></script>
+    <script src="{% static 'jquery-form/src/jquery.form.js' %}"></script>
+    <script src="{% static 'timeago/jquery.timeago.js' %}"></script>
+    <script src="{% static 'bootstrap/dist/js/bootstrap.js' %}"></script>
+    <script src="{% static 'd3/build/d3.js' %}"></script>
+    <script src="{% static 'architect/js/app.js' %}"></script>
+    {% endcompress %}
+    {% block extra_js %}{% endblock %}
+    <div class="modal fade" id="modal-container"></div>
   </body>
 </html>

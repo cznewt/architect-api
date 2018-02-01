@@ -1,0 +1,23 @@
+{% extends TEMPLATE_BASE|default:"content_base.html" %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}
+Delete inventory
+{% endblock %}
+
+{% block content %}
+{% crispy form form.helper %}
+{% endblock %}
+
+{% block extra_js %}
+{% if XHR_REQUEST|default:False %}
+<script>
+var form_options = {
+  target: '#modal',
+  success: function(response) {}
+};
+$('#inventory-delete').ajaxForm(form_options);
+</script>
+{% endif %}
+{% endblock %}

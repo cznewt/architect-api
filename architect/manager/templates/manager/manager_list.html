@@ -1,11 +1,12 @@
-{% extends 'base.html' %}
+{% extends TEMPLATE_BASE|default:"content_base.html" %}
 
 {% block nav_manager_cls %} navigation__sub--active{% endblock %}
 
+{% block title %}
+Available Managers
+{% endblock %}
+
 {% block content %}
-<header class="content__title">
-  <h1>Available Managers</h1>
-</header>
 <div class="row">
   {% for manager in manager_list %}
   <div class="col-sm-6 col-md-4 mb-3 h-75">

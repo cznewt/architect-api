@@ -20,7 +20,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_extensions',
     'django_select2',
+    'crispy_forms',
     'compressor',
+    'architect',
     'architect.inventory',
     'architect.manager',
     'architect.monitor',
@@ -69,7 +71,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'django.template.context_processors.request'
+                'architect.context_processors.base'
             ],
         },
     },
@@ -142,6 +144,10 @@ INVENTORY_ENGINES = CONFIG.get('inventory', {})
 MANAGER_ENGINES = CONFIG.get('manager', {})
 MONITOR_ENGINES = CONFIG.get('monitor', {})
 
+INVENTORY_BASE_DIR = '/srv/architect'
+INVENTORY_RECLASS_CLASSES_DIRS = CONFIG.get('inventory_reclass_classes_dirs', [])
+INVENTORY_SALT_FORMULAS_DIRS = CONFIG.get('inventory_salt_formulas_dirs', [])
+
 if 'inventory_classes' in CONFIG:
     INVENTORY_CLASS_MAPPINGS = CONFIG['inventory_classes']
 else:
@@ -207,3 +213,5 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 )
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'

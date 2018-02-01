@@ -1,19 +1,48 @@
-{% extends 'base.html' %}
+{% extends TEMPLATE_BASE|default:"content_base.html" %}
+{% load compress %}
 
 {% block nav_inventory_cls %} navigation__sub--active{% endblock %}
 
+{% block extra_js %}
+{% comment %}
+<script>
+$(function() {
+  $('#modal-container').on('show.bs.modal', function(event) {
+    var modal = $(this)
+    $.ajax({
+      url: "{% url 'inventory:inventory_create' %}",
+      context: document.body
+    }).done(function(response) {
+      modal.html(response);
+    });
+  });
+})
+</script>
+{% endcomment %}
+{% endblock %}
+
+{% block page_title %}
+Available inventories
+{% endblock %}
+
+{% block title %}
+Available inventories
+{% endblock %}
+
+{% block actions %}
+<a href="{% url 'inventory:inventory_create' %}" class="btn btn-sm btn-outline-primary">Create new</a>
+<a href="{% url 'inventory:inventory_check' %}" class="btn btn-sm btn-outline-secondary">Check status</a>
+{% endblock %}
+
 {% block content %}
-<header class="content__title">
-  <h1>Available inventories</h1>
-</header>
 <div class="row">
   {% for inventory in inventory_list %}
   <div class="col-sm-6 col-md-4 mb-3 h-75">
     <div class="card border-{{ inventory.color }}">
       <div class="card-body">
         <h4 class="card-title">{{ inventory.metadata.name|default:inventory.name }}</h4>
-        <h6 class="card-subtitle mb-2 text-muted">{{ inventory.engine }}, {{ inventory.resource_count }} resources</h6>
-        <a href="{% url 'inventory:inventory_detail' inventory.name %}" class="btn btn-outline-primary">Details</a>
+        <h6 class="card-subtitle mb-2 text-muted">{{ inventory.engine }}</h6>
+        <a href="{% url 'inventory:inventory_detail' inventory.name %}" class="btn btn-sm btn-outline-primary">Details</a>
       </div>
     </div>
   </div>

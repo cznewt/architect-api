@@ -1,9 +1,12 @@
-{% extends 'base.html' %}
+{% extends TEMPLATE_BASE|default:"content_base.html" %}
 
 {% block nav_manager_cls %} navigation__sub--active{% endblock %}
 
+{% block title %}
+Resource {{ resource.name }}
+{% endblock %}
+
 {% block content %}
-<h2 class="center">Resource {{ resource.name }}</h2>
 <div class="row">
   <div class="col s12 m12 l8 offset-l2">
     <h4 class="center">Parameters</h4>

@@ -5,3 +5,7 @@ $(window).on('load', function () {
         $('.page-loader').fadeOut();
     }, 200);
 });
+
+$(window).on('beforeunload', function () {
+    $('.page-loader').fadeIn();
+});
