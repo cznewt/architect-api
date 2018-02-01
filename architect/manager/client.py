@@ -25,6 +25,9 @@ class BaseClient(object):
     def get_resource_status(self, name, metadata):
         raise NotImplementedError
 
+    def check_status(self):
+        return self.auth()
+
     def update_resources(self, resources=None):
         raise NotImplementedError
 

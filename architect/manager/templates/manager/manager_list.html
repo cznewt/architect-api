@@ -2,8 +2,16 @@
 
 {% block nav_manager_cls %} navigation__sub--active{% endblock %}
 
+{% block page_title %}
+Available managers
+{% endblock %}
+
 {% block title %}
-Available Managers
+Available managers
+{% endblock %}
+
+{% block actions %}
+<a href="{% url 'manager:manager_check' %}" class="btn btn-sm btn-outline-secondary">Check status</a>
 {% endblock %}
 
 {% block content %}
@@ -21,7 +29,7 @@ Available Managers
           {% endif %}
           {% endfor %}
         </p>
-        <a href="{% url 'manager:manager_detail' manager.name %}" class="btn btn-outline-primary">Details</a>
+        <a href="{% url 'manager:manager_detail' manager.name %}" class="btn btn-sm btn-outline-primary">Details</a>
       </div>
     </div>
   </div>

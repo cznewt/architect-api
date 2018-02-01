@@ -2,8 +2,16 @@
 
 {% block nav_manager_cls %} navigation__sub--active{% endblock %}
 
+{% block page_title %}
+Manager {{ manager.name }}
+{% endblock %}
+
 {% block title %}
 Manager {{ manager.name }}
+{% endblock %}
+
+{% block actions %}
+<a href="{% url 'manager:manager_list' %}" class="btn btn-sm btn-outline-primary">List</a>
 {% endblock %}
 
 {% block content %}

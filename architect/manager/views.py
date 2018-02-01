@@ -15,6 +15,23 @@ class ManagerListView(TemplateView):
         return context
 
 
+class ManagerCheckView(RedirectView):
+
+    permanent = False
+    query_string = True
+    pattern_name = 'manager:manager_list'
+
+    def get_redirect_url(self, *args, **kwargs):
+        managers = Manager.objects.all()
+        for manager in managers:
+            if manager.client().check_status():
+                manager.status = 'active'
+            else:
+                manager.status = 'error'
+            manager.save()
+        return super().get_redirect_url(*args, **kwargs)
+
+
 class ManagerDetailView(TemplateView):
 
     template_name = "manager/manager_detail.html"

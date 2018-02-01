@@ -5,6 +5,9 @@ app_name = 'manager'
 urlpatterns = [
     path('v1', views.ManagerListView.as_view(),
          name='manager_list'),
+    path('v1/manager-check',
+         views.ManagerCheckView.as_view(),
+         name='manager_check'),
     path('v1/<manager_name>', views.ManagerDetailView.as_view(),
          name='manager_detail'),
     path('v1/<manager_name>/sync', views.ManagerUpdateView.as_view(),

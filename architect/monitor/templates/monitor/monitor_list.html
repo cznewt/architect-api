@@ -2,6 +2,10 @@
 
 {% block nav_monitor_cls %} navigation__sub--active{% endblock %}
 
+{% block page_title %}
+Available Dashboards
+{% endblock %}
+
 {% block title %}
 Available Dashboards
 {% endblock %}
@@ -14,7 +18,7 @@ Available Dashboards
       <div class="card-body">
         <h4 class="card-title">{{ monitor.metadata.name|default:monitor.name }}</h4>
         <h6 class="card-subtitle mb-2 text-muted">{{ monitor.widgets|length }} widgets</h6>
-        <a href="{% url 'monitor:monitor_detail' monitor.name %}" class="btn btn-outline-primary">Details</a>
+        <a href="{% url 'monitor:monitor_detail' monitor.name %}" class="btn btn-sm btn-outline-primary">Details</a>
       </div>
     </div>
   </div>

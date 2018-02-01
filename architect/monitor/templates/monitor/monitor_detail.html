@@ -4,8 +4,16 @@
 
 {% block nav_monitor_cls %} navigation__sub--active{% endblock %}
 
+{% block page_title %}
+"{{ monitor.metadata.name|default:monitor.name }}" Dashboard
+{% endblock %}
+
 {% block title %}
 "{{ monitor.metadata.name|default:monitor.name }}" Dashboard
+{% endblock %}
+
+{% block actions %}
+<a href="{% url 'monitor:monitor_list' %}" class="btn btn-sm btn-outline-primary">List</a>
 {% endblock %}
 
 {% block content %}

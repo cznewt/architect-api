@@ -1,5 +1,4 @@
 {% extends TEMPLATE_BASE|default:"content_base.html" %}
-
 {% load crispy_forms_tags %}
 
 {% block title %}
@@ -14,7 +13,7 @@ Delete inventory
 {% if XHR_REQUEST|default:False %}
 <script>
 var form_options = {
-  target: '#modal',
+  target: '#modal-container',
   success: function(response) {}
 };
 $('#inventory-delete').ajaxForm(form_options);
