@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 
+from datetime import timedelta
 from django.core.cache import cache
 from django.views.generic.base import TemplateView
+from architect import utils
 from architect.views import JSONDataView
 from architect.monitor.models import Monitor
 
@@ -30,7 +32,7 @@ class MonitorDetailView(TemplateView):
 class MonitorQueryJSONView(JSONDataView):
 
     def get_context_data(self, **kwargs):
-        data = {}
+        output = {}
         monitor = Monitor.objects.get(name=kwargs.get('manager_name'))
         client_monitor = monitor.client()
         query = client_monitor._schema['query'].get(kwargs.get('query_name'))
@@ -43,12 +45,29 @@ class MonitorQueryJSONView(JSONDataView):
         else:
             client_monitor.instant = query['instant']
         client_monitor.queries = query['metric']
-
-        data['query_cache_key'] = query_cache_key
-        data['name'] = monitor.name
-        range_data = client_monitor.get_range()
-        if range_data is not None:
-            data['data'] = range_data.to_dict('series')
+        output['query_cache_key'] = query_cache_key
+        output['name'] = monitor.name
+        data = client_monitor.get_range()
+        start_date = utils.get_date_object(query['start'])
+        step_seconds = utils.unit_time_to_seconds(query['step'])
+        x = ['x']
+        outputs = []
+        if data is not None:
+            data = data.to_dict('series')
+            i = 0
+            for series_name, series in data.items():
+                j = 0
+                list_series = []
+                for datum in series:
+                    if i == 0:
+                        start_offset = j * timedelta(seconds=step_seconds)
+                        date_object = start_date + start_offset
+                        x.append(date_object.strftime('%Y-%m-%d %H:%M:%S'))
+                        j += 1
+                    list_series.append(datum)
+                i += 1
+                outputs.append([series_name, ] + list_series)
         else:
-            data['data'] = {}
-        return data
+            data = {}
+        output['data'] = [x] + outputs
+        return output

@@ -1,7 +1,7 @@
 query:
   prometheus_test_range_query:
     metric: hdd_errors
-    step: 1h
+    step: 4h
     start: "2018-01-25T12:00:00Z"
     end: "2018-01-30T12:00:00Z"
   prometheus_test_instant_query:

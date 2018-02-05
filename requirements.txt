@@ -1,10 +1,13 @@
 python-memcached
 celery
+apache-airflow[celery, postgres]
 redis
 pyaml
 pyyaml
 jsonschema
 markdown
+rfc3339
+iso8601
 
 Django
 djangorestframework

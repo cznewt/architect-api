@@ -4,6 +4,9 @@ import re
 import json
 import yaml
 import importlib
+import datetime
+import rfc3339
+import iso8601
 
 from django.conf import settings
 from architect import exceptions
@@ -49,6 +52,21 @@ def to_camel_case(snake_str, first=True):
 def to_snake_case(name):
     s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
     return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()
+
+
+def get_date_object(date_string):
+    return iso8601.parse_date(date_string)
+
+
+def get_date_string(date_object):
+    return rfc3339.rfc3339(date_object)
+
+
+seconds_per_unit_time = {"s": 1, "m": 60, "h": 3600, "d": 86400, "w": 604800}
+
+
+def unit_time_to_seconds(s):
+    return int(s[:-1]) * seconds_per_unit_time[s[-1]]
 
 
 def get_module(module_key, module_type='manager'):

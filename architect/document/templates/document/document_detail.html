@@ -52,18 +52,21 @@
 
 {% block extra_js %}
 <script src="{% static 'billboard.js/dist/billboard.js' %}"></script>
-<script src="{% static 'architect/js/d3.layout.hive.js' %}"></script>
-<script src="{% static 'architect/js/d3.layout.matrix.js' %}"></script>
-<script src="{% static 'architect/js/d3.utils.js' %}"></script>
-<script src="{% static 'architect/js/d3.plot.arc.js' %}"></script>
-<script src="{% static 'architect/js/d3.plot.bundle.js' %}"></script>
-<script src="{% static 'architect/js/d3.plot.force.js' %}"></script>
-<script src="{% static 'architect/js/d3.plot.hive.js' %}"></script>
-<script src="{% static 'architect/js/d3.plot.matrix.js' %}"></script>
-<script src="{% static 'architect/js/d3.plot.pack.js' %}"></script>
-<script src="{% static 'architect/js/d3.plot.sunburst.js' %}"></script>
-<script src="{% static 'architect/js/d3.plot.tree.js' %}"></script>
-<script src="{% static 'architect/js/d3.plot.treemap.js' %}"></script>
+<script src="{% static 'architect-document/js/d3.layout.hive.js' %}"></script>
+<script src="{% static 'architect-document/js/d3.layout.matrix.js' %}"></script>
+<script src="{% static 'architect-document/js/d3.utils.js' %}"></script>
+<script src="{% static 'architect-document/js/d3.plot.arc.js' %}"></script>
+<script src="{% static 'architect-document/js/d3.plot.bar.js' %}"></script>
+<script src="{% static 'architect-document/js/d3.plot.bundle.js' %}"></script>
+<script src="{% static 'architect-document/js/d3.plot.force.js' %}"></script>
+<script src="{% static 'architect-document/js/d3.plot.hive.js' %}"></script>
+<script src="{% static 'architect-document/js/d3.plot.line.js' %}"></script>
+<script src="{% static 'architect-document/js/d3.plot.matrix.js' %}"></script>
+<script src="{% static 'architect-document/js/d3.plot.pack.js' %}"></script>
+<script src="{% static 'architect-document/js/d3.plot.area.js' %}"></script>
+<script src="{% static 'architect-document/js/d3.plot.sunburst.js' %}"></script>
+<script src="{% static 'architect-document/js/d3.plot.tree.js' %}"></script>
+<script src="{% static 'architect-document/js/d3.plot.treemap.js' %}"></script>
 <script>
 document.addEventListener("DOMContentLoaded", function(event) {
   console.log('Page DOM loaded.');
@@ -136,68 +139,12 @@ document.addEventListener("DOMContentLoaded", function(event) {
   new RelationalPlot.treeMap(src['{{ widget_name }}'], sel['{{ widget_name }}'], upd['{{ widget_name }}']).init();
   {% elif widget.chart == 'tree' %}
   new RelationalPlot.tree(src['{{ widget_name }}'], sel['{{ widget_name }}'], upd['{{ widget_name }}']).init();
-  {% elif widget.chart == 'line-chart' %}
-  var chart01 = bb.generate({
-    data: {
-      x: "x",
-      columns: [
-    ["x", "2013-01-01", "2013-01-02", "2013-01-03", "2013-01-04", "2013-01-05", "2013-01-06"],
-    ["data1", 30, 200, 100, 400, 150, 250],
-    ["data2", 130, 340, 200, 500, 250, 350]
-      ]
-    },
-    axis: {
-      x: {
-        type: "timeseries",
-        tick: {
-          format: "%Y-%m-%d"
-        }
-      }
-    },
-    bindto: sel['{{ widget_name }}']
-  });
-
-  {% elif widget.chart == 'stacked-chart' %}
-
-  var chart02 = bb.generate({
-    data: {
-      x: "x",
-      columns: [
-    ["x", "2013-01-01", "2013-01-02", "2013-01-03", "2013-01-04", "2013-01-05", "2013-01-06"],
-    ["data10", 130, 200, 100, 400, 150, 250],
-    ["data20",   30, 340, 200, 500, 250, 350]
-      ]
-    },
-    type: "spline",
-    axis: {
-      x: {
-        type: "timeseries",
-        tick: {
-          format: "%Y-%m"
-        }
-      }
-    },
-    bindto: sel['{{ widget_name }}']
-  });
-
   {% elif widget.chart == 'bar-chart' %}
-
-  var chart03 = bb.generate({
-    data: {
-      columns: [
-    ["data1", 30, 200, 100, 400, 150, 250],
-    ["data2", 130, 100, 140, 200, 150, 50]
-      ],
-      type: "bar"
-    },
-    bar: {
-      width: {
-        ratio: 0.5
-      }
-    },
-    bindto: sel['{{ widget_name }}']
-  });
-
+  new QuantitativePlot.barChart(src['{{ widget_name }}'], sel['{{ widget_name }}'], upd['{{ widget_name }}']).init();
+  {% elif widget.chart == 'line-chart' %}
+  new QuantitativePlot.lineChart(src['{{ widget_name }}'], sel['{{ widget_name }}'], upd['{{ widget_name }}']).init();
+  {% elif widget.chart == 'stacked-chart' %}
+  new QuantitativePlot.stackedAreaChart(src['{{ widget_name }}'], sel['{{ widget_name }}'], upd['{{ widget_name }}']).init();
   {% endif %}{% endfor %}
 });
 
