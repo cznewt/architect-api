@@ -5,11 +5,11 @@
 {% block nav_document_cls %} navigation__sub--active{% endblock %}
 
 {% block page_title %}
-"{{ document.metadata.name|default:document.name }}" document
+"{{ document.metadata.name|default:document.name }}" visualization
 {% endblock %}
 
 {% block title %}
-"{{ document.metadata.name|default:document.name }}" document
+"{{ document.metadata.name|default:document.name }}" visualization
 {% endblock %}
 
 {% block actions %}
@@ -52,6 +52,7 @@
 
 {% block extra_js %}
 <script src="{% static 'billboard.js/dist/billboard.js' %}"></script>
+<script src="{% static 'd3-horizon-chart/build/d3-horizon-chart.js' %}"></script>
 <script src="{% static 'architect-document/js/d3.layout.hive.js' %}"></script>
 <script src="{% static 'architect-document/js/d3.layout.matrix.js' %}"></script>
 <script src="{% static 'architect-document/js/d3.utils.js' %}"></script>
@@ -61,6 +62,7 @@
 <script src="{% static 'architect-document/js/d3.plot.bundle.js' %}"></script>
 <script src="{% static 'architect-document/js/d3.plot.force.js' %}"></script>
 <script src="{% static 'architect-document/js/d3.plot.hive.js' %}"></script>
+<script src="{% static 'architect-document/js/d3.plot.horizon.js' %}"></script>
 <script src="{% static 'architect-document/js/d3.plot.line.js' %}"></script>
 <script src="{% static 'architect-document/js/d3.plot.matrix.js' %}"></script>
 <script src="{% static 'architect-document/js/d3.plot.pack.js' %}"></script>
@@ -146,10 +148,12 @@ document.addEventListener("DOMContentLoaded", function(event) {
   new QuantitativePlot.lineChart(src['{{ widget_name }}'], sel['{{ widget_name }}'], upd['{{ widget_name }}']).init();
   {% elif widget.chart == 'stacked-chart' %}
   new QuantitativePlot.stackedAreaChart(src['{{ widget_name }}'], sel['{{ widget_name }}'], upd['{{ widget_name }}']).init();
-  {% elif widget.chart == 'pie-chart' %}
+  {% elif widget.chart == 'pie' %}
   new QuantitativePlot.pieChart(src['{{ widget_name }}'], sel['{{ widget_name }}'], upd['{{ widget_name }}']).init();
-  {% elif widget.chart == 'donut-chart' %}
+  {% elif widget.chart == 'donut' %}
   new QuantitativePlot.donutChart(src['{{ widget_name }}'], sel['{{ widget_name }}'], upd['{{ widget_name }}']).init();
+  {% elif widget.chart == 'horizon' %}
+  new QuantitativePlot.horizonChart(src['{{ widget_name }}'], sel['{{ widget_name }}'], upd['{{ widget_name }}']).init();
   {% endif %}{% endfor %}
 });
 

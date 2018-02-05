@@ -56,16 +56,17 @@
 @import '../../architect/scss/layout';
 @import '../../architect/scss/sidebar';
 
-@import '../../architect-monitor/scss/variables';
-@import '../../architect-monitor/scss/plot-arc';
-@import '../../architect-monitor/scss/plot-billboard';
-@import '../../architect-monitor/scss/plot-circle-pack';
-@import '../../architect-monitor/scss/plot-edge-bundle';
-@import '../../architect-monitor/scss/plot-force-directed';
-@import '../../architect-monitor/scss/plot-hive';
-@import '../../architect-monitor/scss/plot-matrix';
-@import '../../architect-monitor/scss/plot-sunburst';
-@import '../../architect-monitor/scss/plot-tree-node-link';
+@import '../../architect-document/scss/variables';
+@import '../../architect-document/scss/plot-arc';
+@import '../../architect-document/scss/plot-billboard';
+@import '../../architect-document/scss/plot-circle-pack';
+@import '../../architect-document/scss/plot-edge-bundle';
+@import '../../architect-document/scss/plot-force-directed';
+@import '../../architect-document/scss/plot-hive';
+@import '../../architect-document/scss/plot-horizon';
+@import '../../architect-document/scss/plot-matrix';
+@import '../../architect-document/scss/plot-sunburst';
+@import '../../architect-document/scss/plot-tree-node-link';
 
 @import '../../bootswatch/dist/cyborg/bootswatch';
 
