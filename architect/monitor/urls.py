@@ -8,10 +8,7 @@ urlpatterns = [
          name='monitor_list'),
     path('v1/<monitor_name>', views.MonitorDetailView.as_view(),
          name='monitor_detail'),
-    path('v1/<monitor_name>/<widget_name>',
-         views.WidgetDetailView.as_view(),
-         name='widget_detail'),
-    path('v1/<monitor_name>/<widget_name>/data.json',
-         views.WidgetDetailJSONView.as_view(),
-         name='widget_json_detail'),
+    path('v1/<manager_name>/query/<query_name>',
+         views.MonitorQueryJSONView.as_view(),
+         name='manager_query'),
 ]

@@ -1,42 +1,41 @@
 {% extends TEMPLATE_BASE|default:"content_base.html" %}
+{% load architect %}
 
 {% block nav_manager_cls %} navigation__sub--active{% endblock %}
 
 {% block page_title %}
-Resource {{ resource.name }}
+Resource {{ resource.name }} on {{ manager.name }}
 {% endblock %}
 
 {% block title %}
-Resource {{ resource.name }}
+Resource {{ resource.name }} on {{ manager.name }}
+{% endblock %}
+
+{% block actions %}
+<a href="{% url 'manager:manager_detail' manager.name %}" class="btn btn-sm btn-outline-primary">Manager {{ manager.name }}</a>
+{% endblock %}
+
+
+{% block sidebar %}
+<ul class="list-group list-group-flush">
+  <li class="list-group-item">Resource name
+    <span class="badge">{{ resource.name }}</span>
+  </li>
+  <li class="list-group-item">OS finger
+    <span class="badge badge-{{ inventory.color }}">{{ resource.metadata.osfinger }}</span>
+  </li>
+</ul>
 {% endblock %}
 
 {% block content %}
 <div class="row">
-  <div class="col s12 m12 l8 offset-l2">
-    <h4 class="center">Parameters</h4>
-    <ul class="collection">
-      <li class="collection-item"><div>Resource name<div class="secondary-content">{{ resource.name }}</div></div></li>
-      <li class="collection-item"><div>OS finger<div class="secondary-content">{{ resource.metadata.osfinger }}</div></div></li>
-    </ul>
-    <h4 class="center">Services</h4>
-    <table id="table" class="table bordered">
-      <thead>
-        <tr>
-          <th>Service</th>
-          <th class="center-align">Resources</th>
-          <th class="center-align">Status</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for service_name, service in service_list.items %}
-        <tr>
-          <td></td>
-          <td class="center-align"></td>
-          <td class="center-align"></td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+  <div class="col col-sm-12">
+    <div class="card">
+      <div class="card-block">
+        <h3 class="card-title">Resource metadata</h3>
+        <pre class="text-light"><code>{{ resource.metadata|to_yaml }}</code></pre>
+      </div>
+    </div>
   </div>
 </div>
 {% endblock %}

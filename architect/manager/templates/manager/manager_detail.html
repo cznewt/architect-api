@@ -11,25 +11,28 @@ Manager {{ manager.name }}
 {% endblock %}
 
 {% block actions %}
-<a href="{% url 'manager:manager_list' %}" class="btn btn-sm btn-outline-primary">List</a>
+<a href="{% url 'manager:manager_list' %}" class="btn btn-sm btn-outline-primary">Managers</a>
 {% endblock %}
 
 {% block content %}
-<div class="card">
-  <div class="card-body">
-    <h4 class="card-title">Manager Resources</h4>
+<div class="row">
+  <div class="col col-sm-12">
     <table class="table mb-0">
       <thead>
-        <th>Resource</th>
-        <th class="center-align">Status</th>
+        <tr>
+          <th>Resource</th>
+          <th>Kind</th>
+          <th class="center-align">Status</th>
+        </tr>
       </thead>
       <tbody>
         {% for resource in resource_list %}
         <tr>
-          <td>
+          <th scope="row">
             <a href="{% url 'manager:resource_detail' manager.name resource.name %}">{{ resource.name }}</a>
-          </td>
-          <td class="center-align">{{ resource.status }}</td>
+          </th>
+          <td>{{ resource.kind }}</td>
+          <td><span class="badge badge-{{ resource.color }}">{{ resource.status }}</span></td>
         </tr>
         {% endfor %}
       </tbody>

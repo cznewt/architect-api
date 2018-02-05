@@ -56,6 +56,8 @@ def get_module(module_key, module_type='manager'):
         class_mapping = settings.MANAGER_CLASS_MAPPINGS
     elif module_type == 'inventory':
         class_mapping = settings.INVENTORY_CLASS_MAPPINGS
+    elif module_type == 'monitor':
+        class_mapping = settings.MONITOR_CLASS_MAPPINGS
     if module_key not in class_mapping:
         raise exceptions.ArchitectException(
             "Service {module_key} is unkown. Please pass in a client"

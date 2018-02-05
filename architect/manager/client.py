@@ -5,6 +5,8 @@ from architect.manager.models import Resource, Manager, Relationship
 from django.conf import settings
 from django.core.cache import cache
 from celery.utils.log import get_logger
+from architect.manager.transform import transform_data, filter_node_types, \
+    filter_lone_nodes, clean_relations
 
 logger = get_logger(__name__)
 
@@ -34,7 +36,6 @@ class BaseClient(object):
     def load_resources(self, resources=None):
         if resources is None:
             resources = self.resource_type_list()
-        print(resources)
         for resource in resources:
             self.load_resource_metadata(resource)
             count = len(self.resources.get(resource, {}))
@@ -135,11 +136,36 @@ class BaseClient(object):
         }
 
     def refresh_cache(self):
+        manager = Manager.objects.get(name=self.name)
         self.load_resources()
         self.load_relations()
         raw_data = self.to_dict()
         logger.info('Refreshing manager {} cache'.format(self.name))
         cache.set(self.name, raw_data, settings.RESOURCE_CACHE_DURATION)
+
+        for query_name in manager.metadata.get('queries', []):
+            query = self._schema['query'][query_name]
+            layout = query.get('layout', 'graph')
+            query_cache_key = '{}-{}'.format(self.name,
+                                             query_name)
+            if layout == 'graph':
+                transform = 'default_graph'
+                options = {}
+                data = transform_data(raw_data, transform, options)
+                if query.get('filter_node_types', []):
+                    data = filter_node_types(data,
+                                             query.get('filter_node_types'))
+                if query.get('filter_lone_nodes', []):
+                    data = filter_lone_nodes(data,
+                                             query.get('filter_lone_nodes'))
+                data = clean_relations(data)
+            elif layout == 'hierarchy':
+                transform = 'default_hier'
+                options = query.get('hierarchy_layers', {})
+                data = transform_data(raw_data, transform, options)
+            cache.set(query_cache_key,
+                      data,
+                      settings.RESOURCE_CACHE_DURATION)
 
     def _get_resource_types(self):
         res_map = {}

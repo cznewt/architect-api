@@ -19,6 +19,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions',
+    'rest_framework',
     'django_select2',
     'crispy_forms',
     'compressor',
@@ -26,6 +27,7 @@ INSTALLED_APPS = [
     'architect.inventory',
     'architect.manager',
     'architect.monitor',
+    'architect.document',
     'architect.manager.engine.saltstack',
 ]
 
@@ -143,6 +145,7 @@ RESOURCE_CACHE_DURATION = 10
 INVENTORY_ENGINES = CONFIG.get('inventory', {})
 MANAGER_ENGINES = CONFIG.get('manager', {})
 MONITOR_ENGINES = CONFIG.get('monitor', {})
+DOCUMENT_ENGINES = CONFIG.get('document', {})
 
 INVENTORY_BASE_DIR = '/srv/architect'
 INVENTORY_RECLASS_CLASSES_DIRS = CONFIG.get('inventory_reclass_classes_dirs', [])
@@ -168,6 +171,15 @@ else:
         "saltstack": "architect.manager.engine.saltstack.client.SaltStackClient",
         "spinnaker": "architect.manager.engine.spinnaker.client.SpinnakerClient",
         "terraform": "architect.manager.engine.terraform.client.TerraformClient",
+    }
+
+if 'monitor_classes' in CONFIG:
+    MONITOR_CLASS_MAPPINGS = CONFIG['monitor_classes']
+else:
+    MONITOR_CLASS_MAPPINGS = {
+        "graphite": "architect.monitor.engine.graphite.client.GraphiteClient",
+        "influxdb": "architect.monitor.engine.influxdb.client.InfluxdbClient",
+        "prometheus": "architect.monitor.engine.prometheus.client.PrometheusClient",
     }
 
 RECLASS_SERVICE_BLACKLIST = [
@@ -215,3 +227,10 @@ STATICFILES_FINDERS = (
 )
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
+}

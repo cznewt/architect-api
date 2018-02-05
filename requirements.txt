@@ -4,14 +4,17 @@ redis
 pyaml
 pyyaml
 jsonschema
+markdown
 
 Django
+djangorestframework
 django-compressor
 django-jsonview
 django-yamlfield
 django-extensions
 django-npm
 django_select2
+django-filter
 
 os_client_config
 python-cinderclient

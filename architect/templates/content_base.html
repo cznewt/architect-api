@@ -53,7 +53,10 @@
               <a href="{% url 'manager:manager_list' %}"><i class="fa fa-search"></i>Managers</a>
             </li>
             <li class="navigation__sub{% block nav_monitor_cls %}{% endblock %}">
-              <a href="{% url 'monitor:monitor_list' %}"><i class="fa fa-list"></i>Dashboards</a>
+              <a href="{% url 'monitor:monitor_list' %}"><i class="fa fa-list"></i>Monitors</a>
+            </li>
+            <li class="navigation__sub{% block nav_document_cls %}{% endblock %}">
+              <a href="{% url 'document:document_list' %}"><i class="fa fa-list"></i>Documents</a>
             </li>
           </ul>
           {% endif %}
@@ -72,10 +75,23 @@
     <script src="{% static 'jquery-form/src/jquery.form.js' %}"></script>
     <script src="{% static 'timeago/jquery.timeago.js' %}"></script>
     <script src="{% static 'bootstrap/dist/js/bootstrap.js' %}"></script>
+    <script src="{% static 'bootstrap-notify/bootstrap-notify.js' %}"></script>
     <script src="{% static 'd3/build/d3.js' %}"></script>
     <script src="{% static 'architect/js/app.js' %}"></script>
     {% endcompress %}
     {% block extra_js %}{% endblock %}
     <div class="modal fade" id="modal-container"></div>
+    {% if messages %}
+    <script>
+    {% for message in messages %}  
+    document.addEventListener("DOMContentLoaded", function(event) {
+      $('body').notify({
+        message: '{{ message }}',
+        type: 'danger'
+      });
+    });
+    {% endfor %}
+    </script>
+    {% endif %}
   </body>
 </html>

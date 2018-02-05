@@ -1,7 +1,16 @@
 import re
+import pyaml
 from django import template
 
 register = template.Library()
+
+
+@register.filter(name='to_yaml')
+def to_yaml(value):
+    """
+    Output value as YAML string
+    """
+    return pyaml.dump(value)
 
 
 @register.filter(name='lcut')

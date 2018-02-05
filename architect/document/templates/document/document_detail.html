@@ -1,0 +1,205 @@
+{% extends TEMPLATE_BASE|default:"content_base.html" %}
+
+{% load static compress %}
+
+{% block nav_document_cls %} navigation__sub--active{% endblock %}
+
+{% block page_title %}
+"{{ document.metadata.name|default:document.name }}" document
+{% endblock %}
+
+{% block title %}
+"{{ document.metadata.name|default:document.name }}" document
+{% endblock %}
+
+{% block actions %}
+<a href="{% url 'document:document_list' %}" class="btn btn-sm btn-outline-primary">List</a>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  {% for widget_name, widget in document.widgets.items %}
+  <div class="{{ widget.width }}">
+    <div class="card border-primary h-100">
+      <div class="card-body">
+        <h4 class="card-title">{{ widget.name|default:widget_name }}</h4>
+        <ul class="list-inline card-actions">
+          <li>
+            <a href="#" id="{{ widget_name }}-fullscreen" role="button" title="Toggle fullscreen">
+              <i class="fa fa-expand"></i>
+            </a>
+          </li>
+        </ul>
+        <div class="{{ widget.chart }} plot-container text-center" id="chart-{{ widget_name }}"></div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}
+
+{% block sidebar %}
+<ul class="list-group mb-3">
+  <li class="list-group-item">Resources<span class="badge" id="plotResources">N/A</span></li>
+  <li class="list-group-item">Relations<span class="badge" id="plotRelations">N/A</span></li>
+</ul>
+<div class="card">
+  <div id="resource-detail" class="card-body">
+    <div>No resource selected.</div>
+  </div>
+<div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'billboard.js/dist/billboard.js' %}"></script>
+<script src="{% static 'architect/js/d3.layout.hive.js' %}"></script>
+<script src="{% static 'architect/js/d3.layout.matrix.js' %}"></script>
+<script src="{% static 'architect/js/d3.utils.js' %}"></script>
+<script src="{% static 'architect/js/d3.plot.arc.js' %}"></script>
+<script src="{% static 'architect/js/d3.plot.bundle.js' %}"></script>
+<script src="{% static 'architect/js/d3.plot.force.js' %}"></script>
+<script src="{% static 'architect/js/d3.plot.hive.js' %}"></script>
+<script src="{% static 'architect/js/d3.plot.matrix.js' %}"></script>
+<script src="{% static 'architect/js/d3.plot.pack.js' %}"></script>
+<script src="{% static 'architect/js/d3.plot.sunburst.js' %}"></script>
+<script src="{% static 'architect/js/d3.plot.tree.js' %}"></script>
+<script src="{% static 'architect/js/d3.plot.treemap.js' %}"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function(event) {
+  console.log('Page DOM loaded.');
+
+  /*
+  var changeDetailBox = function (node) {
+    var detailBoxTemplate = '<ul class="collection">' +
+     '<li class="collection-item">Name<span class="badge">{name}</span></li>' +
+     '<li class="collection-item">Kind<span class="badge">{kind}</span></li>' +
+     '</ul>';
+    $('#resource-detail').html(detailBoxTemplate.formatTemplate({
+      name: node.name,
+      kind: node.kind
+    }));
+  };
+  */
+
+  {% for widget_name, widget in document.widgets.items %}
+
+  $("#{{ widget_name }}-fullscreen").click(function (e) {
+    e.preventDefault();  
+    var $this = $(this);
+    if ($this.children('i').hasClass('fa-expand'))
+    {
+      $this.children('i').removeClass('fa-expand');
+      $this.children('i').addClass('fa-compress');
+    }
+    else if ($this.children('i').hasClass('fa-compress'))
+    {
+      $this.children('i').removeClass('fa-compress');
+      $this.children('i').addClass('fa-expand');
+    }
+    $(this).closest('.card').toggleClass('card-fullscreen');
+  });
+
+  $("#chart-{{ widget_name }}")
+    .height({{ widget.height|default:1 }} * $("#chart-{{ widget_name }}").width());
+
+  {% endfor %}
+
+
+  var src = {};
+  var sel = {};
+  var upd = {};
+
+  {% for widget_name, widget in document.widgets.items %}
+  src['{{ widget_name }}'] = "/{% if widget.data_source.default.type == 'relational' %}manager{% else %}monitor{% endif %}/v1/{{ widget.data_source.default.source }}/query/{{ widget.data_source.default.query }}";
+  sel['{{ widget_name }}'] = "#chart-{{ widget_name }}";
+  upd['{{ widget_name }}'] = {{ widget.update_interval|default:600 }};
+  {% endfor %}
+
+  {% for widget_name, widget in document.widgets.items %}
+  {% if widget.chart == 'hive' %}
+  d3.json(src['{{ widget_name }}'], function(data) {
+    HivePlot.init(sel['{{ widget_name }}'], data, {selector: sel['{{ widget_name }}']});
+  });
+  {% elif widget.chart == 'arc' %}
+  new RelationalPlot.arc(src['{{ widget_name }}'], sel['{{ widget_name }}'], upd['{{ widget_name }}']).init();
+  {% elif widget.chart == 'force' %}
+  new RelationalPlot.forceDirected(src['{{ widget_name }}'], sel['{{ widget_name }}'], upd['{{ widget_name }}']).init();
+  {% elif widget.chart == 'matrix' %}
+  new RelationalPlot.adjacencyMatrix(src['{{ widget_name }}'], sel['{{ widget_name }}'], upd['{{ widget_name }}']).init();
+  {% elif widget.chart == 'circle-pack' %}
+  new RelationalPlot.circlePack(src['{{ widget_name }}'], sel['{{ widget_name }}'], upd['{{ widget_name }}']).init();
+  {% elif widget.chart == 'edge-bundle' %}
+  new RelationalPlot.hierarchicalEdgeBundling(src['{{ widget_name }}'], sel['{{ widget_name }}'], upd['{{ widget_name }}']).init();
+  {% elif widget.chart == 'sunburst' %}
+  new RelationalPlot.sunburst(src['{{ widget_name }}'], sel['{{ widget_name }}'], upd['{{ widget_name }}']).init();
+  {% elif widget.chart == 'treemap' %}
+  new RelationalPlot.treeMap(src['{{ widget_name }}'], sel['{{ widget_name }}'], upd['{{ widget_name }}']).init();
+  {% elif widget.chart == 'tree' %}
+  new RelationalPlot.tree(src['{{ widget_name }}'], sel['{{ widget_name }}'], upd['{{ widget_name }}']).init();
+  {% elif widget.chart == 'line-chart' %}
+  var chart01 = bb.generate({
+    data: {
+      x: "x",
+      columns: [
+    ["x", "2013-01-01", "2013-01-02", "2013-01-03", "2013-01-04", "2013-01-05", "2013-01-06"],
+    ["data1", 30, 200, 100, 400, 150, 250],
+    ["data2", 130, 340, 200, 500, 250, 350]
+      ]
+    },
+    axis: {
+      x: {
+        type: "timeseries",
+        tick: {
+          format: "%Y-%m-%d"
+        }
+      }
+    },
+    bindto: sel['{{ widget_name }}']
+  });
+
+  {% elif widget.chart == 'stacked-chart' %}
+
+  var chart02 = bb.generate({
+    data: {
+      x: "x",
+      columns: [
+    ["x", "2013-01-01", "2013-01-02", "2013-01-03", "2013-01-04", "2013-01-05", "2013-01-06"],
+    ["data10", 130, 200, 100, 400, 150, 250],
+    ["data20",   30, 340, 200, 500, 250, 350]
+      ]
+    },
+    type: "spline",
+    axis: {
+      x: {
+        type: "timeseries",
+        tick: {
+          format: "%Y-%m"
+        }
+      }
+    },
+    bindto: sel['{{ widget_name }}']
+  });
+
+  {% elif widget.chart == 'bar-chart' %}
+
+  var chart03 = bb.generate({
+    data: {
+      columns: [
+    ["data1", 30, 200, 100, 400, 150, 250],
+    ["data2", 130, 100, 140, 200, 150, 50]
+      ],
+      type: "bar"
+    },
+    bar: {
+      width: {
+        ratio: 0.5
+      }
+    },
+    bindto: sel['{{ widget_name }}']
+  });
+
+  {% endif %}{% endfor %}
+});
+
+</script>
+{% endblock %}

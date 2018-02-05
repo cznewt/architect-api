@@ -7,6 +7,7 @@ from architect import utils
 
 registry = utils.ClassRegistry()
 
+
 class ResourceRel(StructuredRel):
     size = IntegerProperty(default=1)
     status = StringProperty(default='unknown')

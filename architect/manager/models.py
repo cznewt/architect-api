@@ -67,6 +67,16 @@ class Resource(models.Model):
     def __str__(self):
         return '{} {}'.format(self.kind, self.name)
 
+    def color(self):
+        if self.status == 'active':
+            return 'success'
+        if self.status == 'error':
+            return 'danger'
+        if self.status == 'build':
+            return 'info'
+        else:
+            return 'warning'
+
     def relations(self):
         return Relationship.objects.filter(Q(source=self) | Q(target=self))
 

@@ -12,7 +12,10 @@ urlpatterns = [
          name='manager_detail'),
     path('v1/<manager_name>/sync', views.ManagerUpdateView.as_view(),
          name='manager_update'),
-    path('v1/<manager_name>/<resource_name>',
+    path('v1/<manager_name>/query/<query_name>',
+         views.ManagerQueryJSONView.as_view(),
+         name='manager_query'),
+    path('v1/<manager_name>/resource/<resource_name>',
          views.ResourceDetailView.as_view(),
          name='resource_detail'),
 ]

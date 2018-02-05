@@ -1,3 +1,44 @@
+query:
+  salt_complete_graph:
+    layout: graph
+  salt_minion_service_graph:
+    layout: graph
+    filter_node_types:
+    - salt_minion
+    - salt_service
+  salt_minions_tree:
+    layout: hierarchy
+    hierarchy_layers:
+      0:
+        name: Salt Master
+        kind:
+      1:
+        kind: salt_minion
+  salt_minion_services_tree:
+    layout: hierarchy
+    hierarchy_layers:
+      0:
+        name: Salt master
+        kind:
+      1:
+        kind: salt_minion
+      2:
+        target: on_salt_minion
+        kind: salt_service
+  salt_minion_lowstates_tree:
+    layout: hierarchy
+    hierarchy_layers:
+      0:
+        name: Salt master
+        kind:
+      1:
+        kind: salt_minion
+      2:
+        target: on_salt_minion
+        kind: salt_service
+      3:
+        source: contains_salt_lowstate
+        kind: salt_lowstate
 relation:
   at_salt_master:
     relation:

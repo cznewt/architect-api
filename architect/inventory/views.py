@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import json
+from django.contrib import messages
 from django.urls import reverse
 from django.http import HttpResponse
 from django.views import View
@@ -38,6 +39,9 @@ class InventoryCheckView(RedirectView):
             else:
                 inventory.status = 'error'
             inventory.save()
+        messages.add_message(self.request,
+                             messages.SUCCESS,
+                             'Finished syncing of inventories.')
         return super().get_redirect_url(*args, **kwargs)
 
 
