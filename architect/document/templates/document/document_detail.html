@@ -56,6 +56,7 @@
 <script src="{% static 'architect-document/js/d3.layout.matrix.js' %}"></script>
 <script src="{% static 'architect-document/js/d3.utils.js' %}"></script>
 <script src="{% static 'architect-document/js/d3.plot.arc.js' %}"></script>
+<script src="{% static 'architect-document/js/d3.plot.area.js' %}"></script>
 <script src="{% static 'architect-document/js/d3.plot.bar.js' %}"></script>
 <script src="{% static 'architect-document/js/d3.plot.bundle.js' %}"></script>
 <script src="{% static 'architect-document/js/d3.plot.force.js' %}"></script>
@@ -63,7 +64,7 @@
 <script src="{% static 'architect-document/js/d3.plot.line.js' %}"></script>
 <script src="{% static 'architect-document/js/d3.plot.matrix.js' %}"></script>
 <script src="{% static 'architect-document/js/d3.plot.pack.js' %}"></script>
-<script src="{% static 'architect-document/js/d3.plot.area.js' %}"></script>
+<script src="{% static 'architect-document/js/d3.plot.pie.js' %}"></script>
 <script src="{% static 'architect-document/js/d3.plot.sunburst.js' %}"></script>
 <script src="{% static 'architect-document/js/d3.plot.tree.js' %}"></script>
 <script src="{% static 'architect-document/js/d3.plot.treemap.js' %}"></script>
@@ -145,6 +146,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
   new QuantitativePlot.lineChart(src['{{ widget_name }}'], sel['{{ widget_name }}'], upd['{{ widget_name }}']).init();
   {% elif widget.chart == 'stacked-chart' %}
   new QuantitativePlot.stackedAreaChart(src['{{ widget_name }}'], sel['{{ widget_name }}'], upd['{{ widget_name }}']).init();
+  {% elif widget.chart == 'pie-chart' %}
+  new QuantitativePlot.pieChart(src['{{ widget_name }}'], sel['{{ widget_name }}'], upd['{{ widget_name }}']).init();
+  {% elif widget.chart == 'donut-chart' %}
+  new QuantitativePlot.donutChart(src['{{ widget_name }}'], sel['{{ widget_name }}'], upd['{{ widget_name }}']).init();
   {% endif %}{% endfor %}
 });
 

@@ -38,36 +38,49 @@ class MonitorQueryJSONView(JSONDataView):
         query = client_monitor._schema['query'].get(kwargs.get('query_name'))
         query_cache_key = '{}-{}'.format(monitor.name,
                                          kwargs.get('query_name'))
-        if 'step' in query:
-            client_monitor.start = query['start']
-            client_monitor.end = query['end']
-            client_monitor.step = query['step']
-        else:
-            client_monitor.instant = query['instant']
         client_monitor.queries = query['metric']
         output['query_cache_key'] = query_cache_key
         output['name'] = monitor.name
-        data = client_monitor.get_range()
-        start_date = utils.get_date_object(query['start'])
-        step_seconds = utils.unit_time_to_seconds(query['step'])
-        x = ['x']
         outputs = []
-        if data is not None:
-            data = data.to_dict('series')
-            i = 0
-            for series_name, series in data.items():
-                j = 0
-                list_series = []
-                for datum in series:
-                    if i == 0:
-                        start_offset = j * timedelta(seconds=step_seconds)
-                        date_object = start_date + start_offset
-                        x.append(date_object.strftime('%Y-%m-%d %H:%M:%S'))
-                        j += 1
-                    list_series.append(datum)
-                i += 1
-                outputs.append([series_name, ] + list_series)
+        if 'start' in query:
+            client_monitor.start = query['start']
+            client_monitor.end = query['end']
+            client_monitor.step = query['step']
+            start_date = utils.get_date_object(query['start'])
+            step_seconds = utils.unit_time_to_seconds(query['step'])
+            data = client_monitor.get_range()
+            x = ['x']
+            if data is not None:
+                data = data.to_dict('series')
+                i = 0
+                for series_name, series in data.items():
+                    j = 0
+                    list_series = []
+                    for datum in series:
+                        if i == 0:
+                            start_offset = j * timedelta(seconds=step_seconds)
+                            date_object = start_date + start_offset
+                            x.append(date_object.strftime('%Y-%m-%d %H:%M:%S'))
+                            j += 1
+                        list_series.append(datum)
+                    i += 1
+                    outputs.append([series_name, ] + list_series)
+            else:
+                data = {}
+            outputs = [x] + outputs
         else:
-            data = {}
-        output['data'] = [x] + outputs
+            client_monitor.moment = query['moment']
+            data = client_monitor.get_instant()
+            if data is not None:
+                data = data.to_dict('series')
+                i = 0
+                for series_name, series in data.items():
+                    list_series = []
+                    for datum in series:
+                        list_series.append(datum)
+                    i += 1
+                    outputs.append([series_name, ] + list_series)
+            else:
+                data = {}
+        output['data'] = outputs
         return output

@@ -6,8 +6,8 @@ query:
     end: "2018-01-30T12:00:00Z"
   prometheus_test_instant_query:
     metric: hdd_errors
-    step: 1h
-    instant: "2018-01-30T12:00:00Z"
+    moment: "2018-01-28T12:00:00Z"
 metric:
   hdd_errors:
     job: telegraf
+    name: HDD errors

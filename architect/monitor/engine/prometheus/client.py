@@ -36,7 +36,6 @@ class PrometheusClient(BaseClient):
             return {}
         else:
             data = response['data']
-            print(data)
             response_data = {}
             for datum in data:
                 name = datum.pop('__name__')

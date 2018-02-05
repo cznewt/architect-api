@@ -48,7 +48,7 @@ var QuantitativePlot = function(QuantitativePlot){
                 x: {
                   type: "timeseries",
                   tick: {
-                    format: '%m-%d %H:%M'
+                    format: '%Y-%m-%d %H:%M'
                   }
                 }
               },

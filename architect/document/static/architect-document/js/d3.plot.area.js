@@ -1,6 +1,6 @@
 var QuantitativePlot = function(QuantitativePlot){
     /**
-     * Line chart rendering method
+     * Stacked area chart rendering method
      * @param dataUrl - Data endpoint URL
      * @param graphSelector - Graph parent <div> CSS selector
      * @param refreshInterval - Refresh interval in seconds (null for disabled)
@@ -49,7 +49,7 @@ var QuantitativePlot = function(QuantitativePlot){
                 x: {
                   type: "timeseries",
                   tick: {
-                    format: '%m-%d %H:%M'
+                    format: '%Y-%m-%d %H:%M'
                   }
                 }
               },
