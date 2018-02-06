@@ -17,7 +17,7 @@ WF_BUILD_INFO = '%(folder_url)sjob/%(short_name)s/%(number)d/wfapi/describe'
 DEFAULT_RESOURCES = [
     'jenkins_pipeline',
     'jenkins_build',
-#    'jenkins_stage',
+    'jenkins_stage',
 ]
 
 
@@ -54,9 +54,10 @@ class JenkinsExtension(object):
         :returns: dictionary of build information, ``dict``
         """
         folder_url, short_name = self.client._get_job_folder(name)
+        number = int(number)
         try:
             response = self.client.jenkins_open(Request(
-                self._build_url(WF_BUILD_INFO, locals())
+                self.client._build_url(WF_BUILD_INFO, locals())
             ))
             if response:
                 return json.loads(response)
@@ -82,6 +83,7 @@ class JenkinsExtension(object):
         :returns: Execution node build log,  ``dict``
         """
         folder_url, short_name = self.client._get_job_folder(name)
+        number = int(number)
         try:
             response = self.client.jenkins_open(Request(
                 self.client._build_url(WF_NODE_LOG, locals())
@@ -137,6 +139,16 @@ class JenkinsClient(BaseClient):
                 return 'active'
             elif metadata['color'] == 'red':
                 return 'error'
+        elif kind == 'jenkins_build':
+            if metadata['result'] == 'SUCCESS':
+                return 'active'
+            elif metadata['result'] == 'FAILURE':
+                return 'error'
+        elif kind == 'jenkins_stage':
+            if metadata['status'] == 'SUCCESS':
+                return 'active'
+            elif metadata['status'] == 'FAILED':
+                return 'error'
         return 'unknown'
 
     def process_resource_metadata(self, kind, metadata):
@@ -148,30 +160,59 @@ class JenkinsClient(BaseClient):
                                       metadata=resource)
         elif kind == 'jenkins_build':
             for resource in metadata:
-                self._create_resource('{}|{}'.format(resource['job_name'],
+                self._create_resource('{}|{}'.format(resource['jobName'],
                                                      resource['id']),
                                       resource['fullDisplayName'],
                                       'jenkins_build',
                                       metadata=resource)
+        elif kind == 'jenkins_stage':
+            for sub_metadata in metadata:
+                for resource in sub_metadata.get('stages', []):
+                    res_id = '{}|{}|{}'.format(sub_metadata['jobName'],
+                                               sub_metadata['id'],
+                                               resource['name'])
+                    resource['jobName'] = sub_metadata['jobName']
+                    resource['runId'] = sub_metadata['id']
+                    self._create_resource(res_id,
+                                          resource['name'],
+                                          'jenkins_stage',
+                                          metadata=resource)
 
     def get_resource_metadata(self, kind):
         logger.info("Getting {} resources".format(kind))
         if kind == 'jenkins_pipeline':
             response = self.api.get_workflows()
         elif kind == 'jenkins_build':
-            logger.info(self.metadata.get('pipelines', []))
+            response = []
             for pipeline in self.metadata.get('pipelines', []):
                 data = self.api.get_builds(pipeline).get('builds', [])
-                response = []
                 for datum in data:
-                    datum['job_name'] = pipeline
+                    datum['jobName'] = pipeline
                     response.append(datum)
+        elif kind == 'jenkins_stage':
+            response = []
+            for pipeline in self.metadata.get('pipelines', []):
+                data = self.api.get_builds(pipeline).get('builds', [])
+                for datum in data:
+                    build_info = self.api.get_wf_build_info(pipeline,
+                                                            datum['id'])
+                    build_info['jobName'] = pipeline
+                    response.append(build_info)
         return response
 
     def process_relation_metadata(self):
+
         for resource_id, resource in self.resources.get('jenkins_build',
                                                         {}).items():
             self._create_relation(
                 'pipeline_run',
                 resource_id,
-                resource['metadata']['job_name'])
+                resource['metadata']['jobName'])
+
+        for resource_id, resource in self.resources.get('jenkins_stage',
+                                                        {}).items():
+            self._create_relation(
+                'build_stage',
+                resource_id,
+                '{}|{}'.format(resource['metadata']['jobName'],
+                               resource['metadata']['runId']))

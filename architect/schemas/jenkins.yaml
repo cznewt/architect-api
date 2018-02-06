@@ -9,6 +9,9 @@ relation:
   pipeline_run:
     relation:
       default: pipeline
+  build_stage:
+    relation:
+      default: build
   in_jenkins_stage:
     relation:
       default: stage
@@ -34,3 +37,8 @@ resource:
     icon: fa:cube
     name: Stage
     resource: Jenkins::Stage
+    model:
+      build:
+        type: relationship_to
+        model: build_stage
+        target: jenkins_build
