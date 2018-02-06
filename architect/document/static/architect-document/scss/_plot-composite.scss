@@ -1,0 +1,16 @@
+
+.composite {
+
+  .black {
+    stroke: $primary;
+  }
+
+  .gray {
+    stroke: $light;
+  }
+
+  .white {
+    stroke: $dark;
+  }
+
+}

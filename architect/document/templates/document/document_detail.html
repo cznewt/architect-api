@@ -154,6 +154,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
   new QuantitativePlot.donutChart(src['{{ widget_name }}'], sel['{{ widget_name }}'], upd['{{ widget_name }}']).init();
   {% elif widget.chart == 'horizon' %}
   new QuantitativePlot.horizonChart(src['{{ widget_name }}'], sel['{{ widget_name }}'], upd['{{ widget_name }}']).init();
+  {% elif widget.chart == 'composite' %}
+  d3.xml("{{ widget.background.url }}").mimeType("image/svg+xml").get(function(error, xml) {
+     if (error) throw error;
+     d3.select(sel['{{ widget_name }}']).node().appendChild(xml.documentElement);
+  });
   {% endif %}{% endfor %}
 });
 
