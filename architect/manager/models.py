@@ -35,6 +35,21 @@ class Manager(models.Model):
     def get_schema(self):
         return utils.get_resource_schema(self.engine)
 
+    def get_resources(self):
+        return Resource.objects.filter(manager=self)
+
+    def get_resources_count(self):
+        return Resource.objects.filter(manager=self).count
+
+    def get_active_resources(self):
+        return Resource.objects.filter(manager=self, status='active')
+
+    def get_error_resources(self):
+        return Resource.objects.filter(manager=self, status='error')
+
+    def get_unknown_resources(self):
+        return Resource.objects.filter(manager=self, status='unknown')
+
     def resources_by_kind(self):
         kinds = self.get_schema()['resource']
         output = {}
@@ -45,7 +60,9 @@ class Manager(models.Model):
     def url(self):
         if self.metadata is None:
             return '-'
-        elif self.engine == 'saltstack':
+        elif self.engine == 'amazon':
+            return self.metadata.get('region', '-')
+        elif self.engine in ['jenkins', 'saltstack']:
             return self.metadata.get('auth_url', '-')
         elif self.engine == 'kubernetes':
             return self.metadata.get('cluster', {}).get('server', '-')
@@ -53,6 +70,9 @@ class Manager(models.Model):
             return self.metadata.get('auth', {}).get('auth_url', '-')
         else:
             return '-'
+
+    class Meta:
+        ordering = ['name']
 
 
 class Resource(models.Model):
@@ -79,6 +99,9 @@ class Resource(models.Model):
 
     def relations(self):
         return Relationship.objects.filter(Q(source=self) | Q(target=self))
+
+    class Meta:
+        ordering = ['name']
 
 
 class Relationship(models.Model):

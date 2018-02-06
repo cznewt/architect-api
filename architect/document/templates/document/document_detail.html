@@ -53,6 +53,7 @@
 {% block extra_js %}
 <script src="{% static 'billboard.js/dist/billboard.js' %}"></script>
 <script src="{% static 'd3-horizon-chart/build/d3-horizon-chart.js' %}"></script>
+<script src="{% static 'skd3/build/sk.d3.js' %}"></script>
 <script src="{% static 'architect-document/js/d3.layout.hive.js' %}"></script>
 <script src="{% static 'architect-document/js/d3.layout.matrix.js' %}"></script>
 <script src="{% static 'architect-document/js/d3.utils.js' %}"></script>
@@ -67,6 +68,7 @@
 <script src="{% static 'architect-document/js/d3.plot.matrix.js' %}"></script>
 <script src="{% static 'architect-document/js/d3.plot.pack.js' %}"></script>
 <script src="{% static 'architect-document/js/d3.plot.pie.js' %}"></script>
+<script src="{% static 'architect-document/js/d3.plot.sankey.js' %}"></script>
 <script src="{% static 'architect-document/js/d3.plot.sunburst.js' %}"></script>
 <script src="{% static 'architect-document/js/d3.plot.tree.js' %}"></script>
 <script src="{% static 'architect-document/js/d3.plot.treemap.js' %}"></script>
@@ -142,6 +144,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
   new RelationalPlot.treeMap(src['{{ widget_name }}'], sel['{{ widget_name }}'], upd['{{ widget_name }}']).init();
   {% elif widget.chart == 'tree' %}
   new RelationalPlot.tree(src['{{ widget_name }}'], sel['{{ widget_name }}'], upd['{{ widget_name }}']).init();
+  {% elif widget.chart == 'sankey' %}
+  new RelationalPlot.sankeyDiagram(src['{{ widget_name }}'], sel['{{ widget_name }}'], upd['{{ widget_name }}']).init();
   {% elif widget.chart == 'bar-chart' %}
   new QuantitativePlot.barChart(src['{{ widget_name }}'], sel['{{ widget_name }}'], upd['{{ widget_name }}']).init();
   {% elif widget.chart == 'line-chart' %}

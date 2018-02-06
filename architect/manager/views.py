@@ -5,7 +5,8 @@ from django.conf import settings
 from django.views.generic.base import TemplateView, RedirectView
 from architect.views import JSONDataView
 from architect.manager.models import Resource, Manager
-from architect.manager.tasks import get_manager_status_task
+from architect.manager.tasks import get_manager_status_task, \
+    sync_manager_resources_task
 from architect.manager.transform import transform_data, filter_node_types, \
     filter_lone_nodes, clean_relations
 
@@ -18,23 +19,6 @@ class ManagerListView(TemplateView):
         context = super().get_context_data(**kwargs)
         context['manager_list'] = Manager.objects.order_by('name')
         return context
-
-
-class ManagerCheckView(RedirectView):
-
-    permanent = False
-    query_string = True
-    pattern_name = 'manager:manager_list'
-
-    def get_redirect_url(self, *args, **kwargs):
-        managers = Manager.objects.all()
-        for manager in managers:
-            if manager.client().check_status():
-                manager.status = 'active'
-            else:
-                manager.status = 'error'
-            manager.save()
-        return super().get_redirect_url(*args, **kwargs)
 
 
 class ManagerDetailView(TemplateView):
@@ -51,13 +35,26 @@ class ManagerDetailView(TemplateView):
         return context
 
 
-class ManagerUpdateView(RedirectView):
+class ManagerCheckView(RedirectView):
+
+    permanent = False
+    query_string = True
+    pattern_name = 'manager:manager_list'
+
+    def get_redirect_url(self, *args, **kwargs):
+        managers = Manager.objects.all()
+        for manager in managers:
+            get_manager_status_task.apply_async((manager.name,))
+        return super().get_redirect_url(*args, **kwargs)
+
+
+class ManagerSyncView(RedirectView):
 
     permanent = False
     pattern_name = 'manager:manager_detail'
 
     def get_redirect_url(self, *args, **kwargs):
-        get_manager_status_task.apply_async((kwargs.get('manager_name'),))
+        sync_manager_resources_task.apply_async((kwargs.get('manager_name'),))
         return super().get_redirect_url(*args, **kwargs)
 
 

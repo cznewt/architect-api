@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import json
+import pyaml
 import jenkins
 import xml.etree.ElementTree as ET
 from architect.manager.client import BaseClient
@@ -13,6 +14,12 @@ logger = get_logger(__name__)
 WF_NODE_LOG = '%(folder_url)sjob/%(short_name)s/%(number)d/execution/node/%(node)s/wfapi/log'
 WF_BUILD_INFO = '%(folder_url)sjob/%(short_name)s/%(number)d/wfapi/describe'
 
+DEFAULT_RESOURCES = [
+    'jenkins_pipeline',
+    'jenkins_build',
+#    'jenkins_stage',
+]
+
 
 class JenkinsExtension(object):
     """
@@ -24,14 +31,8 @@ class JenkinsExtension(object):
         return jobs
 
     def get_builds(self, name):
-        job_info = self.client.get_job_info(name)
-        builds = job_info['builds']
-
-        for build in builds:
-            build_info = self.client.get_build_info(name, build['number'])
-            build.update(build_info)
-            build['job_name'] = name
-        return builds
+        job_info = self.client.get_job_info(name, depth=1)
+        return job_info
 
     def get_tree(self):
         works = self.get_workflows()
@@ -119,10 +120,58 @@ class JenkinsClient(BaseClient):
         return status
 
     def update_resources(self, resources=None):
-        self.process_relation_metadata()
+        if self.auth():
+            if resources is None:
+                resources = DEFAULT_RESOURCES
+            for resource in resources:
+                metadata = self.get_resource_metadata(resource)
+                self.process_resource_metadata(resource, metadata)
+                count = len(self.resources.get(resource, {}))
+                logger.info("Processed {} {} resources".format(count,
+                                                               resource))
+            self.process_relation_metadata()
 
     def get_resource_status(self, kind, metadata):
+        if kind == 'jenkins_pipeline':
+            if metadata['color'] == 'blue':
+                return 'active'
+            elif metadata['color'] == 'red':
+                return 'error'
         return 'unknown'
 
+    def process_resource_metadata(self, kind, metadata):
+        if kind == 'jenkins_pipeline':
+            for resource in metadata:
+                self._create_resource(resource['name'],
+                                      resource['fullname'],
+                                      'jenkins_pipeline',
+                                      metadata=resource)
+        elif kind == 'jenkins_build':
+            for resource in metadata:
+                self._create_resource('{}|{}'.format(resource['job_name'],
+                                                     resource['id']),
+                                      resource['fullDisplayName'],
+                                      'jenkins_build',
+                                      metadata=resource)
+
+    def get_resource_metadata(self, kind):
+        logger.info("Getting {} resources".format(kind))
+        if kind == 'jenkins_pipeline':
+            response = self.api.get_workflows()
+        elif kind == 'jenkins_build':
+            logger.info(self.metadata.get('pipelines', []))
+            for pipeline in self.metadata.get('pipelines', []):
+                data = self.api.get_builds(pipeline).get('builds', [])
+                response = []
+                for datum in data:
+                    datum['job_name'] = pipeline
+                    response.append(datum)
+        return response
+
     def process_relation_metadata(self):
-        pass
+        for resource_id, resource in self.resources.get('jenkins_build',
+                                                        {}).items():
+            self._create_relation(
+                'pipeline_run',
+                resource_id,
+                resource['metadata']['job_name'])

@@ -3,7 +3,8 @@ from django import forms
 from django.contrib import admin
 from django_select2.forms import ModelSelect2Widget
 from architect.manager.models import Resource, Manager, Relationship
-from architect.manager.tasks import get_manager_status_task
+from architect.manager.tasks import get_manager_status_task, \
+    sync_manager_resources_task
 
 
 def get_manager_status(modeladmin, request, queryset):
@@ -11,14 +12,34 @@ def get_manager_status(modeladmin, request, queryset):
         get_manager_status_task.apply_async((manager.name,))
 
 
-get_manager_status.short_description = "Update status of selected managers"
+get_manager_status.short_description = "Get status of selected managers"
+
+
+def sync_manager_resources(modeladmin, request, queryset):
+    for manager in queryset:
+        sync_manager_resources_task.apply_async((manager.name,))
+
+
+sync_manager_resources.short_description = "Synchronise resources of selected managers"
+
+
+def clear_manager_resources(modeladmin, request, queryset):
+    for manager in queryset:
+        Resource.objects.filter(manager=manager).delete()
+
+
+clear_manager_resources.short_description = "Clear resources of selected managers"
 
 
 @admin.register(Manager)
 class ManagerAdmin(admin.ModelAdmin):
     list_display = ('name', 'engine', 'status', 'url')
     list_filter = ('engine', 'status')
-    actions = [get_manager_status]
+    actions = [
+        get_manager_status,
+        sync_manager_resources,
+        clear_manager_resources
+    ]
 
 
 class RelationWidget(ModelSelect2Widget):

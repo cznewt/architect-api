@@ -1,3 +1,6 @@
+query:
+  aws_complete_graph:
+    layout: graph
 relation:
   in_ec2_vpc:
     relation:
@@ -8,6 +11,7 @@ relation:
   using_ec2_key_pair:
     relation:
       default: key_pair
+default_resource: ec2_instance
 resource:
   ec2_elastic_ip:
     client: ec2

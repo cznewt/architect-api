@@ -166,6 +166,7 @@ else:
     MANAGER_CLASS_MAPPINGS = {
         "amazon": "architect.manager.engine.amazon.client.AmazonWebServicesClient",
         "ansible": "architect.manager.engine.ansible.client.AnsibleClient",
+        "jenkins": "architect.manager.engine.jenkins.client.JenkinsClient",
         "kubernetes": "architect.manager.engine.kubernetes.client.KubernetesClient",
         "openstack": "architect.manager.engine.openstack.client.OpenStackClient",
         "saltstack": "architect.manager.engine.saltstack.client.SaltStackClient",

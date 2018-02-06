@@ -14,8 +14,19 @@ class AmazonWebServicesClient(BaseClient):
         super(AmazonWebServicesClient, self).__init__(**kwargs)
 
     def auth(self):
-        self.ec2_client = boto3.resource('ec2')
-        self.s3_client = boto3.resource('s3')
+        self.ec2_client = boto3.resource(
+            'ec2',
+            aws_access_key_id=self.metadata['aws_access_key_id'],
+            aws_secret_access_key=self.metadata['aws_secret_access_key'],
+            region_name=self.metadata['region']
+        )
+        self.s3_client = boto3.resource(
+            's3',
+            aws_access_key_id=self.metadata['aws_access_key_id'],
+            aws_secret_access_key=self.metadata['aws_secret_access_key'],
+            region_name=self.metadata['region']
+        )
+        return True
 
     def update_resources(self, resources=None):
         self.auth()
@@ -64,7 +75,7 @@ class AmazonWebServicesClient(BaseClient):
             resource.pop('client')
             self._create_resource(resource['data']['InternetGatewayId'],
                                   resource['data']['InternetGatewayId'],
-                                  'ec2_internet_gateway', None, metadata=resource['data'])
+                                  'ec2_internet_gateway', metadata=resource['data'])
 
     def scrape_ec2_images(self):
         for item in self.ec2_client.images.all():
@@ -77,7 +88,7 @@ class AmazonWebServicesClient(BaseClient):
                 image_name = resource['data']['ImageId']
             self._create_resource(resource['data']['ImageId'],
                                   image_name,
-                                  'ec2_image', None, metadata=resource['data'])
+                                  'ec2_image', metadata=resource['data'])
 
     def scrape_ec2_instances(self):
         for item in self.ec2_client.instances.all():
@@ -90,7 +101,7 @@ class AmazonWebServicesClient(BaseClient):
                 name = resource['data']['InstanceId']
             self._create_resource(resource['data']['InstanceId'],
                                   name,
-                                  'ec2_instance', None, metadata=resource['data'])
+                                  'ec2_instance', metadata=resource['data'])
 
     def scrape_ec2_internet_gateways(self):
         for item in self.ec2_client.internet_gateways.all():
@@ -99,7 +110,8 @@ class AmazonWebServicesClient(BaseClient):
             resource.pop('client')
             self._create_resource(resource['data']['InternetGatewayId'],
                                   resource['data']['InternetGatewayId'],
-                                  'ec2_internet_gateway', None, metadata=resource['data'])
+                                  'ec2_internet_gateway',
+                                  metadata=resource['data'])
 
     def scrape_ec2_key_pairs(self):
         for item in self.ec2_client.key_pairs.all():
@@ -108,7 +120,8 @@ class AmazonWebServicesClient(BaseClient):
             resource.pop('client')
             self._create_resource(resource['data']['KeyName'],
                                   resource['data']['KeyName'],
-                                  'ec2_key_pair', None, metadata=resource['data'])
+                                  'ec2_key_pair',
+                                  metadata=resource['data'])
 
     def scrape_ec2_subnets(self):
         for item in self.ec2_client.subnets.all():
@@ -117,7 +130,8 @@ class AmazonWebServicesClient(BaseClient):
             resource.pop('client')
             self._create_resource(resource['data']['SubnetId'],
                                   resource['data']['SubnetId'],
-                                  'ec2_subnet', None, metadata=resource['data'])
+                                  'ec2_subnet',
+                                  metadata=resource['data'])
 
     def scrape_ec2_vpcs(self):
         for item in self.ec2_client.vpcs.all():
@@ -130,7 +144,8 @@ class AmazonWebServicesClient(BaseClient):
                     name = tag['Value']
             self._create_resource(resource['data']['VpcId'],
                                   name,
-                                  'ec2_vpc', None, metadata=resource['data'])
+                                  'ec2_vpc',
+                                  metadata=resource['data'])
 
     def scrape_s3_buckets(self):
         for item in self.s3_client.buckets.all():
@@ -139,4 +154,5 @@ class AmazonWebServicesClient(BaseClient):
             resource.pop('client')
             self._create_resource(resource['data']['Name'],
                                   resource['data']['Name'],
-                                  's3_bucket', None, metadata=resource['data'])
+                                  's3_bucket',
+                                  metadata=resource['data'])

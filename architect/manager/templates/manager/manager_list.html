@@ -21,15 +21,10 @@ Available managers
     <div class="card border-{{ manager.color }}">
       <div class="card-body">
         <h4 class="card-title">{{ manager.metadata.name|default:manager.name }}</h4>
-        <h6 class="card-subtitle mb-2 text-muted">{{ manager.engine }}</h6>
-        <p style="display: none;">
-          {% for kind_name, kind_query in manager.resources_by_kind.items %}
-          {% if kind_query.count > 0 %}
-          {{ kind_name }}: {{ kind_query.count }}<br>
-          {% endif %}
-          {% endfor %}
-        </p>
+        <h6 class="card-subtitle mb-2 text-muted">{{ manager.engine }}, resources
+</h6>
         <a href="{% url 'manager:manager_detail' manager.name %}" class="btn btn-sm btn-outline-primary">Details</a>
+        <a href="{% url 'manager:manager_sync' manager.name %}" class="btn btn-sm btn-outline-secondary">Synchronise</a>
       </div>
     </div>
   </div>

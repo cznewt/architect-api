@@ -61,7 +61,6 @@ var QuantitativePlot = function(QuantitativePlot){
                         'values': d.slice(1, d.length)
                     });
                 });;
-                console.log(values);
                 graph._data = values;
                 if(typeof callback === 'function'){
                     callback();

@@ -19,6 +19,7 @@
     "jquery-form": "^4.2.2",
     "popper.js": "^1.12.9",
     "radial-progress-chart": "git+https://github.com/edgargonzalez525/radial-progress-chart.git",
+    "skd3": "^0.2.0",
     "techan-js": "^1.0.2",
     "timeago": "^1.6.1",
     "webcola": "^3.3.7"

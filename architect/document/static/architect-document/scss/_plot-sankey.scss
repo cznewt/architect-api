@@ -1,0 +1,44 @@
+
+.sankey {
+    .sk-svg {
+        font-family: sans-serif;
+    }
+
+    /* disable text selection in sankey */
+    .sk-svg text {
+        cursor: default;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+    .sk-svg text::-moz-selection {
+        background: none;
+    }
+    .sk-svg text::selection {
+        background: none;
+    }
+    .sk-node rect {
+        cursor: move;
+        fill-opacity: .9;
+        shape-rendering: crispEdges;
+    }
+    .sk-node text {
+        pointer-events: none;
+        font-size: 13px;
+    }
+    .sk-link {
+        fill: none;
+        stroke: $plot-link-color;
+        stroke-opacity: .16;
+        -webkit-transition-property: stroke-opacity;
+        transition-property: stroke-opacity;
+        -webkit-transition-duration: 0.5s;
+                transition-duration: 0.5s;
+    }
+
+    .sk-link:hover {
+        stroke-opacity: .5;
+    }
+
+}

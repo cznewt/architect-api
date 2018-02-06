@@ -43,3 +43,4 @@ class Inventory(models.Model):
 
     class Meta:
         verbose_name_plural = "Inventories"
+        ordering = ['name']
