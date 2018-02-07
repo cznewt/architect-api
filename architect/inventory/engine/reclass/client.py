@@ -43,14 +43,16 @@ class ReclassClient(BaseClient):
     def class_list(self, resource=None):
         resource_list = {}
         for node_name, node in self.inventory().items():
-            role_class = []
-            for service_name, service in node['parameters'].items():
-                if service_name not in settings.RECLASS_SERVICE_BLACKLIST:
-                    for role_name, role in service.items():
-                        if role_name not in settings.RECLASS_ROLE_BLACKLIST:
-                            role_class.append('{}-{}'.format(service_name,
-                                                             role_name))
-            resource_list[node_name] = role_class
+            resource_list[node_name] = node['classes']
+        if resource is None:
+            return resource_list
+        else:
+            return {resource: resource_list[resource]}
+
+    def parameter_list(self, resource=None):
+        resource_list = {}
+        for node_name, node in self.inventory().items():
+            resource_list[node_name] = node['parameters']
         if resource is None:
             return resource_list
         else:

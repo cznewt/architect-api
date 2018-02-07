@@ -1,0 +1,24 @@
+query:
+  heat_complete_graph:
+    layout: graph
+relation:
+  defined_by:
+    relation:
+      default: template
+default_resource: heat_template
+resource:
+  heat_template:
+    client: heat
+    icon: fa:cube
+    name: Template
+    resource: OS::Heat::Stack
+  heat_stack:
+    client: heat
+    icon: fa:cube
+    name: Stack
+    resource: OS::Heat::Stack
+    model:
+      template:
+        type: relationship_to
+        model: defined_by
+        target: heat_template

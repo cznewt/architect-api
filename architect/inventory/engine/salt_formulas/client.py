@@ -82,6 +82,10 @@ class SaltFormulasClient(BaseClient):
         else:
             return reclass.inventory()["nodes"][resource]
 
+    def parameter_list(self, resource=None):
+        resource_list = {}
+        return resource_list
+
     def class_list(self, resource=None):
         resource_list = {}
         for node_name, node in self.inventory().items():

@@ -1,5 +1,5 @@
-
-@import '../../bootswatch/dist/cyborg/variables';
+	
+@import '../../bootswatch/dist/materia/variables';
 
 @import '../../bootstrap/scss/functions';
 @import '../../bootstrap/scss/variables';
@@ -55,6 +55,7 @@
 @import '../../architect/scss/page-loader';
 @import '../../architect/scss/layout';
 @import '../../architect/scss/sidebar';
+@import '../../architect/scss/utils';
 
 @import '../../architect-document/scss/variables';
 @import '../../architect-document/scss/plot-arc';
@@ -69,69 +70,4 @@
 @import '../../architect-document/scss/plot-sunburst';
 @import '../../architect-document/scss/plot-tree-node-link';
 
-@import '../../bootswatch/dist/cyborg/bootswatch';
-
-.tooltip {
-  position: absolute;
-  padding: 5px 10px;
-  font: 12px sans-serif;
-  font-color: $body-color;
-  background: $body-bg;
-  pointer-events: none;
-}
-
-h4.card-title {
-  font-size: 1.1rem;
-}
-
-.content .card {
-   background-color: transparent;
-  border-width: 2px;
-}
-
-.list-group-item {
-  background-color: transparent;
-}
-
-.list-tree-item {
-  @extend .list-group-item;
-  padding: 0;
-}
-
-.list-tree-level0 {
-  @extend .list-tree-item;
-  padding-left: 0;
-}
-
-.list-tree-level1 {
-  @extend .list-tree-item;
-  padding-left: 1rem;
-}
-
-.list-tree-level2 {
-  @extend .list-tree-item;
-  padding-left: 2rem;
-}
-
-.card-actions {
-  margin-top: -2rem;
-  margin-bottom: 0;
-  text-align: right;
-}
-
-.card-fullscreen {
-  display: block;
-  z-index: 9999;
-  position: fixed;
-  width: 96%;
-  height: 96%;
-  top: 2%;
-  right: 0;
-  left: 2%;
-  bottom: 0;
-  overflow: auto;
-  background-color: $body-bg!important;
-}
-.card-fullscreen .card-body {
-  background-color: $body-bg!important;
-}
+@import '../../bootswatch/dist/materia/bootswatch';

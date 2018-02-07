@@ -24,6 +24,18 @@
       <div class="card-body">
         <h4 class="card-title">{{ widget.name|default:widget_name }}</h4>
         <ul class="list-inline card-actions">
+          {% if widget.data_source.default.type == 'relational' %}
+          <li>
+            <a href="#"  data-zoom="+1" id="{{ widget_name }}-zoom-in" title="Zoom in">
+              <i class="fa fa-plus-circle"></i>
+            </a>
+          </li>
+          <li>
+            <a href="#" data-zoom="-1" id="{{ widget_name }}-zoom-out" title="Zoom out">
+              <i class="fa fa-minus-circle"></i>
+            </a>
+          </li>
+          {% endif %}
           <li>
             <a href="#" id="{{ widget_name }}-fullscreen" role="button" title="Toggle fullscreen">
               <i class="fa fa-expand"></i>

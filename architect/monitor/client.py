@@ -1,8 +1,9 @@
 
 import json
 import requests
-from architect import utils
 from celery.utils.log import get_logger
+from architect import utils
+from architect.monitor.models import Monitor, Resource
 
 logger = get_logger(__name__)
 
@@ -23,6 +24,30 @@ class BaseClient(object):
         self.step = kwargs.get('step', None)
         self.verify = False
         self._schema = utils.get_resource_schema(self.kind)
+
+    def _create_resource(self, uid, name, kind, metadata={}):
+        if kind not in self.resources:
+            self.resources[kind] = {}
+        self.resources[kind][uid] = {
+            'uid': uid,
+            'name': name,
+            'kind': kind,
+            'metadata': metadata,
+        }
+
+    def save(self):
+        monitor = Monitor.objects.get(name=self.name)
+        for resource_type, resources in self.resources.items():
+            for resource_name, resource in resources.items():
+                res, created = Resource.objects.get_or_create(uid=resource['uid'],
+                                                              monitor=monitor)
+                if created:
+                    res.name = resource['name']
+                    res.kind = resource_type
+                    res.metadata = resource['metadata']
+                    res.status = self.get_resource_status(resource_type,
+                                                          resource['metadata'])
+                    res.save()
 
     def log_error(self, flag, message):
         logger.error('Prometheus API replied with '

@@ -19,3 +19,7 @@ class ArchitectClient(BaseClient):
 
     def class_list(self, resource=None):
         return {}
+
+    def parameter_list(self, resource=None):
+        resource_list = {}
+        return resource_list

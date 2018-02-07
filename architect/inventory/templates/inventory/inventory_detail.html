@@ -318,6 +318,7 @@ $(function() {
       <thead>
         <th>Resource</th>
         <th>Classes</th>
+        <th>Parameters</th>
       </thead>
       <tbody>
         {% for resource_name, resource in resource_list.items %}
@@ -326,9 +327,10 @@ $(function() {
             <a href="#">{{ resource_name }}</a>
           </td>
           <td>
-            {% for class in resource %}
-            {{ class }}
-            {% endfor %}
+            <pre>{{ resource.classes|to_yaml }}</pre>
+          </td>
+          <td>
+            <pre>{{ resource.parameters|to_yaml }}</pre>
           </td>
         </tr>
         {% endfor %}

@@ -13,6 +13,8 @@ from django.utils.decorators import method_decorator
 from architect.views import JSONDataView
 from .models import Inventory
 from .forms import SaltFormulasInventoryCreateForm, InventoryDeleteForm
+from .tasks import get_inventory_status_task, \
+    sync_inventory_resources_task
 
 
 class InventoryListView(TemplateView):
@@ -34,11 +36,7 @@ class InventoryCheckView(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         inventories = Inventory.objects.all()
         for inventory in inventories:
-            if inventory.client().check_status():
-                inventory.status = 'active'
-            else:
-                inventory.status = 'error'
-            inventory.save()
+            get_inventory_status_task.apply_async((inventory.name,))
         messages.add_message(self.request,
                              messages.SUCCESS,
                              'Finished syncing of inventories.')
@@ -53,10 +51,15 @@ class InventoryDetailView(TemplateView):
         inventory = Inventory.objects.get(name=kwargs.get('inventory_name'))
         context = super().get_context_data(**kwargs)
         context['inventory'] = inventory
-        context['resource_list'] = inventory.class_list()
-        if inventory.status != 'active' and len(context['resource_list']) > 0:
-            inventory.status = 'active'
-            inventory.save()
+        resource_list = {}
+        classes = inventory.client().class_list()
+        parameters = inventory.client().parameter_list()
+        for parameter in parameters:
+            resource_list[parameter] = {
+                'classes': classes[parameter],
+                'parameters': parameters[parameter]
+            }
+        context['resource_list'] = resource_list
         return context
 
 
