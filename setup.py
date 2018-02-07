@@ -7,6 +7,9 @@ VERSION = '0.2'
 with open('README.rst') as readme:
     LONG_DESCRIPTION = ''.join(readme.readlines())
 
+with open('./requirements/base.txt') as _requirements:
+    requirements = [r.strip() for r in _requirements.readlines()]
+
 DESCRIPTION = """Architect API is server-side of service modeling,
 management and visualization platform."""
 
@@ -20,16 +23,7 @@ setup(
     license='Apache License, Version 2.0',
     url='https://github.com/cznewt/architect-api/',
     packages=find_packages(),
-    install_requires=[
-        'Django',
-        'django_neomodel',
-        'django-jsonview',
-        'django-yamlfield',
-        'django-extensions',
-        'django-material',
-        'django-viewflow',
-        'viewflow-extensions'
-    ],
+    install_requires=requirements,
     extras_require={
         'tests': [
             'pytest',
