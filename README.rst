@@ -16,63 +16,48 @@ program in Matrix movie series:
     at the very least a virtual representation of the entire Machine
     mainframe.
 
-The Architect service consists of several core compontents:
-
-Inventory Component
-    Inventory is the Architect's metadata engine. It encapsulates and unifies data
-    from various metadata sources to provide inventory/metadata for various
-    orchestration services.
-
-Manager Component
-    Manager is the Architect's orchestration engine. The aim of this module is
-    to enforce infrastructure topologies models and acquire live
-    infrastructure topology data from any resource provider for further
-    relational and quantitative analysis and visualisations.
-
-Monitor Component
-    The structure of infrastructure resources is directed graph that can be
-    subject for further analysis. We can perform several transformation
-    functions on this graph data in Monitor component.
-
-Following figure shows high-level achitecture of Architect system.
+The The Architect project was started as part of my thesis "Visualization of
+cloud performace metrics". Following figure shows high-level achitecture of
+Architect system.
 
 .. figure:: ./doc/source/static/scheme/high_level_arch.png
     :align: center
     :width: 80%
 
-
-Architect Documentation
-=======================
-
-Installation instructions, getting started guides, and API documentation.
-
-https://architect-api.readthedocs.io/
+You can find installation instructions, getting started guides, and API
+documentation at https://architect-api.readthedocs.io/.
 
 
 Architect Components
 ====================
 
-A quick summary of properties, capabilities and integrations of each component.
+The Architect project consists of 4 core compontents. A quick summary of
+properties, capabilities and integrations for each component.
 
 
 Inventory Component
 -------------------
 
 Inventory is the Architect's metadata engine. It encapsulates and unifies data
-from various metadata sources to provide inventory/metadata for various
-orchestration services. Basically serves as metadata proxy with clients.
-Currently supported metadata engines are:
+from various metadata sources to provide inventory metadata for various
+orchestration services. Basically serves as metadata proxy with clients. It
+works best integrated with http://salt-formulas.readthedocs.io/.
 
-* reclass (python3 version)
+Currently supported metadata backends are:
+
 * salt-formulas
+* `reclass <http://architect-api.readthedocs.io/en/latest/text/inventory-reclass.html>`_ (python3 version)
 
-The following inventory providers are to be intergrated in near future.
+The currently supported customers of metadata provided by Inventory using
+``architect-api`` client library are:
 
-* varstack
-* hiera
+* SaltStack
+* Ansible
+* Puppe
 
-There is a plan to integrate simple UI workflow (multi-step form wizards)
-defitions to simplify creation of complex service models.
+Following orchestrators have direct support for injecting context metadata:
+
+* Heat
 
 
 Manager Component
@@ -85,207 +70,61 @@ quantitative analysis and visualisations.
 
 The pull approach for querying endpoint APIs is supported at the moment, the
 processing push from target services is supported for SaltStack events.
+
 Currently supported resource providers are:
 
 * Kubernetes clusters
 * OpenStack clouds
+* Heat templates
 * Amazon web services
 * SaltStack infrastructures
 * Terraform templates
 * Jenkins pipelines
 
-The following resource providers are to be intergrated in near future.
-
-* GCE and Azure clouds
-* Cloudify TOSCA blueprints
-* JUJU templates
-
 
 Monitor Component
 -----------------
 
-The structure of infrastructure resources is directed graph that can be
-subject for further analysis. We can perform several transformation functions
-on this graph data in Monitor component.
+Monitor is the Architect's monitoring engine. It can connect to multiple
+data endpoints and subject them for further analysis. We can define
+queries for quantitative data or time-series in Document component.
 
-Currently supported relational analysis visualizations:
+Currently supported monitoring services are:
 
-* Adjacency Matrix
-* Arc Diagram
-* Force-directed Layouts
-* Hierarchical Edge Bundling
-* Hive Plot
-* Node-link Trees (Reingold-Tilford, Dendrograms)
-* Partition Layouts (Sunburst, Icicle Diagrams, Treemaps)
+* Graphite
+* ElasticSearch
+* Prometheus
+* InfluxDB
 
 
-Installation
-============
+Document Component
+------------------
 
-Following steps show how to deploy various components of the Architect service
-and connections to external services.
+Document component is responsible for analysis and visualization of
+infrastructure resources in form of directed graph. We can perform several
+transformation functions on this graph data. The other part is analysis of
+quantitative data provided by monitoring solutions and corellating it to the
+relational structures provided by Manager component.
 
+Currently supported relational visualization layouts:
 
-Service architect-api Installation
-----------------------------------
+* Adjacency matrix
+* Arc diagram
+* Force-directed graph
+* Hierarchical edge bundling
+* Hive plot
+* Circle packing
+* Node-link tree (Reingold-Tilford tidy trees, dendrograms)
+* Partition layout (sunburst, icicle diagrams, treemaps)
+* Sankey diagram
 
-The core service responsible for handling HTTP API requests and providing
-simple UI based on Material design. Release version of architect-api is
-currently available on `Pypi <https://pypi.org/project/architect-api/>`_, to
-install it, simply execute:
+Currently supported quatitative visualization layouts:
 
-.. code-block:: bash
+* Line chart
+* Bar chart, stacked bar chart
+* Horizon chart
+* Donut chart, pie chart
 
-    pip install architect-api
-
-To bootstrap latest development version into local virtualenv, run following
-commands:
-
-.. code-block:: bash
-
-    git clone git@github.com:cznewt/architect-api.git
-    cd architect-api
-    virtualenv venv
-    source venv/bin/activate
-    python setup.py install
-
-You provide one configuration file for all service settings. The default
-location is ``/etc/architect/api.yaml``.
-
-Following configuration for individual inventories/managers/models can be
-stored in config files or in the database.
-
-
-Architect Inventory Configuration
----------------------------------
-
-Each manager endpoint expects different configuration. Following samples show
-the required parameters to setup individual inventory backends.
-
-
-Reclass (Inventory Backend)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Following configuration points to the reclass inventory storage on local
-filesystem.
-
-.. code-block:: yaml
-
-    class_dir: /srv/salt/reclass/classes
-    node_dir: /srv/salt/reclass/nodes
-    storage_type: yaml_fs
-    filter_keys:
-      - _param
-
-
-Architect Manager Configuration
--------------------------------
-
-Each manager endpoint expects different configuration. Following samples show
-the required parameters to setup each endpoint type.
-
-
-Amazon Web Services (Manager Endpoint)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-AWS manager uses ``boto3`` high level AWS python SDK for accessing and
-manipulating with AWS resources.
-
-
-.. code-block:: yaml
-
-    region: us-west-2
-    aws_access_key_id: {{ access_key_id }}
-    aws_secret_access_key: {{ secret_access_key }}
-
-
-Kubernetes (Manager Endpoint)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Kubernetes requires some information from ``kubeconfig`` file. You provide the
-parameters of the cluster and the user to the manager. These can be found
-under corresponding keys.
-
-.. code-block:: yaml
-
-    scope: global
-    cluster:
-      certificate-authority-data: |
-        {{ ca-for-server-and-clients }}
-      server: https://{{ kubernetes-api }}:443
-    user:
-      client-certificate-data: |
-        {{ client-cert-public }}
-      client-key-data: |
-        {{ client-cert-private }}
-
-.. note::
-
-    Options ``config.cluster`` and ``config.user`` can be found in your
-    ``kubeconfig`` file. Just copy the config fragment with cluster parameters
-    and fragment with user parameter.
-
-
-OpenStack (Manager Endpoint)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Configuration for keystone ``v2.0`` and keystone ``v3`` clouds. Configuration
-sample for single tenant access.
-
-.. code-block:: yaml
-
-    scope: local
-    region_name: RegionOne
-    compute_api_version: '2.1'
-    auth:
-      username: {{ user-name }}
-      password: {{ user-password }}
-      project_name: {{ project-name }}
-      domain_name: 'default'
-      auth_url: https://{{ keystone-api }}:5000/v3
-
-Config for managing resources of entire cloud, including hypervisors, tenants,
-etc in given region.
-
-.. code-block:: yaml
-
-    scope: global
-    region_name: RegionOne
-    auth:
-      username: {{ admin-name }}
-      password: {{ admin-password }}
-      project_name: admin
-      auth_url: https://{{ keystone-api }}:5000/v2.0
-
-
-SaltStack (Manager Endpoint)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Configuration for manager connection to Salt API.
-
-.. code-block:: yaml
-
-    auth_url: http://{{ salt-api }}:8000
-    username: {{ user-name }}
-    password: {{ user-password }}
-
-Following figure shows how SaltStack integrates with Architect Inventory and
-Manager. Please note that you can use Inventory integration independently of
-the Manager integration.
-
-.. figure:: ./doc/source/static/scheme/manager_salt.png
-    :align: center
-    :width: 60%
-
-
-Terraform (Manager Endpoint)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Configuration for parsing Hashicorp Terraform templates.
-
-.. code-block:: yaml
-
-    dir: ~/terraform/{{ terraform-dir }}
 
 
 Architect Monitor Configuration

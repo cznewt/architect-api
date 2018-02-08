@@ -1,0 +1,1 @@
+auth_url: http://{{ prometheus-api }}:8000

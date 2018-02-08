@@ -38,7 +38,7 @@ Systems<y:LabelModel>
           <y:Geometry height="104.4214631859532" width="291.0" x="477.0620982665755" y="304.7137011168905"/>
           <y:Fill color="#CCFFCC" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="5.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Arial" fontSize="32" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="78.5" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="201.296875" x="44.8515625" y="12.960731592976572">Monitoring
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Arial" fontSize="32" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="78.5" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="201.296875" x="44.8515625" y="12.960731592976629">Monitoring
 Systems<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
@@ -74,7 +74,7 @@ Resource<y:LabelModel>
           <y:Geometry height="104.4214631859532" width="243.0" x="-265.43471511401503" y="30.522227040426316"/>
           <y:Fill color="#CCFFFF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="5.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Arial" fontSize="32" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="78.5" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="177.953125" x="32.5234375" y="12.960731592976572">Architect
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Arial" fontSize="32" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="78.5" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="177.953125" x="32.5234375" y="12.9607315929766">Architect
 Inventory<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
@@ -107,7 +107,7 @@ Manager<y:LabelModel>
     <node id="n5">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="104.42146318595314" width="243.0" x="733.6270459240355" y="33.89920682309395"/>
+          <y:Geometry height="104.42146318595314" width="243.0" x="882.3700391912681" y="30.522227040426344"/>
           <y:Fill color="#CCFFFF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="5.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Arial" fontSize="32" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="78.5" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="168.53125" x="37.234375" y="12.960731592976572">Architect
@@ -128,7 +128,7 @@ Monitor<y:LabelModel>
           <y:Geometry height="104.4214631859532" width="291.0" x="457.8746294226298" y="323.54435760097556"/>
           <y:Fill color="#CCFFCC" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="5.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Arial" fontSize="32" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="78.5" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="201.296875" x="44.8515625" y="12.9607315929766">Monitoring
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Arial" fontSize="32" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="78.5" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="201.296875" x="44.8515625" y="12.960731592976572">Monitoring
 Systems<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
@@ -217,7 +217,7 @@ Resources<y:LabelModel>
           <y:Geometry height="104.4214631859532" width="291.0" x="40.83203816357485" y="304.7137011168905"/>
           <y:Fill color="#CCFFCC" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="5.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Arial" fontSize="32" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="41.25" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="254.265625" x="18.3671875" y="31.585731592976572">Orchestrators<y:LabelModel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Arial" fontSize="32" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="41.25" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="254.265625" x="18.3671875" y="31.58573159297663">Orchestrators<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
             <y:ModelParameter>
@@ -234,7 +234,7 @@ Resources<y:LabelModel>
           <y:Geometry height="104.4214631859532" width="291.0" x="19.684330424292114" y="330.14804549556715"/>
           <y:Fill color="#CCFFCC" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="5.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Arial" fontSize="32" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="41.25" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="254.265625" x="18.3671875" y="31.585731592976572">Orchestrators<y:LabelModel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Arial" fontSize="32" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="41.25" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="254.265625" x="18.3671875" y="31.58573159297663">Orchestrators<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
             <y:ModelParameter>
@@ -251,7 +251,7 @@ Resources<y:LabelModel>
           <y:Geometry height="104.4214631859532" width="291.0" x="-325.61572126401785" y="443.70691946845585"/>
           <y:Fill hasColor="false" transparent="false"/>
           <y:BorderStyle hasColor="false" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Arial" fontSize="22" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="80.828125" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#808080" verticalTextPosition="bottom" visible="true" width="305.6298828125" x="-7.31494140625" y="11.796669092976572">Salt, Ansible, Terraform
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Arial" fontSize="22" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="80.828125" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#808080" verticalTextPosition="bottom" visible="true" width="305.6298828125" x="-7.31494140625" y="11.796669092976629">Salt, Ansible, Terraform
 Kubernetes, OpenStack,
 Heat, Helm, Jenkins<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
@@ -291,6 +291,24 @@ Sensu, Nagios<y:LabelModel>
           <y:BorderStyle hasColor="false" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Arial" fontSize="22" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="55.21875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#808080" verticalTextPosition="bottom" visible="true" width="494.4453125" x="-101.72265625" y="24.601356592976572">Software resources, cloud resources,
 Containers, lambdas, hardware devices<y:LabelModel>
+              <y:SmartNodeLabelModel distance="4.0"/>
+            </y:LabelModel>
+            <y:ModelParameter>
+              <y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/>
+            </y:ModelParameter>
+          </y:NodeLabel>
+          <y:Shape type="roundrectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n16">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="104.42146318595314" width="243.0" x="457.8746294226298" y="30.522227040426344"/>
+          <y:Fill color="#CCFFFF" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="5.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Arial" fontSize="32" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="78.5" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="187.421875" x="27.7890625" y="12.960731592976572">Architect
+Document<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
             <y:ModelParameter>
@@ -364,24 +382,24 @@ to the orchestrators<y:LabelModel>
         </y:ArcEdge>
       </data>
     </edge>
-    <edge id="e3" source="n4" target="n5">
+    <edge id="e3" source="n4" target="n16">
       <data key="d10">
         <y:ArcEdge>
-          <y:Path sx="0.0" sy="0.0" tx="-30.67023462788427" ty="-1.6863498859738684">
-            <y:Point x="494.9713439941406" y="24.777355194091797"/>
+          <y:Path sx="121.5155029296875" sy="0.0" tx="-121.50203756153553" ty="7.38391404436868">
+            <y:Point x="373.30426025390625" y="62.82453918457031"/>
           </y:Path>
           <y:LineStyle color="#000000" type="line" width="5.0"/>
           <y:Arrows source="none" target="delta"/>
-          <y:EdgeLabel alignment="center" configuration="AutoFlippingLabel" distance="2.0" fontFamily="Dialog" fontSize="22" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="55.21875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" verticalTextPosition="bottom" visible="true" width="305.0068359375" x="74.91121436988874" y="13.27104342712829">Process and display
-orchestrator based data<y:LabelModel>
+          <y:EdgeLabel alignment="center" configuration="AutoFlippingLabel" distance="2.0" fontFamily="Dialog" fontSize="22" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="55.21875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" verticalTextPosition="bottom" visible="true" width="250.6728515625" x="-51.723918846713445" y="-114.31572951404497">Process and display
+relational data<y:LabelModel>
               <y:SmartEdgeLabelModel autoRotationEnabled="false" defaultAngle="0.0" defaultDistance="10.0"/>
             </y:LabelModel>
             <y:ModelParameter>
-              <y:SmartEdgeLabelModelParameter angle="6.283185307179586" distance="59.431378182945885" distanceToCenter="true" position="right" ratio="0.24893809401215303" segment="-1"/>
+              <y:SmartEdgeLabelModelParameter angle="6.283185307179586" distance="68.01065473554142" distanceToCenter="true" position="left" ratio="2.3033512789792687" segment="-2"/>
             </y:ModelParameter>
             <y:PreferredPlacementDescriptor angle="0.0" angleOffsetOnRightSide="0" angleReference="absolute" angleRotationOnRightSide="co" distance="-1.0" frozen="true" placement="anywhere" side="anywhere" sideReference="relative_to_edge_flow"/>
           </y:EdgeLabel>
-          <y:Arc height="58.801116943359375" ratio="0.35676249861717224" type="fixedRatio"/>
+          <y:Arc height="23.62232208251953" ratio="0.5514983534812927" type="fixedRatio"/>
         </y:ArcEdge>
       </data>
     </edge>
@@ -443,7 +461,7 @@ log events, process alarms<y:LabelModel>
       <data key="d10">
         <y:ArcEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0">
-            <y:Point x="855.1270751953125" y="86.10993957519531"/>
+            <y:Point x="1003.8700561523438" y="82.73295593261719"/>
           </y:Path>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="standard"/>
@@ -454,12 +472,12 @@ log events, process alarms<y:LabelModel>
     <edge id="e8" source="n0" target="n5">
       <data key="d10">
         <y:ArcEdge>
-          <y:Path sx="145.49857841546623" sy="4.601460155237703" tx="91.21705026337224" ty="52.22064664865525">
-            <y:Point x="911.441162109375" y="274.8676452636719"/>
+          <y:Path sx="145.49857841546623" sy="4.601460155237703" tx="-17.33726331236187" ty="52.18579136659713">
+            <y:Point x="932.2630615234375" y="281.7318115234375"/>
           </y:Path>
           <y:LineStyle color="#000000" type="line" width="5.0"/>
           <y:Arrows source="none" target="delta"/>
-          <y:EdgeLabel alignment="center" configuration="AutoFlippingLabel" distance="2.0" fontFamily="Dialog" fontSize="22" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="55.21875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" verticalTextPosition="bottom" visible="true" width="305.0068359375" x="-190.22070211035884" y="-152.816050025063">Process and display
+          <y:EdgeLabel alignment="center" configuration="AutoFlippingLabel" distance="2.0" fontFamily="Dialog" fontSize="22" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="55.21875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" verticalTextPosition="bottom" visible="true" width="305.0068359375" x="-174.12768589757354" y="-157.32072478434554">Process and display
 orchestrator based data<y:LabelModel>
               <y:SmartEdgeLabelModel autoRotationEnabled="false" defaultAngle="0.0" defaultDistance="10.0"/>
             </y:LabelModel>
@@ -468,12 +486,11 @@ orchestrator based data<y:LabelModel>
             </y:ModelParameter>
             <y:PreferredPlacementDescriptor angle="0.0" angleOffsetOnRightSide="0" angleReference="absolute" angleRotationOnRightSide="co" distance="-1.0" frozen="true" placement="anywhere" side="anywhere" sideReference="relative_to_edge_flow"/>
           </y:EdgeLabel>
-          <y:Arc height="-55.28618621826172" ratio="-0.8529821038246155" type="fixedRatio"/>
+          <y:Arc height="-61.40407180786133" ratio="-0.8529821038246155" type="fixedRatio"/>
         </y:ArcEdge>
       </data>
     </edge>
     <edge id="e9" source="n13" target="n12">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -484,7 +501,6 @@ orchestrator based data<y:LabelModel>
       </data>
     </edge>
     <edge id="e10" source="n14" target="n0">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -495,7 +511,6 @@ orchestrator based data<y:LabelModel>
       </data>
     </edge>
     <edge id="e11" source="n15" target="n2">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="-252.87136544607165" sy="-5.101837559702744" tx="0.0" ty="0.0"/>
@@ -503,6 +518,39 @@ orchestrator based data<y:LabelModel>
           <y:Arrows source="none" target="none"/>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e12" source="n16" target="n16">
+      <data key="d10">
+        <y:ArcEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0">
+            <y:Point x="579.3746337890625" y="82.73295593261719"/>
+          </y:Path>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="standard"/>
+          <y:Arc height="0.0" ratio="1.0" type="fixedRatio"/>
+        </y:ArcEdge>
+      </data>
+    </edge>
+    <edge id="e13" source="n5" target="n16">
+      <data key="d10">
+        <y:ArcEdge>
+          <y:Path sx="-121.5155029296875" sy="0.0" tx="121.52411036145952" ty="6.817851004838815">
+            <y:Point x="790.6480102539062" y="60.09498977661133"/>
+          </y:Path>
+          <y:LineStyle color="#000000" type="line" width="5.0"/>
+          <y:Arrows source="none" target="delta"/>
+          <y:EdgeLabel alignment="center" configuration="AutoFlippingLabel" distance="2.0" fontFamily="Dialog" fontSize="22" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="55.21875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" verticalTextPosition="bottom" visible="true" width="250.6728515625" x="-219.7813671205555" y="-123.1294810358696">Process and display
+quantitative data<y:LabelModel>
+              <y:SmartEdgeLabelModel autoRotationEnabled="false" defaultAngle="0.0" defaultDistance="10.0"/>
+            </y:LabelModel>
+            <y:ModelParameter>
+              <y:SmartEdgeLabelModelParameter angle="6.283185307179586" distance="70.10187618961668" distanceToCenter="true" position="right" ratio="20.125409158562164" segment="-2"/>
+            </y:ModelParameter>
+            <y:PreferredPlacementDescriptor angle="0.0" angleOffsetOnRightSide="0" angleReference="absolute" angleRotationOnRightSide="co" distance="-1.0" frozen="true" placement="anywhere" side="anywhere" sideReference="relative_to_edge_flow"/>
+          </y:EdgeLabel>
+          <y:Arc height="-26.06527328491211" ratio="-0.574176013469696" type="fixedRatio"/>
+        </y:ArcEdge>
       </data>
     </edge>
   </graph>

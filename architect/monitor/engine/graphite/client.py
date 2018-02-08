@@ -16,6 +16,32 @@ class GraphiteClient(BaseClient):
     def check_status(self):
         return False
 
+    def get_series(self):
+        data = self.get_http_series_params()
+        return self.process_series(data)
+
+    def get_series_params(self):
+        return {}
+
+    def get_series_url(self):
+        url = '/metrics/index.json'
+        return self.base_url + url
+
+    def process_series(self, response):
+        print(response)
+        if response['status'] == 'error':
+            self.log_error(response['errorType'], response['error'])
+            return {}
+        else:
+            data = response['data']
+            response_data = {}
+            for datum in data:
+                name = datum.pop('__name__')
+                if name not in response_data:
+                    response_data[name] = []
+                response_data[name].append(datum)
+            return response_data
+
     def get_instant_url(self):
         params = ["from={}".format(self.start),
                   "until={}".format(self.end)]

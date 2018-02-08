@@ -9,3 +9,9 @@ under corresponding keys in the kubernetes configuration file.
 
 .. literalinclude:: ../static/config/manager-kubernetes.yaml
    :language: yaml
+
+.. note::
+
+    Options ``config.cluster`` and ``config.user`` can be found in your
+    ``kubeconfig`` file. Just copy the config fragment with cluster parameters
+    and fragment with user parameter.

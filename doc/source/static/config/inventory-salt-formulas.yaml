@@ -1,0 +1,7 @@
+engine: salt-formulas
+service_class_dir:
+system_class_dir:
+cluster_class_dir:
+class_dir: /srv/salt/reclass/classes
+node_dir: /srv/salt/reclass/nodes
+formula_dir: /srv/salt/base

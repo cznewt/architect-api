@@ -1,0 +1,6 @@
+engine: heat
+cloud_endpoint: {{ openstack-manager-name }}
+root_path: /path/to/heat-templates
+template_path: /path/to/heat-templates/template
+context_source: local
+context_path: /path/to/heat-templates/env

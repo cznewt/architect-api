@@ -10,8 +10,8 @@ filesystem.
    :language: yaml
 
 
-More Information
-----------------
+References
+----------
 
 * http://reclass.pantsfullofunix.net/
 * https://github.com/salt-formulas/reclass

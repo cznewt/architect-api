@@ -17,7 +17,7 @@ Available monitors
     <div class="card border-{{ monitor.color }}">
       <div class="card-body">
         <h4 class="card-title">{{ monitor.metadata.name|default:monitor.name }}</h4>
-        <h6 class="card-subtitle mb-2 text-muted">{{ monitor.widgets|length }} widgets</h6>
+        <h6 class="card-subtitle mb-2 text-muted">{{ monitor.widgets|length }} metrics</h6>
         <a href="{% url 'monitor:monitor_detail' monitor.name %}" class="btn btn-sm btn-outline-primary">Details</a>
       </div>
     </div>
