@@ -5,6 +5,7 @@ from django.contrib import admin
 from django.urls import path
 from django.views import generic
 from django.conf.urls import include
+from graphene_django.views import GraphQLView
 
 urlpatterns = [
     path('',
@@ -26,4 +27,5 @@ urlpatterns = [
          include('architect.monitor.urls', namespace='monitor')),
     path('salt/',
          include('architect.manager.engine.saltstack.urls')),
+    path('graphql/', GraphQLView.as_view(graphiql=True)),
 ]

@@ -8,7 +8,6 @@ jsonschema
 markdown
 rfc3339
 iso8601
-petname
 
 Django
 djangorestframework

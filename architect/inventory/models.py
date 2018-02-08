@@ -1,8 +1,8 @@
 
-from django.urls import reverse
-from django.db import models
-from yamlfield.fields import YAMLField
 from architect import utils
+from django.db import models
+from django.urls import reverse
+from yamlfield.fields import YAMLField
 
 
 class Inventory(models.Model):

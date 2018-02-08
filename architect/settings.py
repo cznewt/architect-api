@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'architect.monitor',
     'architect.document',
     'architect.manager.engine.saltstack',
+    'graphene_django',
 ]
 
 MIDDLEWARE = [
@@ -43,6 +44,10 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'architect.urls'
+
+GRAPHENE = {
+    'SCHEMA': 'architect.schema.schema'
+}
 
 CONFIG_FILE = os.environ.get('ARCHITECT_CONFIG_FILE',
                              '/etc/architect/api.yml')
