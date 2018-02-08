@@ -1,6 +1,5 @@
 python-memcached
 celery
-apache-airflow[celery, postgres]
 redis
 pyaml
 pyyaml
