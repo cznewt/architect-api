@@ -4,13 +4,16 @@ import os
 import pyaml
 import glob
 import tempfile
+import petname
 import os_client_config
+from django import forms
 from os_client_config import cloud_config
 from heatclient.common import http
 from heatclient.common import template_format
 from heatclient.common import template_utils
 from heatclient.common import utils
 from keystoneauth1.exceptions.connection import ConnectFailure
+from urllib.error import URLError
 from architect.manager.client import BaseClient
 from architect.manager.models import Manager
 from celery.utils.log import get_logger
@@ -40,8 +43,6 @@ class HeatClient(BaseClient):
                 .get_one_cloud(cloud=self.name)
             os.remove(filename)
             self.api = self._get_client('orchestration')
-            logger.info(self.api.__class__)
-            logger.info(dir(self.api))
         except ConnectFailure as exception:
             logger.error(exception)
             status = False
@@ -89,6 +90,12 @@ class HeatClient(BaseClient):
                                       'heat_template',
                                       metadata=resource)
 
+    def process_relation_metadata(self):
+        pass
+
+    def generate_name(self, separator='-', word_count=2):
+        return petname.Generate(int(word_count), separator)
+
     def create_resource(self, kind, metadata):
         logger.info("Creating {} resource".format(kind))
 
@@ -98,7 +105,6 @@ class HeatClient(BaseClient):
                     template_file=metadata['template_file'],
                     object_request=http.authenticated_fetcher(self.api))
                 env_files_list = []
-                logger.info(metadata)
                 env_files, env = template_utils.process_multiple_environments_and_files(
                     env_paths=[metadata['environment_file']],
                     env_list_tracker=env_files_list)
@@ -110,10 +116,44 @@ class HeatClient(BaseClient):
                     'files': dict(list(tpl_files.items()) + list(env_files.items())),
                     'environment': env
                 }
-                logger.info(fields)
                 if env_files_list:
                     fields['environment_files'] = env_files_list
-                self.api.stacks.create(**fields)
+                response = self.api.stacks.create(**fields)
+                logger.info(response)
 
-    def process_relation_metadata(self):
-        pass
+    def get_resource_action_fields(self, resource, action):
+        fields = {}
+        if resource.kind == 'heat_template':
+            if action == 'create':
+                initial_name = '{}-{}'.format(resource.name.replace('.hot', ''),
+                                              self.generate_name())
+                fields['name'] = forms.CharField(label='Stack name',
+                                                 initial=initial_name)
+                fields['environment'] = forms.ChoiceField(label='Environment',
+                                                        choices=self.get_environment_choices())
+        return fields
+
+    def process_resource_action(self, resource, action, data):
+        if resource.kind == 'heat_template':
+            if action == 'create':
+                metadata = {
+                    'name': data['name'],
+                    'template_file': '{}/{}'.format(self.metadata['template_path'],
+                                                    resource.name),
+                    'environment_file': data['environment'],
+                    'parameters': [],
+                }
+                try:
+                    self.create_resource('heat_stack', metadata)
+                except URLError as exception:
+                    logger.error(exception)
+
+    def get_environment_choices(self):
+        choices = []
+        if self.metadata.get('context_source', 'local') == 'local':
+            path = self.metadata['context_path']
+            contexts = glob.glob('{}/*'.format(path))
+            for context in contexts:
+                choices.append((context,
+                                context.replace('{}/'.format(path), '')))
+        return choices

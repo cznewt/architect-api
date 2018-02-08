@@ -39,7 +39,6 @@ class InventoryDeleteForm(forms.Form):
 
     def handle(self):
         data = self.clean()
-        print(data)
         inventory = Inventory.objects.get(name=data.get('inventory_name'))
         inventory.delete()
 
@@ -88,7 +87,6 @@ class SaltFormulasInventoryCreateForm(forms.Form):
         )
 
     def handle(self):
-
         data_dir = '{}/{}'.format(settings.INVENTORY_BASE_DIR,
                                   self.cleaned_data['inventory_name'])
         if not os.path.exists(data_dir):

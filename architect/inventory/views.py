@@ -71,6 +71,7 @@ class InventoryDetailJSONView(JSONDataView):
 
 
 class InventoryCreateView(FormView):
+
     template_name = "inventory/inventory_update.html"
     form_class = SaltFormulasInventoryCreateForm
     success_url = '/inventory/v1'
@@ -86,6 +87,7 @@ class InventoryCreateView(FormView):
 
 
 class InventoryDeleteView(FormView):
+
     template_name = "inventory/inventory_delete.html"
     form_class = InventoryDeleteForm
     success_url = '/inventory/v1'

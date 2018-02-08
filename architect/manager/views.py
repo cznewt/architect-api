@@ -3,11 +3,13 @@
 from django.core.cache import cache
 from django.conf import settings
 from django.views.generic.base import TemplateView, RedirectView
+from django.views.generic.edit import FormView
 from architect.views import JSONDataView
-from architect.manager.models import Resource, Manager
-from architect.manager.tasks import get_manager_status_task, \
+from .forms import ManagerActionForm, ResourceActionForm
+from .models import Resource, Manager
+from .tasks import get_manager_status_task, \
     sync_manager_resources_task
-from architect.manager.transform import transform_data, filter_node_types, \
+from .transform import transform_data, filter_node_types, \
     filter_lone_nodes, clean_relations
 
 
@@ -30,6 +32,7 @@ class ManagerDetailView(TemplateView):
         manager = Manager.objects.get(name=kwargs.get('manager_name'))
         kind = manager.get_schema()['default_resource']
         context['manager'] = manager
+        context['workflow_options'] = manager.client()._schema['resource'][kind].get('workflow')
         context['resource_list'] = Resource.objects.filter(manager=manager,
                                                            kind=kind)
         return context
@@ -46,6 +49,31 @@ class ManagerCheckView(RedirectView):
         for manager in managers:
             get_manager_status_task.apply_async((manager.name,))
         return super().get_redirect_url(*args, **kwargs)
+
+
+class ManagerActionView(FormView):
+
+    template_name = "manager/manager_action.html"
+    form_class = ManagerActionForm
+    success_url = '/managerger/v1'
+
+    def get_form_kwargs(self):
+        manager = Manager.objects.get(name=self.kwargs.get('manager_name'))
+        kwargs = super(ManagerActionView, self).get_form_kwargs()
+        print(self.kwargs.get('resource_kind'))
+        print(self.kwargs.get('resource_action'))
+        kwargs.update({
+            'resource_kind': self.kwargs.get('resource_kind'),
+            'resource_action': self.kwargs.get('resource_action'),
+            'manager_name': manager.name,
+            'params': manager.client().get_action_fields(self.kwargs.get('resource_kind'),
+                                                         self.kwargs.get('resource_action'))
+        })
+        return kwargs
+
+    def form_valid(self, form):
+        form.handle()
+        return super().form_valid(form)
 
 
 class ManagerSyncView(RedirectView):
@@ -104,6 +132,32 @@ class ManagerQueryJSONView(JSONDataView):
             print('Loaded manager query cache {}'.format(query_cache_key))
         data['name'] = manager.name
         return data
+
+
+class ResourceActionView(FormView):
+
+    template_name = "manager/resource_action.html"
+    form_class = ResourceActionForm
+    success_url = '/manager/v1'
+
+    def get_form_kwargs(self):
+        manager = Manager.objects.get(name=self.kwargs.get('manager_name'))
+        resource = Resource.objects.get(manager=manager,
+                                        uid=self.kwargs.get('resource_uid'))
+        action = self.kwargs.get('resource_action')
+        kwargs = super(ResourceActionView, self).get_form_kwargs()
+        kwargs.update({
+            'manager': manager,
+            'resource': resource,
+            'action': action,
+            'params': manager.client().get_resource_action_fields(resource,
+                                                                  action)
+        })
+        return kwargs
+
+    def form_valid(self, form):
+        form.handle()
+        return super().form_valid(form)
 
 
 class ResourceDetailView(TemplateView):

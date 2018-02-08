@@ -2,7 +2,7 @@
 from celery.decorators import task
 from celery.utils.log import get_task_logger
 from architect.utils import get_module
-from architect.manager.models import Manager
+from architect.manager.models import Manager, Resource
 
 logger = get_task_logger(__name__)
 
@@ -14,16 +14,6 @@ def get_manager_status_task(manager_name):
         manager.status = 'active'
     else:
         manager.status = 'error'
-    if manager.name == 'mir-dev-prod-heat-local':
-        logger.info("Creating {} resource".format('heat_stack'))
-
-        metadata = {
-            'name': 'test1',
-            'template_file': '/home/newt/work/cloud/heat-templates/heat-templates/template/os_ha_ovs.hot',
-            'environment_file': '/home/newt/work/cloud/heat-templates/heat-templates/env/devcloud.env',
-            'parameters': [],
-        }
-        manager.client().create_resource('heat_stack', metadata)
     manager.save()
     return True
 
@@ -43,4 +33,15 @@ def sync_manager_resources_task(manager_name):
     update_client.save()
     cache_client = manager_client_class(**manager_kwargs)
     cache_client.refresh_cache()
+    return True
+
+
+@task(name="process_resource_action_task")
+def process_resource_action_task(manager_name, resource_uid, action, data={}):
+    manager = Manager.objects.get(name=manager_name)
+    resource = Resource.objects.get(manager=manager,
+                                    uid=resource_uid)
+    logger.info('Commiting action {} on resource {}'.format(action,
+                                                            resource.name))
+    manager.client().process_resource_action(resource, action, data)
     return True
