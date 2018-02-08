@@ -10,6 +10,9 @@ with open('README.rst') as readme:
 with open('./requirements/base.txt') as _requirements:
     requirements = [r.strip() for r in _requirements.readlines()]
 
+with open('./requirements/test.txt') as _tests_requirements:
+    tests_requirements = [r.strip() for r in _tests_requirements.readlines()]
+
 DESCRIPTION = """Architect API is server-side of service modeling,
 management and visualization platform."""
 
@@ -24,6 +27,7 @@ setup(
     url='https://github.com/cznewt/architect-api/',
     packages=find_packages(),
     install_requires=requirements,
+    tests_require=tests_requirements,
     extras_require={
         'tests': [
             'pytest',
