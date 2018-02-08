@@ -1,4 +1,5 @@
 
+import time
 from celery.decorators import task
 from celery.utils.log import get_task_logger
 from architect.utils import get_module
@@ -44,4 +45,41 @@ def process_resource_action_task(manager_name, resource_uid, action, data={}):
     logger.info('Commiting action {} on resource {}'.format(action,
                                                             resource.name))
     manager.client().process_resource_action(resource, action, data)
+    return True
+
+
+@task(name="wait_for_resource_state_task")
+def wait_for_resource_state_task(manager_name,
+                                 resource_uid,
+                                 states=['active', 'error'],
+                                 step=10,
+                                 timeout=720):
+    manager = Manager.objects.get(name=manager_name)
+    resource = Resource.objects.get(manager=manager,
+                                    uid=resource_uid)
+    status = resource.status
+    iteration = 0
+    logger.info('Started to wait for state(s) {} '
+                'on {} {}'.format(', '.join(states),
+                                  resource.kind,
+                                  resource.name))
+    while status not in states:
+        if iteration > timeout:
+            break
+        manager_client = manager.client()
+        if manager_client.auth():
+            metadata = manager_client.get_resource_metadata(resource.kind,
+                                                            resource.uid)
+            manager_client.process_resource_metadata(resource.kind, metadata)
+            meta = manager_client.resources[resource.kind][resource.uid]['metadata']
+            logger.info(meta)
+            manager_client.save()
+            status = manager_client.get_resource_status(resource.kind, meta)
+        iteration += 1
+        logger.info('Waiting for state(s) {} '
+                    'on resource {}, iteration {}'.format(', '.join(states),
+                                                          resource.name,
+                                                          iteration))
+        time.sleep(step)
+
     return True

@@ -9,13 +9,13 @@ import os_client_config
 from django import forms
 from os_client_config import cloud_config
 from heatclient.common import http
-from heatclient.common import template_format
 from heatclient.common import template_utils
-from heatclient.common import utils
 from keystoneauth1.exceptions.connection import ConnectFailure
 from urllib.error import URLError
 from architect.manager.client import BaseClient
 from architect.manager.models import Manager
+from architect.manager.tasks import wait_for_resource_state_task
+
 from celery.utils.log import get_logger
 
 logger = get_logger(__name__)
@@ -68,18 +68,41 @@ class HeatClient(BaseClient):
             self.process_relation_metadata()
 
     def get_resource_status(self, kind, metadata):
+        if not isinstance(metadata, dict):
+            return 'unknown'
+        if kind == 'heat_stack':
+            if metadata.get('stack_status', 'CREATE_IN_PROGRESS'):
+                return 'build'
+            elif metadata.get('stack_status', 'ACTIVE'):
+                return 'active'
         return 'unknown'
 
-    def get_resource_metadata(self, kind):
+    def get_resource_metadata(self, kind, uid=None):
         logger.info("Getting {} resources".format(kind))
         response = {}
         if kind == 'heat_template':
             path = self.metadata['template_path']
-            templates = glob.glob('{}/*.hot'.format(path))
-            for template in templates:
+            if uid is None:
+                templates = glob.glob('{}/*.hot'.format(path))
+                for template in templates:
+                    with open(template) as file_handler:
+                        data = file_handler.read()
+                    response[template.replace('{}/'.format(path), '')] = data
+            else:
+                template = '{}/{}'.format(path, uid)
                 with open(template) as file_handler:
                     data = file_handler.read()
-                response[template.replace('{}/'.format(path), '')] = data
+                    response[uid] = data
+        elif kind == 'heat_stack':
+            if uid is None:
+                stacks = self.api.stacks.list()
+                for stack in stacks:
+                    resource = stack.to_dict()
+                    response[resource['id']] = resource
+            else:
+                stack = self.api.stacks.get(uid)
+                resource = stack.to_dict()
+                response[resource['id']] = resource
         return response
 
     def process_resource_metadata(self, kind, metadata):
@@ -88,6 +111,12 @@ class HeatClient(BaseClient):
                 self._create_resource(resource_name,
                                       resource_name,
                                       'heat_template',
+                                      metadata=resource)
+        elif kind == 'heat_stack':
+            for resource_name, resource in metadata.items():
+                self._create_resource(resource_name,
+                                      resource_name,
+                                      'heat_stack',
                                       metadata=resource)
 
     def process_relation_metadata(self):
@@ -120,6 +149,23 @@ class HeatClient(BaseClient):
                     fields['environment_files'] = env_files_list
                 response = self.api.stacks.create(**fields)
                 logger.info(response)
+                stack = self.api.stacks.get(response['stack']['id'])
+                resource = stack.to_dict()
+                stack_metadata = {resource['id']: resource}
+                template_metadata = self.get_resource_metadata('heat_template',
+                                                               metadata['template_name'])
+                self.process_resource_metadata('heat_template', template_metadata)
+                self.process_resource_metadata('heat_stack', stack_metadata)
+                self._create_relation(
+                    'defined_by',
+                    resource['id'],
+                    metadata['template_name'])
+                self.save()
+                logger.info(stack)
+                wait_for_resource_state_task.apply_async((self.name,
+                                                          resource['id'],
+                                                          ['active', 'error']))
+
 
     def get_resource_action_fields(self, resource, action):
         fields = {}
@@ -142,6 +188,7 @@ class HeatClient(BaseClient):
                                                     resource.name),
                     'environment_file': data['environment'],
                     'parameters': [],
+                    'template_name': resource.name
                 }
                 try:
                     self.create_resource('heat_stack', metadata)
