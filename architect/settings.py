@@ -186,7 +186,7 @@ else:
     MONITOR_CLASS_MAPPINGS = {
         "elasticsearch": "architect.monitor.engine.elasticsearch.client.ElasticSearchClient",
         "graphite": "architect.monitor.engine.graphite.client.GraphiteClient",
-        "influxdb": "architect.monitor.engine.influxdb.client.InfluxdbClient",
+        "influxdb": "architect.monitor.engine.influxdb.client.InfluxDbClient",
         "prometheus": "architect.monitor.engine.prometheus.client.PrometheusClient",
     }
 
