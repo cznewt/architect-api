@@ -14,12 +14,12 @@ Django
 djangorestframework
 django-compressor
 django-jsonview
-django-crispy-forms
 django-yamlfield
 django-extensions
 django-npm
 django_select2
 django-filter
+django-crispy-forms
 
 os_client_config
 python-cinderclient
@@ -37,6 +37,4 @@ pydot
 graphviz
 juju
 
-pytest
-pytest-django
-pytest-cov
+graphene-django>=2.0
