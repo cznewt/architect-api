@@ -1,7 +1,7 @@
 
-=============================
-Architect Inventory Component
-=============================
+===================
+Architect Inventory
+===================
 
 Each manager endpoint expects different configuration. Following samples show
 the required parameters to setup individual inventory backends.

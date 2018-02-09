@@ -1,7 +1,7 @@
 
-===========================
-Architect Manager Component
-===========================
+=================
+Architect Manager
+=================
 
 .. toctree::
    :maxdepth: 2

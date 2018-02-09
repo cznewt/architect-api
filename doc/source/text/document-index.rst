@@ -1,7 +1,7 @@
 
-============================
-Architect Document Component
-============================
+==================
+Architect Document
+==================
 
 .. toctree::
    :maxdepth: 2

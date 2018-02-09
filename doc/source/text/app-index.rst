@@ -1,7 +1,7 @@
 
-=====================
-The Architect Service
-=====================
+====================
+The Architect System
+====================
 
 .. toctree::
    :maxdepth: 2
