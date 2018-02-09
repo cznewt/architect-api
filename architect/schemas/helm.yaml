@@ -1,0 +1,27 @@
+query:
+  helm_complete_graph:
+    layout: graph
+relation:
+  defined_by:
+    relation:
+      default: template
+default_resource: helm_chart
+resource:
+  helm_chart:
+    client: helm
+    icon: fa:cube
+    name: Chart
+    resource: Helm::Chart
+    workflow:
+      create:
+        name: Launch new Release
+  helm_release:
+    client: helm
+    icon: fa:cube
+    name: Release
+    resource: Helm::Release
+    model:
+      template:
+        type: relationship_to
+        model: defined_by
+        target: helm_chart
