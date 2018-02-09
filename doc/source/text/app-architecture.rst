@@ -1,21 +1,9 @@
 
-The Architect service consists of several core compontents:
 
-Inventory Component
-    Inventory is the Architect's metadata engine. It encapsulates and unifies data
-    from various metadata sources to provide inventory/metadata for various
-    orchestration services.
+====================
+Architect Components
+====================
 
-Manager Component
-    Manager is the Architect's orchestration engine. The aim of this module is
-    to enforce infrastructure topologies models and acquire live
-    infrastructure topology data from any resource provider for further
-    relational and quantitative analysis and visualisations.
-
-Monitor Component
-	The structure of infrastructure resources is directed graph that can be
-	subject for further analysis. We can perform several transformation
-	functions on this graph data in Monitor component.
 
 Following figure shows high-level achitecture of Architect system.
 
@@ -26,32 +14,37 @@ Following figure shows high-level achitecture of Architect system.
     High-level achitecture of Architect system
 
 
-Architect Components
-====================
-
-A quick summary of integrations and capabilities of individual modules.
+The Architect project consists of 4 core compontents. A quick summary of
+properties, capabilities and integrations for each component.
 
 
 Inventory Component
--------------------
+===================
 
 Inventory is the Architect's metadata engine. It encapsulates and unifies data
-from various metadata sources to provide inventory/metadata for various
-orchestration services. Currently supported metadata engines are:
+from various metadata sources to provide inventory metadata for various
+orchestration services. Basically serves as metadata proxy with clients. It
+works best integrated with http://salt-formulas.readthedocs.io/.
 
-* reclass (python3 version)
+Currently supported metadata backends are:
 
-The following inventory providers are to be intergrated in near future.
+* `salt-formulas <./inventory-backends.html#salt-formulas-inventory>`_
+* `reclass <./inventory-backends.html#reclass-inventory>`_ (python3 version)
 
-* hiera
-* saltstack
+The currently supported customers of metadata provided by Inventory using
+``architect-api`` client library are:
 
-There is a plan to integrate workflow (multi-step forms) defitions to simplify
-creation of complex infrastructure models.
+* SaltStack
+* Ansible
+* Puppe
+
+Following orchestrators have direct support for injecting context metadata:
+
+* Heat
 
 
 Manager Component
------------------
+=================
 
 Manager is the Architect's orchestration engine. The aim of this module is to
 enforce infrastructure topologies models and acquire live infrastructure
@@ -60,35 +53,57 @@ quantitative analysis and visualisations.
 
 The pull approach for querying endpoint APIs is supported at the moment, the
 processing push from target services is supported for SaltStack events.
+
 Currently supported resource providers are:
 
 * Kubernetes clusters
 * OpenStack clouds
+* Heat templates
 * Amazon web services
 * SaltStack infrastructures
 * Terraform templates
 * Jenkins pipelines
 
-The following resource providers are to be intergrated in near future.
-
-* GCE and Azure clouds
-* Cloudify TOSCA blueprints
-* JUJU templates
-
 
 Monitor Component
------------------
+=================
 
-The structure of infrastructure resources is directed graph that can be
-subject for further analysis. We can perform several transformation functions
-on this graph data in Monitor component.
+Monitor is the Architect's monitoring engine. It can connect to multiple
+data endpoints and subject them for further analysis. We can define
+queries for quantitative data or time-series in Document component.
 
-Currently supported relational analysis visualizations:
+Currently supported monitoring services are:
 
-* Adjacency Matrix
-* Arc Diagram
-* Force-directed Layouts
-* Hierarchical Edge Bundling
-* Hive Plot
-* Node-link Trees (Reingold-Tilford, Dendrograms)
-* Partition Layouts (Sunburst, Icicle Diagrams, Treemaps)
+* Graphite
+* ElasticSearch
+* Prometheus
+* InfluxDB
+
+
+Document Component
+==================
+
+Document component is responsible for analysis and visualization of
+infrastructure resources in form of directed graph. We can perform several
+transformation functions on this graph data. The other part is analysis of
+quantitative data provided by monitoring solutions and corellating it to the
+relational structures provided by Manager component.
+
+Currently supported relational visualization layouts:
+
+* Adjacency matrix
+* Arc diagram
+* Force-directed graph
+* Hierarchical edge bundling
+* Hive plot
+* Circle packing
+* Node-link tree (Reingold-Tilford tidy trees, dendrograms)
+* Partition layout (sunburst, icicle diagrams, treemaps)
+* Sankey diagram
+
+Currently supported quatitative visualization layouts:
+
+* Line chart
+* Bar chart, stacked bar chart
+* Horizon chart
+* Donut chart, pie chart

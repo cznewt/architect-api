@@ -1,14 +1,12 @@
 
-=================
-Architect Manager
-=================
+===========================
+Architect Manager Component
+===========================
 
 .. toctree::
    :maxdepth: 2
 
-   manager-amazon.rst
-   manager-kubernetes.rst
-   manager-openstack.rst
-   manager-heat.rst
-   manager-saltstack.rst
-   manager-terraform.rst
+   manager-config.rst
+   manager-cloud.rst
+   manager-container.rst
+   manager-template.rst

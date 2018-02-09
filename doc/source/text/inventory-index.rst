@@ -1,7 +1,7 @@
 
-===================
-Architect Inventory
-===================
+=============================
+Architect Inventory Component
+=============================
 
 Each manager endpoint expects different configuration. Following samples show
 the required parameters to setup individual inventory backends.
@@ -9,6 +9,5 @@ the required parameters to setup individual inventory backends.
 .. toctree::
    :maxdepth: 2
 
-   inventory-reclass.rst
-   inventory-salt-formulas.rst
-   inventory-saltstack.rst
+   inventory-backends.rst
+   inventory-consumers.rst

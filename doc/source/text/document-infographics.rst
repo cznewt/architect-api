@@ -1,11 +1,11 @@
 
-===================
-Visual Infographics
-===================
+============================
+Visual Infographic Standards
+============================
 
 
-Core Libraries
-==============
+Core Presentation Libraries
+===========================
 
 
 d3.js
@@ -20,8 +20,8 @@ browsers and the freedom to design the right visual interface for your data.
 * https://github.com/d3/d3
 
 
-Helper Libraries
-================
+Presentation Helper Libraries
+=============================
 
 
 d3-legend

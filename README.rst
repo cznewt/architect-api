@@ -45,8 +45,8 @@ works best integrated with http://salt-formulas.readthedocs.io/.
 
 Currently supported metadata backends are:
 
-* salt-formulas
-* `reclass <http://architect-api.readthedocs.io/en/latest/text/inventory-reclass.html>`_ (python3 version)
+* `salt-formulas <http://architect-api.readthedocs.io/en/latest/text/inventory-backends.html#salt-formulas-inventory>`_
+* `reclass <http://architect-api.readthedocs.io/en/latest/text/inventory-backends.html#reclass-inventory>`_ (python3 version)
 
 The currently supported customers of metadata provided by Inventory using
 ``architect-api`` client library are:
@@ -124,4 +124,3 @@ Currently supported quatitative visualization layouts:
 * Bar chart, stacked bar chart
 * Horizon chart
 * Donut chart, pie chart
-

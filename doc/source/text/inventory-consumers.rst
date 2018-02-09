@@ -1,7 +1,11 @@
 
-=======================
-Salt inventory consumer
-=======================
+=============================
+Architect Inventory Consumers
+=============================
+
+
+SaltStack Consumer
+==================
 
 To enable Salt Master inventory, you need to install ``http_architect`` Pillar
 and Top modules and add following to the Salt Master configuration files. To

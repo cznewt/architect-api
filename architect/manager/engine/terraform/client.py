@@ -25,8 +25,11 @@ class TerraformClient(BaseClient):
 
     def __init__(self, **kwargs):
         super(TerraformClient, self).__init__(**kwargs)
+
+    def auth(self):
         self.client = python_terraform.Terraform(
-            working_dir=self.config['dir'])
+            working_dir=self.metadata['template_path'])
+        return True
 
     def _clean_name(self, name):
         return name.replace('"', '').replace('[root] ', '').strip()

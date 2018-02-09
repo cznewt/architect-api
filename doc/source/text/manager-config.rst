@@ -1,6 +1,10 @@
 
-=========================
-SaltStack infrastructures
+========================
+Configuration Management
+========================
+
+
+SaltStack Infrastructures
 =========================
 
 Configuration for connecting to Salt API endpoint.
@@ -16,9 +20,14 @@ the Manager integration.
     :align: center
     :width: 70%
 
+The metadata schema for SaltStack manager:
 
-Salt Master integration
-=======================
+.. literalinclude:: ../../../architect/schemas/saltstack.yaml
+   :language: yaml
+
+
+Salt Master Integration
+-----------------------
 
 You can control salt master infrastructure and get the status of managed hosts
 and resources. The Salt engine ``architect`` relays the state outputs of

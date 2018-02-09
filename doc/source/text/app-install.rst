@@ -1,15 +1,15 @@
 
-============
-Installation
-============
+===============================
+Architect Services Installation
+===============================
 
 Following steps show how to deploy various components of the Architect service
 and connections to external services. It covers the basic development
 deployment.
 
 
-Service architect-api Installation
-==================================
+Service ``architect-api`` Installation
+======================================
 
 The core service responsible for handling HTTP API requests and providing
 simple UI based on Material design. Release version of architect-api is
@@ -44,7 +44,7 @@ Or you you can install service by pip ``architect-api`` package.
     pip install architect-api -e
 
 
-Initial setup for UI
+Initial Setup for UI
 --------------------
 
 Architect-api uses the ``npm`` to install its JavaScript dependencies, which
@@ -100,7 +100,7 @@ sourced run following command.
         /python-apps/architect/architect/templates/_body.html
 
 
-Initial setup for database
+Initial Setup for Database
 --------------------------
 
 You must synchronise your database content with the current migration scheme,
@@ -143,7 +143,7 @@ Memcached backend, for example:
         LOCATION: 127.0.0.1:11211
 
 
-Main configuration file
+Main Configuration File
 -----------------------
 
 You provide one YAML configuration file for all settings. The default
@@ -211,7 +211,7 @@ Look at the the documentation pages for individual inventory, manager or
 monitor configuration options and installation problems.
 
 
-Running development server
+Running Development Server
 --------------------------
 
 To start development server, in architect base dir and sourced run following
@@ -231,8 +231,8 @@ command.
 
 
 
-Service architect-worker Installation
-=====================================
+Service ``architect-worker`` Installation
+=========================================
 
 The architect relies on standalone workers to perform the tasks
 asynchronously. For the development environment, you can just simply install
@@ -284,8 +284,8 @@ command run. If not, check if redis service ``systemctl status redis-server``
 is running. You need at least one instance of worker running.
 
 
-Service architect-client Installation
-=====================================
+Service ``architect-client`` Installation
+=========================================
 
 Following steps show how to deploy and configure Architect Client. You need to
 install client on configuration management servers to integrate the inventory

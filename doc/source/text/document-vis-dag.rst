@@ -1,7 +1,7 @@
 
-=====================================
-Directed Acyclic Graph Visualizations
-=====================================
+==================
+DAG Visualizations
+==================
 
 A directed acyclic graph (DAG), is a finite directed graph with no directed
 cycles. That is, it consists of finitely many vertices and edges, with each

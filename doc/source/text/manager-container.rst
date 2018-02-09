@@ -1,5 +1,9 @@
 
-===================
+=============================
+Container Resource Management
+=============================
+
+
 Kubernetes Clusters
 ===================
 
@@ -15,3 +19,8 @@ under corresponding keys in the kubernetes configuration file.
     Options ``config.cluster`` and ``config.user`` can be found in your
     ``kubeconfig`` file. Just copy the config fragment with cluster parameters
     and fragment with user parameter.
+
+The metadata schema for Kubernetes manager:
+
+.. literalinclude:: ../../../architect/schemas/kubernetes.yaml
+   :language: yaml

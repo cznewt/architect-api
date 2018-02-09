@@ -12,8 +12,8 @@ who drew diagrams of this type for complete graphs in order to analyze all
 pairwise combinations among sets of metaphysical concepts.
 
 
-Dendrograms
-===========
+Dendrogram
+==========
 
 Dendrograms are node-link diagrams that place leaf nodes of the tree at the
 same depth. Dendograms are typically less compact than tidy trees, but are
@@ -27,8 +27,15 @@ hierarchical clustering or phylogenetic tree diagrams.
     SaltStack services in Hierarchical edge bundle
 
 
-Partition Layouts
-=================
+References
+----------
+
+* https://bl.ocks.org/mbostock/4063570
+* https://en.wikipedia.org/wiki/Dendrogram
+
+
+Partition Layout
+================
 
 The partition layout produces adjacency diagrams: a space-filling variant of a
 node-link tree diagram. Rather than drawing a link between parent and child in
@@ -44,6 +51,12 @@ be difficult to show in a node-link diagram.
     SaltStack services in Sunburst Diagram
 
 
+References
+----------
+
+* https://bl.ocks.org/mbostock/4063423
+
+
 Circle Packing
 ==============
 
@@ -56,3 +69,34 @@ objective of packing unit circles into the smallest possible larger circle.
     :figclass: align-center
 
     SaltStack services in Circle Packing
+
+
+References
+----------
+
+* https://en.wikipedia.org/wiki/Circle_packing_in_a_circle
+* https://bl.ocks.org/mbostock/7607535
+
+
+Treemap
+=======
+
+Treemaps display hierarchical (tree-structured) data as a set of nested
+rectangles. Each branch of the tree is given a rectangle, which is then tiled
+with smaller rectangles representing sub-branches. A leaf node's rectangle has
+an area proportional to a specified dimension of the data. Often the leaf
+nodes are colored to show a separate dimension of the data.
+
+When the color and size dimensions are correlated in some way with the tree
+structure, one can often easily see patterns that would be difficult to spot
+in other ways, such as if a certain color is particularly relevant. A second
+advantage of treemaps is that, by construction, they make efficient use of
+space. As a result, they can legibly display thousands of items on the screen
+simultaneously.
+
+
+References
+----------
+
+* https://bl.ocks.org/shimizu/6d60e554dcbba406721e73ed5afdf713
+* https://en.wikipedia.org/wiki/Treemapping

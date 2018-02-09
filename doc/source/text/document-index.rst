@@ -1,7 +1,7 @@
 
-==================
-Architect Document
-==================
+============================
+Architect Document Component
+============================
 
 .. toctree::
    :maxdepth: 2
@@ -11,4 +11,4 @@ Architect Document
    document-infographics.rst
    document-vis-network.rst
    document-vis-hierarchy.rst
-   document-vis-directed-acyclic.rst
+   document-vis-dag.rst
