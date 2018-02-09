@@ -40,7 +40,7 @@ their layout makes it easy to display multivariate data associated with the
 vertices of the graph.
 
 .. figure:: ../static/img/monitor/arc-diagram.png
-    :width: 80%
+    :width: 60%
     :figclass: align-center
 
     OpenStack project resources in Arc diagram (cca 100 resources)
@@ -81,7 +81,7 @@ hard to achieve with any other type of algorithm.
     Kubernetes cluster in Force-directed graph
 
 .. figure:: ../static/img/monitor/force-directed-graph-huge.png
-    :width: 80%
+    :width: 60%
     :figclass: align-center
 
     Whole OpenStack cloud in Force-directed graph (cca 3000 resources)
@@ -115,7 +115,7 @@ bundling is a generic method which can be used in conjunction with existing
 tree visualization techniques.
 
 .. figure:: ../static/img/monitor/hiearchical-edge-bundling.png
-    :width: 80%
+    :width: 60%
     :figclass: align-center
 
     Hierarchical edge bundling of SaltStack services and their relations (cca 100 nodes)
@@ -147,7 +147,7 @@ starting point in visually exploring network structure.
     Kubernetes cluster in Hive plot
 
 .. figure:: ../static/img/monitor/hive-plot-huge.png
-    :width: 80%
+    :width: 60%
     :figclass: align-center
 
     Whole OpenStack cloud in Hive plot (cca 10 000 resources)
@@ -179,7 +179,7 @@ vertex–edge pairs are incident or not, and degree matrix which contains
 information about the degree of each vertex.
 
 .. figure:: ../static/img/monitor/adjacency-matrix.png
-    :width: 80%
+    :width: 60%
     :figclass: align-center
 
     Adjacency matrix of OpenStack project's resources (cca 100 nodes)

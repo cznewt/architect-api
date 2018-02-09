@@ -21,7 +21,7 @@ useful when all the leaves should be at the same level, such as for
 hierarchical clustering or phylogenetic tree diagrams.
 
 .. figure:: ../static/img/monitor/node-link-tree.png
-    :width: 80%
+    :width: 60%
     :figclass: align-center
 
     SaltStack services in Hierarchical edge bundle
@@ -45,7 +45,7 @@ hierarchy. The size of the nodes encodes a quantitative dimension that would
 be difficult to show in a node-link diagram.
 
 .. figure:: ../static/img/monitor/sunburst.png
-    :width: 80%
+    :width: 60%
     :figclass: align-center
 
     SaltStack services in Sunburst Diagram
@@ -65,7 +65,7 @@ Circle packing in a circle is a two-dimensional packing problem with the
 objective of packing unit circles into the smallest possible larger circle.
 
 .. figure:: ../static/img/monitor/circle-packing.png
-    :width: 80%
+    :width: 60%
     :figclass: align-center
 
     SaltStack services in Circle Packing
