@@ -1,7 +1,7 @@
 
-=====================
-The Architect Project
-=====================
+============================================================
+The Architect Project |PypiVersion| |ReadTheDocs| |TravisCI|
+============================================================
 
 
 The aim of this project is to provide unified service modeling, management and
@@ -31,8 +31,9 @@ documentation at https://architect-api.readthedocs.io/.
 Architect Components
 ====================
 
-The Architect project consists of 4 core compontents. A quick summary of
-properties, capabilities and integrations for each component.
+The Architect project consists of 4 core compontents (inventory, manager,
+monitor and document). A quick summary of properties, capabilities and
+integrations for each component.
 
 
 Inventory Component
@@ -53,7 +54,8 @@ The currently supported customers of metadata provided by Inventory using
 
 * SaltStack
 * Ansible
-* Puppe
+* Puppet
+* Chef
 
 Following orchestrators have direct support for injecting context metadata:
 
@@ -124,3 +126,8 @@ Currently supported quatitative visualization layouts:
 * Bar chart, stacked bar chart
 * Horizon chart
 * Donut chart, pie chart
+
+
+.. |PypiVersion| image:: https://badge.fury.io/py/architect-api.svg?style=flat
+.. |ReadTheDocs| image:: https://readthedocs.org/projects/architect-api/badge/?version=master
+.. |TravisCI| image:: https://travis-ci.org/architect-api/architect-api.svg?branch=master

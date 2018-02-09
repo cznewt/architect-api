@@ -36,7 +36,8 @@ The currently supported customers of metadata provided by Inventory using
 
 * SaltStack
 * Ansible
-* Puppe
+* Puppet
+* Chef
 
 Following orchestrators have direct support for injecting context metadata:
 
