@@ -1,7 +1,7 @@
 
-===================
-Relational Analysis
-===================
+========================
+Relational Data Analysis
+========================
 
 You can analyse the resource models in several ways. Either you want to get
 the subsets of the resources (vertices and edges) or you want to combine
