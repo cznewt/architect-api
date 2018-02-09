@@ -6,11 +6,11 @@ from django.conf import settings
 
 modules_list = []
 
+# for module_label, module_class in settings.INVENTORY_CLASS_MAPPINGS.items():
+#     modules_list.append(('inventory', module_label, module_class))
+
 for module_label, module_class in settings.MANAGER_CLASS_MAPPINGS.items():
     modules_list.append(('manager', module_label, module_class))
-
-for module_label, module_class in settings.INVENTORY_CLASS_MAPPINGS.items():
-    modules_list.append(('inventory', module_label, module_class))
 
 for module_label, module_class in settings.MONITOR_CLASS_MAPPINGS.items():
     modules_list.append(('monitor', module_label, module_class))

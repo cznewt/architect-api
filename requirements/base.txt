@@ -20,6 +20,8 @@ django_select2
 django-filter
 django-crispy-forms
 
+python-jenkins
+elasticsearch-dsl
 os_client_config
 python-cinderclient
 python-glanceclient
@@ -37,3 +39,5 @@ graphviz
 juju
 
 graphene-django>=2.0
+pandas
+numpy
