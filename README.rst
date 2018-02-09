@@ -17,8 +17,11 @@ program in Matrix movie series:
     mainframe.
 
 The The Architect project was started as part of my thesis "Visualization of
-cloud performace metrics". Following figure shows high-level achitecture of
-Architect system.
+cloud performace metrics". Now we explore the possible implications of
+combining the relational models of infrastructures with quantitative data that
+relates to it.
+
+Following figure shows high-level achitecture of Architect system.
 
 .. figure:: ./doc/source/static/scheme/high_level_arch.png
     :align: center
@@ -91,7 +94,7 @@ Monitor is the Architect's monitoring engine. It can connect to multiple
 data endpoints and subject them for further analysis. We can define
 queries for quantitative data or time-series in Document component.
 
-Currently supported monitoring services are:
+Currently supported time-series databases are:
 
 * Graphite
 * ElasticSearch

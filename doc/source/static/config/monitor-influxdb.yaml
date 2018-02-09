@@ -1,0 +1,4 @@
+auth_url: http://{{ influxdb-api }}:8086
+username: {{ influxdb-username }}
+password: {{ influxdb-password }}
+database: {{ influxdb-database }}
