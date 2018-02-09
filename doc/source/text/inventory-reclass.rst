@@ -1,7 +1,7 @@
 
-=================
-Reclass Inventory
-=================
+=========================
+Reclass inventory backend
+=========================
 
 Following configuration points to the reclass inventory storage on local
 filesystem.

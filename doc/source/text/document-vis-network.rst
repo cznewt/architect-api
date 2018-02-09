@@ -46,8 +46,8 @@ vertices of the graph.
     OpenStack project resources in Arc diagram (cca 100 resources)
 
 
-More Information
-----------------
+References
+----------
 
 * https://bl.ocks.org/rpgove/53bb49d6ed762139f33bdaea1f3a9e1c
 * https://en.wikipedia.org/wiki/Arc_diagram
@@ -87,8 +87,8 @@ hard to achieve with any other type of algorithm.
     Whole OpenStack cloud in Force-directed graph (cca 3000 resources)
 
 
-More Information
-----------------
+References
+----------
 
 * https://en.wikipedia.org/wiki/Force-directed_graph_drawing
 * https://bl.ocks.org/shimizu/e6209de87cdddde38dadbb746feaf3a3 (shimizu’s D3 v4 - force layout)
@@ -121,8 +121,8 @@ tree visualization techniques.
     Hierarchical edge bundling of SaltStack services and their relations (cca 100 nodes)
 
 
-More Information
-----------------
+References
+----------
 
 * http://www.win.tue.nl/vis1/home/dholten/papers/bundles_infovis.pdf
 * https://www.win.tue.nl/vis1/home/dholten/papers/forcebundles_eurovis.pdf
@@ -153,8 +153,8 @@ starting point in visually exploring network structure.
     Whole OpenStack cloud in Hive plot (cca 10 000 resources)
 
 
-More Information
-----------------
+References
+----------
 
 * http://mkweb.bcgsc.ca/linnet/
 * https://bost.ocks.org/mike/hive/
@@ -185,8 +185,8 @@ information about the degree of each vertex.
     Adjacency matrix of OpenStack project's resources (cca 100 nodes)
 
 
-More Information
-----------------
+References
+----------
 
 * https://github.com/micahstubbs/d3-adjacency-matrix-layout
 * https://bl.ocks.org/micahstubbs/7f360cc66abfa28b400b96bc75b8984e (Micah Stubbs’s adjacency matrix layout)
@@ -197,7 +197,7 @@ Treemap
 =======
 
 
-More Information
-----------------
+References
+----------
 
 * https://bl.ocks.org/shimizu/6d60e554dcbba406721e73ed5afdf713

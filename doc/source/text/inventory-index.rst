@@ -11,3 +11,4 @@ the required parameters to setup individual inventory backends.
 
    inventory-reclass.rst
    inventory-salt-formulas.rst
+   inventory-saltstack.rst
