@@ -11,11 +11,3 @@ The Architect Documentation
    text/inventory-index.rst
    text/manager-index.rst
    text/document-index.rst
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
