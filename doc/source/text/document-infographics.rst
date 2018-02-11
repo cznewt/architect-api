@@ -18,7 +18,11 @@ approach to DOM manipulation, giving you the full capabilities of modern
 browsers and the freedom to design the right visual interface for your data.
 
 * https://github.com/d3/d3
-
+* http://blog.visual.ly/cartesian-vs-radial-charts/ Battle of the Charts: Why Cartesian Wins Against Radial
+* http://bost.ocks.org/mike/chart/ Towards Reusable Charts
+* http://bl.ocks.org/giuliano108/7482331 d3.layout.colgrid
+* http://bl.ocks.org/biovisualize/8187844 direct svg to canvas to png conversion
+* http://bl.ocks.org/vicapow/758fce6aa4c5195d24be  An example of creating a PNG from an SVG in D3.
 
 Presentation Helper Libraries
 =============================
@@ -46,3 +50,4 @@ Annotations establish context, and direct our users to insights and anomalies.
 
 * https://github.com/susielu/d3-annotation
 * http://d3-annotation.susielu.com/
+* https://bl.ocks.org/alansmithy/85e2d6e05f1de59167751249fbd1edec

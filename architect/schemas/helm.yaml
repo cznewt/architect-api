@@ -1,6 +1,17 @@
 query:
   helm_complete_graph:
     layout: graph
+  helm_chart_releases_tree:
+    layout: hierarchy
+    hierarchy_layers:
+      0:
+        name: Helm
+        kind:
+      1:
+        kind: helm_chart
+      2:
+        kind: helm_release
+        target: defined_by
 relation:
   defined_by:
     relation:
@@ -14,7 +25,7 @@ resource:
     resource: Helm::Chart
     workflow:
       create:
-        name: Launch new Release
+        name: Deploy release
   helm_release:
     client: helm
     icon: fa:cube

@@ -12,3 +12,5 @@ Architect Document
    document-vis-network.rst
    document-vis-hierarchy.rst
    document-vis-dag.rst
+   document-vis-numeric.rst
+   document-vis-time-series.rst

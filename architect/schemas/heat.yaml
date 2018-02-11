@@ -14,7 +14,7 @@ resource:
     resource: OS::Heat::Stack
     workflow:
       create:
-        name: Launch new Stack
+        name: Launch stack
   heat_stack:
     client: heat
     icon: fa:cube

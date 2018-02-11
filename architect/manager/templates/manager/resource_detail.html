@@ -3,18 +3,13 @@
 
 {% block nav_manager_cls %} navigation__sub--active{% endblock %}
 
-{% block page_title %}
-Resource {{ resource.name }} on {{ manager.name }}
-{% endblock %}
+{% block page_title %}Resource {{ resource.name }}{% endblock %}
 
-{% block title %}
-Resource {{ resource.name }} on {{ manager.name }}
-{% endblock %}
+{% block title %}Resource {{ resource.name }}{% endblock %}
 
 {% block actions %}
 <a href="{% url 'manager:manager_detail' manager.name %}" class="btn btn-sm btn-outline-primary">Manager {{ manager.name }}</a>
 {% endblock %}
-
 
 {% block sidebar %}
 <ul class="list-group list-group-flush">

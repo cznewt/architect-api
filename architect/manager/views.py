@@ -167,8 +167,8 @@ class ResourceDetailView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         manager = Manager.objects.get(name=kwargs.get('manager_name'))
-        resource_name = kwargs.get('resource_name')
+        resource_uid = kwargs.get('resource_uid')
         context['manager'] = manager
         context['resource'] = Resource.objects.get(manager=manager,
-                                                   name=resource_name)
+                                                   uid=resource_uid)
         return context

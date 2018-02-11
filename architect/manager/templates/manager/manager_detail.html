@@ -1,17 +1,15 @@
 {% extends TEMPLATE_BASE|default:"content_base.html" %}
+{% load i18n %}
 
 {% block nav_manager_cls %} navigation__sub--active{% endblock %}
 
-{% block page_title %}
-Manager {{ manager.name }}
-{% endblock %}
+{% block page_title %}{% trans "Manager" %} {{ manager.name }}{% endblock %}
 
-{% block title %}
-Manager {{ manager.name }}
-{% endblock %}
+{% block title %}{% trans "Manager" %} {{ manager.name }}{% endblock %}
 
 {% block actions %}
-<a href="{% url 'manager:manager_list' %}" class="btn btn-sm btn-outline-primary">Managers</a>
+<a href="{% url 'manager:manager_sync' manager.name %}" class="btn btn-sm btn-outline-primary">{% trans "Synchronise" %}</a>
+<a href="{% url 'manager:manager_list' %}" class="btn btn-sm btn-outline-primary">{% trans "List" %}</a>
 {% endblock %}
 
 {% block content %}
@@ -20,20 +18,21 @@ Manager {{ manager.name }}
     <table class="table mb-0">
       <thead>
         <tr>
-          <th>Resource</th>
-          <th>Kind</th>
-          <th>Options</th>
+          <th>{% trans "Resource" %}</th>
+          <th>{% trans "Kind" %}</th>
+          <th>{% trans "Options" %}</th>
         </tr>
       </thead>
       <tbody>
         {% for resource in resource_list %}
         <tr>
           <th scope="row">
-            <a href="{% url 'manager:resource_detail' manager.name resource.name %}">{{ resource.name }}</a>
+            <a href="{% url 'manager:resource_detail' manager.name resource.uid %}">{{ resource.name }}</a>
             <span class="badge badge-{{ resource.color }}">{{ resource.status }}</span>
           </th>
           <td>{{ resource.kind }}</td>
           <td>
+            <a href="{% url 'manager:resource_detail' manager.name resource.uid %}" class="btn btn-sm btn-outline-primary">{% trans "Detail" %}</a>
             {% for action, workflow in workflow_options.items %}
             <a href="{% url 'manager:resource_action' manager.name resource.uid action %}" class="btn btn-sm btn-outline-primary">{{ workflow.name }}</a>
             {% endfor %}
