@@ -1,7 +1,5 @@
 formats:
-  - pdf
+- pdf
 python:
   version: 3.5
-  setup_py_install: true
-  extra_requirements:
-    - docs
+  setup_py_install: false
