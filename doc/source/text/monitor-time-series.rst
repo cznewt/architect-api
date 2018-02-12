@@ -29,6 +29,11 @@ Example query to the Graphite server.
 
     averageSeries(server.web*.load)
 
+The metadata schema for Graphite monitor:
+
+.. literalinclude:: ../../../architect/schemas/graphite.yaml
+   :language: yaml
+
 
 References
 ----------
@@ -36,10 +41,10 @@ References
 * http://graphite.readthedocs.io/en/latest/render_api.html
 
 
-InfluxDb Time-series Database
+InfluxDB Time-series Database
 =============================
 
-Example configuration for the InfluxDb server.
+Example configuration for the InfluxDB server.
 
 .. literalinclude:: ../static/config/monitor-influxdb.yaml
    :language: yaml
@@ -70,6 +75,11 @@ Example query to the Prometheus server.
 .. code-block:: none
 
     alertmanager_notifications_total
+
+The metadata schema for Prometheus monitor:
+
+.. literalinclude:: ../../../architect/schemas/prometheus.yaml
+   :language: yaml
 
 
 References

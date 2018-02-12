@@ -9,14 +9,3 @@ Delete inventory
 {% crispy form form.helper %}
 {% endblock %}
 
-{% block extra_js %}
-{% if XHR_REQUEST|default:False %}
-<script>
-var form_options = {
-  target: '#modal-container',
-  success: function(response) {}
-};
-$('#inventory-delete').ajaxForm(form_options);
-</script>
-{% endif %}
-{% endblock %}

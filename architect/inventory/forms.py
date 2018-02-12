@@ -22,7 +22,7 @@ class InventoryDeleteForm(forms.Form):
         delete_url = reverse('inventory:inventory_delete',
                              kwargs={'inventory_name': self.initial.get('inventory_name')})
         self.helper = FormHelper()
-        self.helper.form_id = 'inventory-delete'
+        self.helper.form_id = 'modal-form'
         self.helper.form_action = delete_url
         self.helper.layout = Layout(
             Div(
@@ -55,8 +55,9 @@ class SaltFormulasInventoryCreateForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super(SaltFormulasInventoryCreateForm, self).__init__(*args, **kwargs)
         create_url = reverse('inventory:inventory_create')
+        self.help_text = 'Optional help text'
         self.helper = FormHelper()
-        self.helper.form_id = 'inventory-create'
+        self.helper.form_id = 'modal-form'
         self.helper.form_action = create_url
         self.helper.layout = Layout(
             Div(

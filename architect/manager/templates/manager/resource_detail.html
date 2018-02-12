@@ -1,5 +1,5 @@
 {% extends TEMPLATE_BASE|default:"content_base.html" %}
-{% load architect %}
+{% load architect i18n %}
 
 {% block nav_manager_cls %} navigation__sub--active{% endblock %}
 
@@ -13,24 +13,63 @@
 
 {% block sidebar %}
 <ul class="list-group list-group-flush">
-  <li class="list-group-item">Resource name
+  <li class="list-group-item">{% trans "Name" %}
     <span class="badge">{{ resource.name }}</span>
   </li>
-  <li class="list-group-item">OS finger
-    <span class="badge badge-{{ inventory.color }}">{{ resource.metadata.osfinger }}</span>
+  <li class="list-group-item">{% trans "Kind" %}
+    <span class="badge">{{ resource.kind }}</span>
+  </li>
+  <li class="list-group-item">{% trans "Status" %}
+    <span class="badge badge-{{ resource.color }}">{{ resource.status }}</span>
   </li>
 </ul>
 {% endblock %}
 
 {% block content %}
-<div class="row">
-  <div class="col col-sm-12">
-    <div class="card">
-      <div class="card-block">
-        <h3 class="card-title">Resource metadata</h3>
-        <pre class="text-light"><code>{{ resource.metadata|to_yaml }}</code></pre>
-      </div>
-    </div>
+<ul class="nav nav-tabs" role="tablist">
+  <li class="nav-item">
+    <a class="nav-link active" data-toggle="tab" href="#properties" role="tab">{% trans "Relations" %}</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" data-toggle="tab" href="#metadata" role="tab">{% trans "Raw metadata" %}</a>
+  </li>
+</ul>
+<div class="tab-content">
+  <div class="tab-pane active" id="properties" role="tabpanel">
+    <table class="table bordered">
+      <thead>
+        <th>{% trans "Name" %}</th>
+        <th>{% trans "Status" %}</th>
+        <th>{% trans "Kind" %}</th>
+        <th>{% trans "Relation" %}</th>
+      </thead>
+      <tbody>
+        {% for source in resource.sources.all %}
+        <tr>
+          <th scope="row">
+            <a href="{% url 'manager:resource_detail' manager.name source.uid %}">{{ source.name }}</a>
+          </td>
+          <td>{{ source.status }}</td>
+          <td>{{ source.kind }}</td>
+          <td>{% trans "Target" %}</td>
+        </tr>
+        {% endfor %}
+        {% for target in resource.targets.all %}
+        <tr>
+          <th scope="row">
+            <a href="{% url 'manager:resource_detail' manager.name target.uid %}">{{ target.name }}</a>
+          </td>
+          <td>{{ target.status }}</td>
+          <td>{{ target.kind }}</td>
+          <td>{% trans "Source" %}</td>
+        </tr>
+        {% endfor %}
+
+      </tbody>
+    </table>
+  </div>
+  <div class="tab-pane" id="metadata" role="tabpanel">
+    <pre class="text-light"><code>{{ resource.metadata|to_yaml }}</code></pre>
   </div>
 </div>
 {% endblock %}

@@ -99,6 +99,11 @@ class HelmClient(BaseClient):
         return response
 
     def get_resource_status(self, kind, metadata):
+        if kind == 'helm_chart':
+            return 'active'
+        elif kind == 'helm_release':
+            if metadata['status'] == 'DEPLOYED':
+                return 'active'
         return 'unknown'
 
     def process_resource_metadata(self, kind, metadata):
@@ -116,7 +121,8 @@ class HelmClient(BaseClient):
                                       metadata=resource)
 
     def process_relation_metadata(self):
-        for resource_id, resource in self.resources.get('helm_release', {}).items():
+        for resource_id, resource in self.resources.get('helm_release',
+                                                        {}).items():
             self._create_relation(
                 'defined_by',
                 resource_id,

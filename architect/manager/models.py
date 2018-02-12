@@ -83,6 +83,18 @@ class Resource(models.Model):
     size = models.IntegerField(default=1)
     metadata = YAMLField(blank=True, null=True)
     status = models.CharField(max_length=32, default='unknown')
+    sources = models.ManyToManyField(
+        'Resource',
+        related_name='resource_sources',
+        through='Relationship',
+        through_fields=('target', 'source'),
+    )
+    targets = models.ManyToManyField(
+        'Resource',
+        related_name='resource_targets',
+        through='RelationshipProxy',
+        through_fields=('source', 'target'),
+    )
 
     def __str__(self):
         return '{} {}'.format(self.kind, self.name)
@@ -122,3 +134,9 @@ class Relationship(models.Model):
 
     def name(self):
         return self.__str__()
+
+
+class RelationshipProxy(Relationship):
+    class Meta:
+        proxy = True
+

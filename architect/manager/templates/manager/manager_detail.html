@@ -34,7 +34,7 @@
           <td>
             <a href="{% url 'manager:resource_detail' manager.name resource.uid %}" class="btn btn-sm btn-outline-primary">{% trans "Detail" %}</a>
             {% for action, workflow in workflow_options.items %}
-            <a href="{% url 'manager:resource_action' manager.name resource.uid action %}" class="btn btn-sm btn-outline-primary">{{ workflow.name }}</a>
+            <a href="{% url 'manager:resource_action' manager.name resource.uid action %}" class="open-modal btn btn-sm btn-outline-primary">{{ workflow.name }}</a>
             {% endfor %}
           </td>
         </tr>

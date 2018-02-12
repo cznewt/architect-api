@@ -3,24 +3,6 @@
 
 {% block nav_inventory_cls %} navigation__sub--active{% endblock %}
 
-{% block extra_js %}
-{% comment %}
-<script>
-$(function() {
-  $('#modal-container').on('show.bs.modal', function(event) {
-    var modal = $(this)
-    $.ajax({
-      url: "{% url 'inventory:inventory_delete' inventory.name %}",
-      context: document.body
-    }).done(function(response) {
-      modal.html(response);
-    });
-  });
-})
-</script>
-{% endcomment %}
-{% endblock %}
-
 {% block page_title %}
 "{{ inventory.metadata.name|default:inventory.name }}" {{ inventory.engine }} inventory
 {% endblock %}
@@ -30,7 +12,7 @@ $(function() {
 {% endblock %}
 
 {% block actions %}
-<a href="{% url 'inventory:inventory_delete' inventory.name %}" class="btn btn-sm btn-outline-danger">Delete</a>
+<a href="{% url 'inventory:inventory_delete' inventory.name %}" class="open-modal btn btn-sm btn-outline-danger">Delete</a>
 <a href="{% url 'inventory:inventory_list' %}" class="btn btn-sm btn-outline-primary">List</a>
 {% endblock %}
 

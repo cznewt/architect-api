@@ -3,28 +3,12 @@
 
 {% block nav_manager_cls %} navigation__sub--active{% endblock %}
 
-{% block page_title %}
-Resource action
-{% endblock %}
+{% block page_title %}{{ form.action }}{% endblock %}
 
-{% block title %}
-Resource action
-{% endblock %}
+{% block title %}{{ form.action }}{% endblock %}
 
-{% block classes %}modal-lg{% endblock %}
+{% block classes %}modal-md{% endblock %}
 
 {% block content %}
 {% crispy form form.helper %}
-{% endblock %}
-
-{% block extra_js %}
-{% if XHR_REQUEST|default:False %}
-<script>
-var form_options = {
-  target: '#modal-container',
-  success: function(response) {}
-};
-$('#resource-action').ajaxForm(form_options);
-</script>
-{% endif %}
 {% endblock %}

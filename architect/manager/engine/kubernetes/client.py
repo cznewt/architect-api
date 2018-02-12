@@ -89,6 +89,13 @@ class KubernetesClient(BaseClient):
             self.process_relation_metadata()
 
     def get_resource_status(self, kind, metadata):
+        phase = metadata.get('status', {}).get('phase', '')
+        if kind == 'k8s_pod':
+            if phase == 'Running':
+                return 'active'
+        elif kind == 'k8s_namespace':
+            if phase == 'Active':
+                return 'active'
         return 'unknown'
 
     def process_resource_metadata(self, kind, metadata):

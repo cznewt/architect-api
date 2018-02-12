@@ -1,36 +1,14 @@
 {% extends TEMPLATE_BASE|default:"content_base.html" %}
-{% load compress %}
+{% load i18n %}
 
 {% block nav_inventory_cls %} navigation__sub--active{% endblock %}
 
-{% block extra_js %}
-{% comment %}
-<script>
-$(function() {
-  $('#modal-container').on('show.bs.modal', function(event) {
-    var modal = $(this)
-    $.ajax({
-      url: "{% url 'inventory:inventory_create' %}",
-      context: document.body
-    }).done(function(response) {
-      modal.html(response);
-    });
-  });
-})
-</script>
-{% endcomment %}
-{% endblock %}
+{% block page_title %}{% trans "Available inventories" %}{% endblock %}
 
-{% block page_title %}
-Available inventories
-{% endblock %}
-
-{% block title %}
-Available inventories
-{% endblock %}
+{% block title %}{% trans "Available inventories" %}{% endblock %}
 
 {% block actions %}
-<a href="{% url 'inventory:inventory_create' %}" class="btn btn-sm btn-outline-primary">Create new</a>
+<a href="{% url 'inventory:inventory_create' %}" class="open-modal btn btn-sm btn-outline-primary">Create new</a>
 <a href="{% url 'inventory:inventory_check' %}" class="btn btn-sm btn-outline-secondary">Check status</a>
 {% endblock %}
 

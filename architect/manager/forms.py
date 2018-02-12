@@ -19,7 +19,7 @@ class ManagerActionForm(forms.Form):
                                      'resource_kind': resource_kind,
                                      'resource_action': resource_action})
         self.helper = FormHelper()
-        self.helper.form_id = 'resource-action'
+        self.helper.form_id = 'modal-form'
         self.helper.form_action = action_url
         for param_name, param_field in parameters.items():
             self.fields[param_name] = param_field
@@ -45,7 +45,7 @@ class ResourceActionForm(forms.Form):
             layout_fields.append(param_name)
 
         self.helper = FormHelper()
-        self.helper.form_id = 'resource-action'
+        self.helper.form_id = 'modal-form'
         self.helper.form_action = action_url
         self.helper.layout = Layout(
             Div(

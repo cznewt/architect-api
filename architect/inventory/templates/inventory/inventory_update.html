@@ -1,28 +1,14 @@
 {% extends TEMPLATE_BASE|default:"content_base.html" %}
 {% load crispy_forms_tags %}
 
-{% block page_title %}
-Create new inventory
-{% endblock %}
+{% block nav_inventory_cls %} navigation__sub--active{% endblock %}
 
-{% block title %}
-Create new inventory
-{% endblock %}
+{% block page_title %}Create new inventory{% endblock %}
+
+{% block title %}Create new inventory{% endblock %}
 
 {% block classes %}modal-lg{% endblock %}
 
 {% block content %}
 {% crispy form form.helper %}
-{% endblock %}
-
-{% block extra_js %}
-{% if XHR_REQUEST|default:False %}
-<script>
-var form_options = {
-  target: '#modal-container',
-  success: function(response) {}
-};
-$('#inventory-create').ajaxForm(form_options);
-</script>
-{% endif %}
 {% endblock %}
