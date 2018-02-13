@@ -1,0 +1,72 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-02-13 18:36+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+
+#: templates/inventory/_salt_formulas_overview.html:3
+msgid "Current cluster overrides"
+msgstr ""
+
+#: templates/inventory/_salt_formulas_overview.html:7
+#: templates/inventory/_salt_formulas_overview.html:27
+msgid "Parameter"
+msgstr "Parametr"
+
+#: templates/inventory/_salt_formulas_overview.html:8
+#: templates/inventory/_salt_formulas_overview.html:28
+msgid "Value"
+msgstr "Hodnota"
+
+#: templates/inventory/_salt_formulas_overview.html:21
+msgid "Dynamic class mapping"
+msgstr ""
+
+#: templates/inventory/_salt_formulas_overview.html:24
+msgid "Name"
+msgstr ""
+
+#: templates/inventory/_salt_formulas_overview.html:25
+msgid "Condition"
+msgstr ""
+
+#: templates/inventory/_salt_formulas_overview.html:26
+msgid "Scope"
+msgstr ""
+
+#: templates/inventory/_salt_formulas_overview.html:37
+msgid "Cluster param"
+msgstr ""
+
+#: templates/inventory/_salt_formulas_overview.html:48
+msgid "Node param"
+msgstr ""
+
+#: templates/inventory/_salt_formulas_overview.html:60
+msgid "Node class"
+msgstr ""
+
+#: templates/inventory/inventory_create_success.html:6
+#: templates/inventory/inventory_create_success.html:8
+#: templates/inventory/inventory_create_success.html:13
+msgid "Action success"
+msgstr ""
+
+#: templates/inventory/inventory_list.html:6
+#: templates/inventory/inventory_list.html:8
+msgid "Available inventories"
+msgstr ""

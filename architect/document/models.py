@@ -1,14 +1,22 @@
 
 from django.db import models
 from django.contrib.postgres.fields import JSONField
+from django.utils.translation import gettext_lazy as _
 
 
 class Document(models.Model):
-    name = models.CharField(max_length=255)
-    description = models.TextField(blank=True, null=True)
-    engine = models.CharField(max_length=32, default='dashboard')
-    metadata = JSONField(blank=True, null=True)
-    status = models.CharField(max_length=32, default='active')
+    name = models.CharField(verbose_name=_("Document name"),
+                            max_length=255)
+    description = models.TextField(blank=True,
+                                   null=True)
+    engine = models.CharField(verbose_name=_("Engine"),
+                              max_length=32,
+                              default='dashboard')
+    metadata = JSONField(blank=True,
+                         null=True)
+    status = models.CharField(verbose_name=_("Status"),
+                              max_length=32,
+                              default='active')
 
     def widgets(self):
         return self.metadata.get('widget', {})

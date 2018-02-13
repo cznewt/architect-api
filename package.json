@@ -1,6 +1,6 @@
 {
   "name": "architect-api",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Architect API is server-side of service modeling, management and visualization platform.",
   "main": "index.js",
   "directories": {

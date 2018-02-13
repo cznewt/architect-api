@@ -129,6 +129,11 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
+LANGUAGES = [
+    ('en', 'English'),
+    ('cs', 'Czech'),
+]
+
 if LOGIN_URL is None:
     LOGIN_URL = WEBROOT + 'accounts/login/'
 if LOGOUT_URL is None:
