@@ -19,8 +19,10 @@
     <div class="card border-{{ inventory.color }}">
       <div class="card-body">
         <h4 class="card-title">{{ inventory.metadata.name|default:inventory.name }}</h4>
-        <h6 class="card-subtitle mb-2 text-muted">{{ inventory.engine }}</h6>
+        <h6 class="card-subtitle mb-2 text-muted">{{ inventory.engine }}, {{ inventory.resources.count }} definitions</h6>
+        <h6 class="card-subtitle mb-2 text-muted">{{ inventory.conn_detail }}</h6>
         <a href="{% url 'inventory:inventory_detail' inventory.name %}" class="btn btn-sm btn-outline-primary">Details</a>
+        <a href="{% url 'inventory:inventory_sync' inventory.name %}" class="btn btn-sm btn-outline-secondary">Synchronise</a>
       </div>
     </div>
   </div>

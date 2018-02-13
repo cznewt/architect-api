@@ -71,10 +71,11 @@ def wait_for_resource_state_task(manager_name,
             metadata = manager_client.get_resource_metadata(resource.kind,
                                                             resource.uid)
             manager_client.process_resource_metadata(resource.kind, metadata)
+            manager_client.save()
             meta = manager_client.resources[resource.kind][resource.uid]['metadata']
             logger.info(meta)
-            manager_client.save()
             status = manager_client.get_resource_status(resource.kind, meta)
+            logger.info(status)
         iteration += 1
         logger.info('Waiting for state(s) {} '
                     'on resource {}, iteration {}'.format(', '.join(states),

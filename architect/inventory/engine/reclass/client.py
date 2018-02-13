@@ -3,11 +3,11 @@
 import os
 import re
 import yaml
-from django.conf import settings
 from collections import OrderedDict
 from reclass import get_storage
 from reclass.core import Core
 from architect.inventory.client import BaseClient
+from architect.inventory.models import Resource, Inventory
 from celery.utils.log import get_logger
 
 logger = get_logger(__name__)
@@ -25,6 +25,17 @@ class ReclassClient(BaseClient):
         except Exception:
             status = False
         return status
+
+    def update_resources(self):
+        inventory = Inventory.objects.get(name=self.name)
+        for resource, metadata in self.inventory().items():
+            res, created = Resource.objects.get_or_create(uid=resource,
+                                                          inventory=inventory)
+            if created:
+                res.name = resource
+                res.kind = 'reclass_node'
+                res.metadata = metadata
+                res.save()
 
     def inventory(self, resource=None):
         '''

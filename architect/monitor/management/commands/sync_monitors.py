@@ -10,8 +10,10 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         for engine_name, engine in settings.MONITOR_ENGINES.items():
             if Monitor.objects.filter(name=engine_name).count() == 0:
+                engine_kind = engine.pop('engine')
                 monitor = Monitor(**{
                     'name': engine_name,
+                    'engine': engine_kind,
                     'metadata': engine
                 })
                 monitor.save()

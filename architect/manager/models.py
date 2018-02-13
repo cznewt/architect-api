@@ -57,17 +57,22 @@ class Manager(models.Model):
             output[kind] = Resource.objects.filter(manager=self, kind=kind)
         return output
 
-    def url(self):
+    def conn_detail(self):
         if self.metadata is None:
             return '-'
         elif self.engine == 'amazon':
-            return self.metadata.get('region', '-')
+            return '{} ({})'.format(self.metadata.get('aws_access_key_id', '-'),
+                                    self.metadata.get('region', '-'))
         elif self.engine in ['jenkins', 'saltstack']:
             return self.metadata.get('auth_url', '-')
+        elif self.engine == 'heat':
+            return self.metadata.get('cloud_endpoint', '-')
+        elif self.engine == 'helm':
+            return self.metadata.get('container_endpoint', '-')
         elif self.engine == 'kubernetes':
             return self.metadata.get('cluster', {}).get('server', '-')
         elif self.engine == 'openstack':
-            return self.metadata.get('auth', {}).get('auth_url', '-')
+            return '{}'.format(self.metadata.get('auth', {}).get('auth_url', '-'))
         else:
             return '-'
 
@@ -78,7 +83,9 @@ class Manager(models.Model):
 class Resource(models.Model):
     uid = models.CharField(max_length=511)
     name = models.CharField(max_length=511)
-    manager = models.ForeignKey(Manager, on_delete=models.CASCADE)
+    manager = models.ForeignKey(Manager,
+                                on_delete=models.CASCADE,
+                                related_name='resources')
     kind = models.CharField(max_length=32)
     size = models.IntegerField(default=1)
     metadata = YAMLField(blank=True, null=True)
@@ -139,4 +146,3 @@ class Relationship(models.Model):
 class RelationshipProxy(Relationship):
     class Meta:
         proxy = True
-

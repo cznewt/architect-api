@@ -16,9 +16,9 @@
   <div class="col-sm-6 col-md-4 mb-3 h-75">
     <div class="card border-{{ manager.color }}">
       <div class="card-body">
-        <h4 class="card-title">{{ manager.metadata.name|default:manager.name }}</h4>
-        <h6 class="card-subtitle mb-2 text-muted">{{ manager.engine }}, resources
-</h6>
+        <h4 class="card-title"> {{ manager.metadata.name|default:manager.name }}</h4>
+        <h6 class="card-subtitle mb-2 text-muted">{{ manager.engine }}, {{ manager.resources.count }} resources</h6>
+        <h6 class="card-subtitle mb-2 text-muted">{{ manager.conn_detail }}</h6>
         <a href="{% url 'manager:manager_detail' manager.name %}" class="btn btn-sm btn-outline-primary">Details</a>
         <a href="{% url 'manager:manager_sync' manager.name %}" class="btn btn-sm btn-outline-secondary">Synchronise</a>
       </div>

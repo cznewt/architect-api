@@ -1,0 +1,20 @@
+<table class="table bordered">
+  <thead>
+    <th>Resource</th>
+    <th>Classes</th>
+  </thead>
+  <tbody>
+    {% for resource in inventory.resources.all %}
+    <tr>
+      <th scope="row">
+        <a href="#">{{ resource.name }}</a>
+      </td>
+      <td>
+        {% for class in resource.classes %}
+        {{ class }}
+        {% endfor %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>

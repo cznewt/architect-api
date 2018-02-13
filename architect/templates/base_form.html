@@ -1,0 +1,12 @@
+{% extends TEMPLATE_BASE|default:"content_base.html" %}
+{% load crispy_forms_tags %}
+
+{% block page_title %}{{ form.label|default:"Modal action" }}{% endblock %}
+
+{% block title %}{{ form.label|default:"Modal action" }}{% endblock %}
+
+{% block classes %}{{ form.modal_class|default:"modal-sm" }}{% endblock %}
+
+{% block content %}
+{% crispy form form.helper %}
+{% endblock %}

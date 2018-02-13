@@ -31,6 +31,14 @@ class Monitor(models.Model):
         else:
             return 'warning'
 
+    def conn_detail(self):
+        if self.metadata is None:
+            return '-'
+        elif self.engine in ['graphite', 'influxdb', 'prometheus']:
+            return self.metadata.get('auth_url', '-')
+        else:
+            return '-'
+
     def __str__(self):
         return self.name
 
@@ -41,7 +49,9 @@ class Monitor(models.Model):
 class Resource(models.Model):
     uid = models.CharField(max_length=511)
     name = models.CharField(max_length=511)
-    monitor = models.ForeignKey(Monitor, on_delete=models.CASCADE)
+    monitor = models.ForeignKey(Monitor,
+                                on_delete=models.CASCADE,
+                                related_name='resources')
     kind = models.CharField(max_length=32)
     size = models.IntegerField(default=1)
     metadata = YAMLField(blank=True, null=True)

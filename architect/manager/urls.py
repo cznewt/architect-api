@@ -17,7 +17,7 @@ urlpatterns = [
     path('v1/<manager_name>/query/<query_name>',
          views.ManagerQueryJSONView.as_view(),
          name='manager_query'),
-    path('v1/<manager_name>/action/<resource_kind>/<resource_action>',
+    path('v1/<manager_name>/action/<resource_kind>/<manager_action>',
          views.ManagerActionView.as_view(),
          name='manager_action'),
     path('v1/<manager_name>/resource/<resource_uid>',
@@ -26,4 +26,7 @@ urlpatterns = [
     path('v1/<manager_name>/resource/<resource_uid>/<resource_action>',
          views.ResourceActionView.as_view(),
          name='resource_action'),
+    path('v1/<manager_name>/resource/<resource_uid>/<resource_action>/success',
+         views.ResourceActionSuccessView.as_view(),
+         name='resource_action_success'),
 ]

@@ -1,4 +1,5 @@
 
+import yaml
 import time
 from architect import utils
 from architect.manager.models import Resource, Manager, Relationship
@@ -86,6 +87,12 @@ class BaseClient(object):
                     res.status = self.get_resource_status(resource_type,
                                                           resource['metadata'])
                     res.save()
+                else:
+                    if res.metadata != resource['metadata']:
+                        res.metadata = resource['metadata']
+                        res.status = self.get_resource_status(resource_type,
+                                                              resource['metadata'])
+                        res.save()
 
         res_list = {}
         res_list_rev = {}
@@ -97,9 +104,9 @@ class BaseClient(object):
         rel_list = {}
         rels = Relationship.objects.filter(manager=manager)
         for rel in rels:
-            rel_list['{}-{}'.format(res_list_rev[rel.source_id],
-                                    res_list_rev[rel.source_id])] = rel
-
+            rel_list['{}-{}-{}'.format(res_list_rev[rel.source_id],
+                                       rel.kind,
+                                       res_list_rev[rel.target_id])] = rel
         for relation_type, relations in self.relations.items():
             logger.info('Processed {} {} relations'.format(len(relations),
                                                            relation_type))
@@ -112,8 +119,9 @@ class BaseClient(object):
                     logger.error('No resource with'
                                  ' uid {} found'.format(relation['target']))
                     continue
-                rel_key = '{}-{}'.format(relation['source'],
-                                         relation['target'])
+                rel_key = '{}-{}-{}'.format(relation['source'],
+                                            relation['kind'],
+                                            relation['target'])
                 if rel_key not in rel_list:
                     resource = {
                         'kind': relation['kind'],

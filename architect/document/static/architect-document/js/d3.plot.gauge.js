@@ -8,27 +8,35 @@ var QuantitativePlot = function(QuantitativePlot){
      */
     QuantitativePlot.gauge = function(dataUrl, graphSelector, refreshInterval) {
 
+        var config = {
+            size: $(graphSelector).innerWidth(),
+            label: 'gauge',
+            min: undefined != min ? min : 0,
+            max: undefined != max ? max : 100,
+            minorTicks: 5
+        }
+
+        var range = config.max - config.min;
+        config.yellowZones = [{ from: config.min + range*0.75, to: config.min + range*0.9 }];
+        config.redZones = [{ from: config.min + range*0.9, to: config.max }];
+
+        this.gauge = new Gauge(graphSelector, config);
+
         var graph = this;
         this._data = {};
 
         this.init = function(alreadyRunning) {
 
-            if(alreadyRunning && graph.svg) {
-                graph.chart.remove()
-            }
-
             if(!alreadyRunning){
                 graph.requestData(dataUrl, graph.render);
 
                 $(window).on('resize', function(ev){
-                    graph.init(true);
                     graph.render();
                 });
 
                 if(refreshInterval){
                     setInterval(function(){
                         graph.requestData(dataUrl, function(){
-                            graph.init(true);
                             graph.render();
                         });
                     }, refreshInterval * 1000);
@@ -37,19 +45,8 @@ var QuantitativePlot = function(QuantitativePlot){
         };
 
         this.render = function() {
-            console.log(graphSelector);
-
-            graph.chart = bb.generate({
-              data: {
-                columns: graph._data,
-                type: "pie",
-                onclick: function (d, i) { console.log("onclick", d, i); },
-                onover: function (d, i) { console.log("onover", d, i); },
-                onout: function (d, i) { console.log("onout", d, i); }
-              },
-              bindto: graphSelector
-            });
-
+            console.log(graph._data);
+            graph.gauge.redraw(graph._data);
         };
 
         this.requestData = function(dataUrl, callback){

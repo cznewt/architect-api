@@ -49,16 +49,16 @@
           {% if user.is_authenticated %}
           <ul class="navigation">
             <li class="navigation__sub{% block nav_inventory_cls %}{% endblock %}">
-              <a href="{% url 'inventory:inventory_list' %}"><i class="fa fa-film"></i>Inventories</a>
+              <a href="{% url 'inventory:inventory_list' %}"><i class="fa fa-book"></i>Inventories</a>
             </li>
             <li class="navigation__sub{% block nav_manager_cls %}{% endblock %}">
-              <a href="{% url 'manager:manager_list' %}"><i class="fa fa-search"></i>Managers</a>
+              <a href="{% url 'manager:manager_list' %}"><i class="fa fa-cogs"></i>Managers</a>
             </li>
             <li class="navigation__sub{% block nav_monitor_cls %}{% endblock %}">
-              <a href="{% url 'monitor:monitor_list' %}"><i class="fa fa-list"></i>Monitors</a>
+              <a href="{% url 'monitor:monitor_list' %}"><i class="fa fa-search"></i>Monitors</a>
             </li>
             <li class="navigation__sub{% block nav_document_cls %}{% endblock %}">
-              <a href="{% url 'document:document_list' %}"><i class="fa fa-list"></i>Visualizations</a>
+              <a href="{% url 'document:document_list' %}"><i class="fa fa-line-chart"></i>Visualizations</a>
             </li>
           </ul>
           {% endif %}
@@ -67,7 +67,7 @@
       </aside>
       <section class="content">
         <header class="content__title">
-          <h1>{% block title %}{% endblock %} <div class="float-sm-right">{% block actions %}</div>{% endblock %}</h1>
+          <h1>{% block title %}{% endblock %} <div class="float-sm-right">{% block actions %}{% endblock %}</div></h1>
         </header>
         {% block content %}{% endblock %}
       </section>

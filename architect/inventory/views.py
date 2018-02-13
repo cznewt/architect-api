@@ -43,6 +43,16 @@ class InventoryCheckView(RedirectView):
         return super().get_redirect_url(*args, **kwargs)
 
 
+class InventorySyncView(RedirectView):
+
+    permanent = False
+    pattern_name = 'inventory:inventory_detail'
+
+    def get_redirect_url(self, *args, **kwargs):
+        sync_inventory_resources_task.apply_async((kwargs.get('inventory_name'),))
+        return super().get_redirect_url(*args, **kwargs)
+
+
 class InventoryDetailView(TemplateView):
 
     template_name = "inventory/inventory_detail.html"
@@ -51,15 +61,15 @@ class InventoryDetailView(TemplateView):
         inventory = Inventory.objects.get(name=kwargs.get('inventory_name'))
         context = super().get_context_data(**kwargs)
         context['inventory'] = inventory
-        resource_list = {}
-        classes = inventory.client().class_list()
-        parameters = inventory.client().parameter_list()
-        for parameter in parameters:
-            resource_list[parameter] = {
-                'classes': classes[parameter],
-                'parameters': parameters[parameter]
-            }
-        context['resource_list'] = resource_list
+#        resource_list = {}
+#        classes = inventory.client().class_list()
+#        parameters = inventory.client().parameter_list()
+#        for parameter in parameters:
+#            resource_list[parameter] = {
+#                'classes': classes[parameter],
+#                'parameters': parameters[parameter]
+#            }
+#        context['resource_list'] = resource_list
         return context
 
 
@@ -72,9 +82,9 @@ class InventoryDetailJSONView(JSONDataView):
 
 class InventoryCreateView(FormView):
 
-    template_name = "inventory/inventory_update.html"
+    template_name = "base_form.html"
     form_class = SaltFormulasInventoryCreateForm
-    success_url = '/inventory/v1'
+    success_url = '/inventory/v1/success'
     initial = {
         'classes_dir': '/srv/salt/reclass/classes',
         'nodes_dir': '/srv/salt/reclass/nodes',
@@ -88,9 +98,9 @@ class InventoryCreateView(FormView):
 
 class InventoryDeleteView(FormView):
 
-    template_name = "inventory/inventory_delete.html"
+    template_name = "base_form.html"
     form_class = InventoryDeleteForm
-    success_url = '/inventory/v1'
+    success_url = '/inventory/v1/success'
 
     def get_success_url(self):
         return reverse('inventory:inventory_list')
@@ -114,13 +124,18 @@ class InventoryCreateJSONView(JSONDataView):
         return inventory.inventory()
 
 
+class InventoryCreateSuccessView(TemplateView):
+
+    template_name = "inventory/inventory_create_success.html"
+
+
 class ResourceDetailView(TemplateView):
 
     template_name = "inventory/resource_detail.html"
 
     def get_context_data(self, **kwargs):
-        inventory = Inventory.objects.get(name=kwargs.get('inventory_name'))
         context = super().get_context_data(**kwargs)
+        inventory = Inventory.objects.get(name=kwargs.get('inventory_name'))
         context['inventory'] = inventory
         context['resource_name'] = kwargs.get('resource_name')
         resource_list = inventory.class_list()

@@ -18,9 +18,9 @@
     <table class="table mb-0">
       <thead>
         <tr>
-          <th>{% trans "Resource" %}</th>
+          <th>{% trans "Name" %}</th>
           <th>{% trans "Kind" %}</th>
-          <th>{% trans "Options" %}</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
@@ -31,7 +31,7 @@
             <span class="badge badge-{{ resource.color }}">{{ resource.status }}</span>
           </th>
           <td>{{ resource.kind }}</td>
-          <td>
+          <td align="right">
             <a href="{% url 'manager:resource_detail' manager.name resource.uid %}" class="btn btn-sm btn-outline-primary">{% trans "Detail" %}</a>
             {% for action, workflow in workflow_options.items %}
             <a href="{% url 'manager:resource_action' manager.name resource.uid action %}" class="open-modal btn btn-sm btn-outline-primary">{{ workflow.name }}</a>

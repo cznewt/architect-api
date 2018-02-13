@@ -39,7 +39,6 @@
     <table class="table bordered">
       <thead>
         <th>{% trans "Name" %}</th>
-        <th>{% trans "Status" %}</th>
         <th>{% trans "Kind" %}</th>
         <th>{% trans "Relation" %}</th>
       </thead>
@@ -48,8 +47,8 @@
         <tr>
           <th scope="row">
             <a href="{% url 'manager:resource_detail' manager.name source.uid %}">{{ source.name }}</a>
+            <span class="badge badge-{{ source.color }}">{{ source.status }}</span>
           </td>
-          <td>{{ source.status }}</td>
           <td>{{ source.kind }}</td>
           <td>{% trans "Target" %}</td>
         </tr>
@@ -58,8 +57,8 @@
         <tr>
           <th scope="row">
             <a href="{% url 'manager:resource_detail' manager.name target.uid %}">{{ target.name }}</a>
+            <span class="badge badge-{{ target.color }}">{{ target.status }}</span>
           </td>
-          <td>{{ target.status }}</td>
           <td>{{ target.kind }}</td>
           <td>{% trans "Source" %}</td>
         </tr>
@@ -69,7 +68,7 @@
     </table>
   </div>
   <div class="tab-pane" id="metadata" role="tabpanel">
-    <pre class="text-light"><code>{{ resource.metadata|to_yaml }}</code></pre>
+    <pre class="text-light mt-2 mb-2 mr-3 ml-3"><code>{{ resource.metadata|to_yaml }}</code></pre>
   </div>
 </div>
 {% endblock %}

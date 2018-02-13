@@ -1,0 +1,20 @@
+{% extends TEMPLATE_BASE|default:"content_base.html" %}
+{% load i18n %}
+
+{% block nav_manager_cls %} navigation__sub--active{% endblock %}
+
+{% block page_title %}{% trans "Action success" %}{% endblock %}
+
+{% block title %}{% trans "Action success" %}{% endblock %}
+
+{% block classes %}modal-sm{% endblock %}
+
+{% block content %}
+<div class="alert alert-success">{% trans "Action success" %}</div>
+{% endblock %}
+
+{% block extra_js %}
+{% if XHR_REQUEST|default:False %}
+$('#modal-container').modal('hide');
+{% endif %}
+{% endblock %}

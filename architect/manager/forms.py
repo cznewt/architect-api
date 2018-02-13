@@ -4,6 +4,7 @@ from django.urls import reverse
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Div, Submit
 from .tasks import process_resource_action_task
+from .models import Resource
 
 
 class ManagerActionForm(forms.Form):
@@ -44,6 +45,7 @@ class ResourceActionForm(forms.Form):
             self.fields[param_name] = param_field
             layout_fields.append(param_name)
 
+        self.label = self.manager.client()._schema['resource'][self.resource.kind]['workflow'][self.action]['name']
         self.helper = FormHelper()
         self.helper.form_id = 'modal-form'
         self.helper.form_action = action_url

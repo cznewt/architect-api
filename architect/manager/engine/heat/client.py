@@ -71,10 +71,13 @@ class HeatClient(BaseClient):
         if not isinstance(metadata, dict):
             return 'unknown'
         if kind == 'heat_stack':
-            if metadata.get('stack_status', 'CREATE_IN_PROGRESS'):
+            stack_status = metadata.get('stack_status', '')
+            if stack_status in ['CREATE_IN_PROGRESS', 'UPDATE_IN_PROGRESS']:
                 return 'build'
-            elif metadata.get('stack_status', 'ACTIVE'):
+            elif stack_status in ['CREATE_COMPLETE', 'UPDATE_COMPLETE']:
                 return 'active'
+            elif stack_status in ['CREATE_FAILED', 'UPDATE_FAILED', 'DELETE_FAILED']:
+                return 'error'
         return 'unknown'
 
     def get_resource_metadata(self, kind, uid=None):
@@ -115,7 +118,7 @@ class HeatClient(BaseClient):
         elif kind == 'heat_stack':
             for resource_name, resource in metadata.items():
                 self._create_resource(resource_name,
-                                      resource_name,
+                                      resource['stack_name'],
                                       'heat_stack',
                                       metadata=resource)
 

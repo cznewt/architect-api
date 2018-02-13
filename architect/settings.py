@@ -152,7 +152,7 @@ MANAGER_ENGINES = CONFIG.get('manager', {})
 MONITOR_ENGINES = CONFIG.get('monitor', {})
 DOCUMENT_ENGINES = CONFIG.get('document', {})
 
-INVENTORY_BASE_DIR = '/srv/architect'
+INVENTORY_BASE_DIR = '/srv/architect/nodes'
 INVENTORY_RECLASS_CLASSES_DIRS = CONFIG.get('inventory_reclass_classes_dirs', [])
 INVENTORY_SALT_FORMULAS_DIRS = CONFIG.get('inventory_salt_formulas_dirs', [])
 

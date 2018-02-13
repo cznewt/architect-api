@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.core.cache import cache
+from django.urls import reverse
 from django.conf import settings
 from django.views.generic.base import TemplateView, RedirectView
 from django.views.generic.edit import FormView
@@ -136,9 +137,17 @@ class ManagerQueryJSONView(JSONDataView):
 
 class ResourceActionView(FormView):
 
-    template_name = "manager/resource_action.html"
+    template_name = "base_form.html"
     form_class = ResourceActionForm
-    success_url = '/manager/v1'
+
+    def get_success_url(self):
+        kwargs = {
+            'manager_name': self.kwargs.get('manager_name'),
+            'resource_uid': self.kwargs.get('resource_uid'),
+            'resource_action': self.kwargs.get('resource_action')
+        }
+        action_url = reverse('manager:resource_action_success', kwargs=kwargs)
+        return action_url
 
     def get_form_kwargs(self):
         manager = Manager.objects.get(name=self.kwargs.get('manager_name'))
@@ -158,6 +167,11 @@ class ResourceActionView(FormView):
     def form_valid(self, form):
         form.handle()
         return super().form_valid(form)
+
+
+class ResourceActionSuccessView(TemplateView):
+
+    template_name = "manager/resource_action_success.html"
 
 
 class ResourceDetailView(TemplateView):

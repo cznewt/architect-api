@@ -5,7 +5,7 @@ query:
     layout: hierarchy
     hierarchy_layers:
       0:
-        name: Helm
+        name: Helm Charts
         kind:
       1:
         kind: helm_chart

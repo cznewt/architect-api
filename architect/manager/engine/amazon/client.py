@@ -43,6 +43,12 @@ class AmazonWebServicesClient(BaseClient):
         self.process_relation_metadata()
 
     def get_resource_status(self, kind, metadata):
+        if kind == 'ec2_instance':
+            if metadata.get('State', {}).get('Name', '') == 'running':
+                return 'active'
+        elif kind == 'ec2_vpc':
+            if metadata.get('State', '') == 'available':
+                return 'active'
         return 'unknown'
 
     def process_relation_metadata(self):

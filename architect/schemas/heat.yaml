@@ -1,6 +1,17 @@
 query:
   heat_complete_graph:
     layout: graph
+  heat_template_stacks_tree:
+    layout: hierarchy
+    hierarchy_layers:
+      0:
+        name: Heat heat_template_stacks_tree
+        kind:
+      1:
+        kind: heat_template
+      2:
+        kind: heat_stack
+        target: defined_by
 relation:
   defined_by:
     relation:

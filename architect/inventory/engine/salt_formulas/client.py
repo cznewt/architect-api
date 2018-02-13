@@ -14,6 +14,7 @@ from reclass import get_storage
 from reclass.core import Core
 from architect import utils
 from architect.inventory.client import BaseClient
+from architect.inventory.models import Resource, Inventory
 from celery.utils.log import get_logger
 from jsonschema import validate
 from jsonschema.validators import validator_for
@@ -67,6 +68,17 @@ class SaltFormulasClient(BaseClient):
         except Exception:
             status = False
         return status
+
+    def update_resources(self):
+        inventory = Inventory.objects.get(name=self.name)
+        for resource, metadata in self.inventory().items():
+            res, created = Resource.objects.get_or_create(uid=resource,
+                                                          inventory=inventory)
+            if created:
+                res.name = resource
+                res.kind = 'reclass_node'
+                res.metadata = metadata
+                res.save()
 
     def inventory(self, resource=None):
         '''
@@ -135,10 +147,10 @@ class SaltFormulasClient(BaseClient):
                 service_name = service.split('/')[-1]
                 output[service_name] = {
                     'path': service,
-                    'metadata': self.parse_metadata_file(service),
-                    'readme': self.parse_readme_file(service),
-                    'schemas': self.parse_schema_files(service),
-                    'support_files': self.parse_support_files(service)
+                    'metadata': {},  # self.parse_metadata_file(service),
+                    'readme': {},  # self.parse_readme_file(service),
+                    'schemas': {},  # self.parse_schema_files(service),
+                    'support_files': {},  # self.parse_support_files(service)
                 }
         return output
 
@@ -296,3 +308,8 @@ class SaltFormulasClient(BaseClient):
         '''
         classes = self.raw_class_list()
         return {name: classes.get(name)}
+
+    def resource_create(self, name, metadata):
+        file_name = '{}/{}.yml'.format(self.metadata['node_dir'], name)
+        with open(file_name, 'w+') as file_handler:
+            yaml.safe_dump(metadata, file_handler, default_flow_style=False)

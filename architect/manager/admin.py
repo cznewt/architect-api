@@ -33,7 +33,7 @@ clear_manager_resources.short_description = "Clear resources of selected manager
 
 @admin.register(Manager)
 class ManagerAdmin(admin.ModelAdmin):
-    list_display = ('name', 'engine', 'status', 'url')
+    list_display = ('name', 'engine', 'status', 'conn_detail')
     list_filter = ('engine', 'status')
     actions = [
         get_manager_status,
