@@ -1,0 +1,68 @@
+{% load i18n %}
+
+<h6 class="mt-3">{% trans "Current cluster overrides" %}</h6>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>{% trans "Parameter" %}</th>
+      <th>{% trans "Value" %}</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for param, value in inventory.cache.overrides.items %}
+    <tr>
+      <th scope="row">{{ param }}</th>
+      <td>{{ value }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<h6 class="mt-3">{% trans "Dynamic class mapping" %}</h6>
+<table class="table table-striped">
+  <thead>
+    <th>{% trans "Name" %}</th>
+    <th>{% trans "Condition" %}</th>
+    <th>{% trans "Scope" %}</th>
+    <th>{% trans "Parameter" %}</th>
+    <th>{% trans "Value" %}</th>
+  </thead>
+  <tbody>
+    {% for mapping_name, mapping in inventory.cache.class_mapping.items %}
+    {% if mapping.cluster_param %}
+    {% for param, value in mapping.cluster_param.items %}
+    <tr>
+      <th scope="row">{{ mapping_name }}</th>
+      <td>{{ mapping.expression }}</td>
+      <td>{% trans "Cluster param" %}</td>
+      <td>{{ param }}</td>
+      <td>{{ value.value_template }}</td>
+    </tr>
+    {% endfor %}
+    {% endif %}
+    {% if mapping.node_param %}
+    {% for param, value in mapping.node_param.items %}
+    <tr>
+      <th scope="row">{{ mapping_name }}</th>
+      <td>{{ mapping.expression }}</td>
+      <td>{% trans "Node param" %}</td>
+      <td>{{ param }}</td>
+      <td>{{ value.value_template }}</td>
+    </tr>
+    {% endfor %}
+    {% endif %}
+    {% if mapping.node_class %}
+    {% for param, value in mapping.node_class.items %}
+    {% for class in value %}
+    <tr>
+      <th scope="row">{{ mapping_name }}</th>
+      <td>{{ mapping.expression }}</td>
+      <td>{% trans "Node class" %}</td>
+      <td colspan="2">class <strong>{{ class }}</strong></td>
+    </tr>
+    {% endfor %}
+    {% endfor %}
+    {% endif %}
+    {% endfor %}
+  </tbody>
+</table>

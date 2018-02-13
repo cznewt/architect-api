@@ -4,6 +4,8 @@ import os
 import re
 import yaml
 import glob
+import six
+from string import Template
 import docutils
 from collections import OrderedDict
 from docutils.frontend import OptionParser
@@ -68,6 +70,7 @@ class SaltFormulasClient(BaseClient):
         except Exception:
             status = False
         return status
+
 
     def update_resources(self):
         inventory = Inventory.objects.get(name=self.name)
@@ -313,3 +316,112 @@ class SaltFormulasClient(BaseClient):
         file_name = '{}/{}.yml'.format(self.metadata['node_dir'], name)
         with open(file_name, 'w+') as file_handler:
             yaml.safe_dump(metadata, file_handler, default_flow_style=False)
+
+    def init_overrides(self):
+        file_name = '{}/overrides/{}.yml'.format(self.metadata['class_dir'], self.name)
+        if 'cluster_name' not in self.metadata:
+            return
+        metadata = {
+            'parameters': {
+                '_param': {
+                    'cluster_name': self.metadata['cluster_name'],
+                    'cluster_domain': self.metadata['cluster_domain']
+                }
+            }
+        }
+        with open(file_name, 'w+') as file_handler:
+            yaml.safe_dump(metadata, file_handler, default_flow_style=False)
+
+    def get_overrides(self):
+        file_name = '{}/overrides/{}.yml'.format(self.metadata['class_dir'], self.name)
+        if 'cluster_name' not in self.metadata:
+            return {}
+        with open(file_name, 'r') as file_handler:
+            metadata = yaml.load(file_handler.read())
+        return metadata.get('parameters', {}).get('_param', {})
+
+    def node_classify(self, node_name, node_data={}, class_mapping={}, **kwargs):
+        '''
+        CLassify node by given class_mapping dictionary
+        '''
+        node_data = {k: v for (k, v) in node_data.items() if not k.startswith('__')}
+
+        classes = []
+        node_params = {}
+        cluster_params = {}
+        ret = {'node_create': '', 'cluster_param': {}}
+
+        for type_name, node_type in class_mapping.items():
+            valid = self._validate_condition(node_data, node_type.get('expression', ''))
+            if valid:
+                gen_classes = self._get_node_classes(node_data, node_type.get('node_class', {}))
+                classes = classes + gen_classes
+                gen_node_params = self._get_params(node_data, node_type.get('node_param', {}))
+                node_params.update(gen_node_params)
+                gen_cluster_params = self._get_params(node_data, node_type.get('cluster_param', {}))
+                cluster_params.update(gen_cluster_params)
+
+        if classes:
+            create_kwargs = {'name': node_name, 'path': '_generated', 'classes': classes, 'parameters': node_params}
+            ret['node_create'] = node_create(**create_kwargs)
+
+        for name, value in cluster_params.items():
+            ret['cluster_param'][name] = cluster_meta_set(name, value)
+
+        return ret
+
+    def _get_node_classes(self, node_data, class_mapping_fragment):
+        classes = []
+
+        for value_tmpl_string in class_mapping_fragment.get('value_template', []):
+            value_tmpl = Template(value_tmpl_string.replace('<<', '${')
+                                                   .replace('>>', '}'))
+            rendered_value = value_tmpl.safe_substitute(node_data)
+            classes.append(rendered_value)
+
+        for value in class_mapping_fragment.get('value', []):
+            classes.append(value)
+
+        return classes
+
+    def _get_params(self, node_data, class_mapping_fragment):
+        params = {}
+
+        for param_name, param in class_mapping_fragment.items():
+            value = param.get('value', None)
+            value_tmpl_string = param.get('value_template', None)
+            if value:
+                params.update({param_name: value})
+            elif value_tmpl_string:
+                value_tmpl = Template(value_tmpl_string.replace('<<', '${')
+                                                       .replace('>>', '}'))
+                rendered_value = value_tmpl.safe_substitute(node_data)
+                params.update({param_name: rendered_value})
+
+        return params
+
+    def _validate_condition(self, node_data, expressions):
+        """
+        Allow string expression definition for single expression conditions
+        """
+        if isinstance(expressions, six.string_types):
+            expressions = [expressions]
+
+        result = []
+        for expression_tmpl_string in expressions:
+            expression_tmpl = Template(expression_tmpl_string.replace('<<', '${')
+                                                             .replace('>>', '}'))
+            expression = expression_tmpl.safe_substitute(node_data)
+
+            if expression and expression == 'all':
+                result.append(True)
+            elif expression:
+                val_a = expression.split('__')[0]
+                val_b = expression.split('__')[2]
+                condition = expression.split('__')[1]
+                if condition == 'startswith':
+                    result.append(val_a.startswith(val_b))
+                elif condition == 'equals':
+                    result.append(val_a == val_b)
+
+        return all(result)

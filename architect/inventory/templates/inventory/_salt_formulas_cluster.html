@@ -1,0 +1,37 @@
+
+<table class="table bordered">
+  <thead>
+    <tr class="row m-0">
+      <th class="d-inline-block col-6">Class</th>
+      <th class="d-inline-block col-6">Properties</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for class_name, class in inventory.client.cluster_class_list.items %}
+    <tr class="row m-0">
+      <th class="d-inline-block col-6" scope="row">
+        <a href="#">{{ class_name|lcut:"cluster." }}</a>
+      </th>
+      <td class="d-inline-block col-6">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">Required parameters
+            {% for param in class.params_required %}
+            <span class="badge">{{ param }}</span>
+            {% endfor %}
+          </li>
+          <li class="list-group-item">Created parameters
+            {% for param in class.params_created %}
+            <span class="badge">{{ param }}</span>
+            {% endfor %}
+          </li>
+          <li class="list-group-item">Included classes
+            {% for param in class.classes %}
+            <span class="badge">{{ param }}</span>
+            {% endfor %}
+          </li>
+        </ul>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>

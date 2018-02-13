@@ -1,13 +1,13 @@
 
 from django.db import models
-from yamlfield.fields import YAMLField
+from django.contrib.postgres.fields import JSONField
 
 
 class Document(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
     engine = models.CharField(max_length=32, default='dashboard')
-    metadata = YAMLField(blank=True, null=True)
+    metadata = JSONField(blank=True, null=True)
     status = models.CharField(max_length=32, default='active')
 
     def widgets(self):

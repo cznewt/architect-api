@@ -1,4 +1,5 @@
 
+import yaml
 import os
 import re
 from crispy_forms.helper import FormHelper
@@ -50,7 +51,7 @@ class InventoryDeleteForm(forms.Form):
 
 class SaltFormulasInventoryCreateForm(forms.Form):
 
-    inventory_name = forms.SlugField(label="Slug name")
+    inventory_name = forms.CharField(label="Inventory name")
     display_name = forms.CharField(required=False, label="Display name")
     cluster_name = forms.SlugField(required=False)
     cluster_domain = forms.CharField(required=False)
@@ -126,7 +127,10 @@ class SaltFormulasInventoryCreateForm(forms.Form):
             print(cluster_dir)
             if not os.path.exists(cluster_dir):
                 raise forms.ValidationError(
-                    "This cluster is not defined in selected classes."
+                    "Cluster {} is not defined in selected classes {}.".format(
+                        cluster_name,
+                        class_dir
+                    )
                 )
             if cleaned_data.get("cluster_domain") == '':
                 raise forms.ValidationError(
@@ -141,6 +145,7 @@ class SaltFormulasInventoryCreateForm(forms.Form):
         kwargs = {
             'name': self.cleaned_data['inventory_name'],
             'engine': 'salt-formulas',
+            'status': 'active',
             'metadata': {
                 'name': self.cleaned_data['inventory_name'],
                 'class_dir': self.cleaned_data['class_dir'],
@@ -159,7 +164,10 @@ class SaltFormulasInventoryCreateForm(forms.Form):
         if self.cleaned_data['cluster_name'] != '' and self.cleaned_data['cluster_domain'] != '':
             node_name = 'cfg01.{}'.format(self.cleaned_data['cluster_domain'])
             node_metadata = {
-                'classes': ['cluster.{}.infra.config'.format(self.cleaned_data['cluster_name'])],
+                'classes': [
+                    'cluster.{}.infra.config'.format(self.cleaned_data['cluster_name']),
+                    'overrides.{}'.format(self.cleaned_data['inventory_name'])
+                ],
                 'parameters': {
                     '_param': {
                         'linux_system_codename': 'xenial'
@@ -172,4 +180,29 @@ class SaltFormulasInventoryCreateForm(forms.Form):
                     }
                 }
             }
+            inventory.client().init_overrides()
             inventory.client().resource_create(node_name, node_metadata)
+            reclass_meta = inventory.client().inventory()[node_name]['parameters']['reclass']['storage']
+            for node_name, node in reclass_meta['node'].items():
+                node_name = '{}.{}'.format(node['name'], node['domain'])
+                node_classes = node['classes'] + ['overrides.{}'.format(self.cleaned_data['inventory_name'])]
+                node_metadata = {
+                    'classes': node_classes,
+                    'parameters': {
+                        '_param': node['params'],
+                        'linux': {
+                            'system': {
+                                'name': node['name'],
+                                'domain': node['domain']
+                            }
+                        }
+                    }
+                }
+                inventory.client().resource_create(node_name, node_metadata)
+
+            inventory.cache = {
+                'class_mapping': reclass_meta['class_mapping'],
+                'overrides': inventory.client().get_overrides()
+            }
+            inventory.save()
+            inventory.client().update_resources()

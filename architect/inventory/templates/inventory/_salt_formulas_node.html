@@ -1,4 +1,5 @@
-<table class="table bordered">
+
+<table class="table table-striped">
   <thead>
     <th>Resource</th>
     <th>Classes</th>
@@ -10,8 +11,8 @@
         <a href="#">{{ resource.name }}</a>
       </td>
       <td>
-        {% for class in resource.classes %}
-        {{ class }}
+        {% for class in resource.metadata.applications %}
+        <span class="badge">{{ class }}</span>
         {% endfor %}
       </td>
     </tr>

@@ -13,7 +13,6 @@ Django
 djangorestframework
 django-compressor
 django-jsonview
-django-yamlfield
 django-extensions
 django-npm
 django_select2

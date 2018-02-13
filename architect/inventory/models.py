@@ -1,16 +1,16 @@
 
 from architect import utils
 from django.db import models
-from django.urls import reverse
 from django.utils.safestring import mark_safe
-from yamlfield.fields import YAMLField
+from django.contrib.postgres.fields import JSONField
 
 
 class Inventory(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
     engine = models.CharField(max_length=32, default='reclass')
-    metadata = YAMLField(blank=True, null=True)
+    metadata = JSONField(blank=True, null=True)
+    cache = JSONField(blank=True, null=True)
     status = models.CharField(max_length=32, default='unknown')
 
     def client(self):
@@ -64,7 +64,8 @@ class Resource(models.Model):
                                   related_name='resources')
     kind = models.CharField(max_length=32)
     size = models.IntegerField(default=1)
-    metadata = YAMLField(blank=True, null=True)
+    metadata = JSONField(blank=True, null=True)
+    cache = JSONField(blank=True, null=True)
     status = models.CharField(max_length=32, default='unknown')
 
     def __str__(self):

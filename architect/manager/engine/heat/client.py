@@ -169,12 +169,11 @@ class HeatClient(BaseClient):
                                                           resource['id'],
                                                           ['active', 'error']))
 
-
     def get_resource_action_fields(self, resource, action):
         fields = {}
         if resource.kind == 'heat_template':
             if action == 'create':
-                initial_name = '{}-{}'.format(resource.name.replace('.hot', ''),
+                initial_name = '{}-{}'.format(resource.name.replace('.hot', '').replace('_', '-'),
                                               self.generate_name())
                 fields['name'] = forms.CharField(label='Stack name',
                                                  initial=initial_name)

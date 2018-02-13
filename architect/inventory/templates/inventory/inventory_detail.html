@@ -61,7 +61,10 @@
 {% if inventory.engine == 'salt-formulas' %}
 <ul class="nav nav-tabs" role="tablist">
   <li class="nav-item">
-    <a class="nav-link active" data-toggle="tab" href="#node" role="tab">Node definitions</a>
+    <a class="nav-link active" data-toggle="tab" href="#overview" role="tab">Inventory overview</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" data-toggle="tab" href="#node" role="tab">Node definitions</a>
   </li>
   <li class="nav-item">
     <a class="nav-link" data-toggle="tab" href="#cluster" role="tab">Cluster definitions</a>
@@ -74,13 +77,16 @@
   </li>
 </ul>
 <div class="tab-content">
+  <div class="tab-pane active" id="overview" role="tabpanel">
+    {% include "inventory/_salt_formulas_overview.html" %}
+  </div>
   <div class="tab-pane" id="service" role="tabpanel">
   </div>
   <div class="tab-pane" id="system" role="tabpanel">
   </div>
   <div class="tab-pane" id="cluster" role="tabpanel">
   </div>
-  <div class="tab-pane active" id="node" role="tabpanel">
+  <div class="tab-pane" id="node" role="tabpanel">
     {% include "inventory/_salt_formulas_node.html" %}
   </div>
 </div>

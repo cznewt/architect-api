@@ -1,10 +1,15 @@
 # -*- coding: utf-8 -*-
 
+import json
 from django.core.cache import cache
 from django.urls import reverse
 from django.conf import settings
+from django.http import HttpResponse, JsonResponse
 from django.views.generic.base import TemplateView, RedirectView
 from django.views.generic.edit import FormView
+from django.views import View
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
 from architect.views import JSONDataView
 from .forms import ManagerActionForm, ResourceActionForm
 from .models import Resource, Manager
@@ -75,6 +80,42 @@ class ManagerActionView(FormView):
     def form_valid(self, form):
         form.handle()
         return super().form_valid(form)
+
+
+class ManagerCreateJSONView(View):
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super(ManagerCreateJSONView, self).dispatch(request, *args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        return HttpResponse('Only POST method is supported.')
+
+    def post(self, request, *args, **kwargs):
+        metadata = json.loads(request.body.decode("utf-8"))
+        current_managers = Manager.objects.filter(name=metadata.get('manager_name'))
+        if current_managers.count() > 0:
+            return JsonResponse({'error': "Manager with name '{}' already exists.".format(metadata.get('manager_name'))})
+        manager_kwargs = {
+            'name': metadata.get('manager_name'),
+            'engine': 'saltstack',
+            'metadata': {
+                "auth_url": metadata.get('manager_url'),
+                "password": metadata.get('manager_password'),
+                "username": metadata.get('manager_user')
+            }
+        }
+        print(manager_kwargs)
+        manager = Manager(**manager_kwargs)
+        if manager.client().check_status():
+            manager.status = 'active'
+        else:
+            manager.status = 'error'
+        manager.save()
+        status = {'success': "Manager '{}' was created.".format(metadata.get('manager_name'))}
+#        status = {'failure': 'Inventory form validation failed: {}.'.format(errors)}
+        return JsonResponse(status)
+
 
 
 class ManagerSyncView(RedirectView):
