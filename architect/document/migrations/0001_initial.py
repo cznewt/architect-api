@@ -6,8 +6,6 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    replaces = [('document', '0001_initial'), ('document', '0002_auto_20180213_1045')]
-
     initial = True
 
     dependencies = [

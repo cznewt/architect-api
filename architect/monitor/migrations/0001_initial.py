@@ -7,8 +7,6 @@ import django.db.models.deletion
 
 class Migration(migrations.Migration):
 
-    replaces = [('monitor', '0001_initial'), ('monitor', '0002_auto_20180202_1104'), ('monitor', '0003_auto_20180208_2121'), ('monitor', '0004_auto_20180213_1045')]
-
     initial = True
 
     dependencies = [
