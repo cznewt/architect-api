@@ -20,6 +20,7 @@
         <tr>
           <th>{% trans "Name" %}</th>
           <th>{% trans "Kind" %}</th>
+          <th style="text-align:right;">{% trans "Relations" %}</th>
           <th></th>
         </tr>
       </thead>
@@ -31,6 +32,7 @@
             <span class="badge badge-{{ resource.color }}">{{ resource.status }}</span>
           </th>
           <td>{{ resource.kind }}</td>
+          <td style="text-align:right;">{{ resource.relations.count }}</td>
           <td align="right">
             <a href="{% url 'manager:resource_detail' manager.name resource.uid %}" class="btn btn-sm btn-outline-primary">{% trans "Detail" %}</a>
             {% for action, workflow in workflow_options.items %}

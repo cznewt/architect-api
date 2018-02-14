@@ -177,13 +177,20 @@ class SaltFormulasInventoryCreateForm(forms.Form):
                             'name': 'cfg01',
                             'domain': self.cleaned_data['cluster_domain']
                         }
+                    },
+                    'salt': {
+                        'master': {
+                            'pillar': {
+                                'engine': 'architect'
+                            }
+                        }
                     }
                 }
             }
             inventory.client().init_overrides()
             inventory.client().resource_create(node_name, node_metadata)
-            reclass_meta = inventory.client().inventory()[node_name]['parameters']['reclass']['storage']
-            for node_name, node in reclass_meta['node'].items():
+            reclass_meta = inventory.client().inventory()[node_name]['parameters'].get('reclass', {}).get('storage', {})
+            for node_name, node in reclass_meta.get('node', {}).items():
                 node_name = '{}.{}'.format(node['name'], node['domain'])
                 node_classes = node['classes'] + ['overrides.{}'.format(self.cleaned_data['inventory_name'])]
                 node_metadata = {
@@ -201,7 +208,7 @@ class SaltFormulasInventoryCreateForm(forms.Form):
                 inventory.client().resource_create(node_name, node_metadata)
 
             inventory.cache = {
-                'class_mapping': reclass_meta['class_mapping'],
+                'class_mapping': reclass_meta.get('class_mapping', {}),
                 'overrides': inventory.client().get_overrides()
             }
             inventory.save()

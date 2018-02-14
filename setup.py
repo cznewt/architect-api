@@ -13,8 +13,8 @@ with open('./requirements/base.txt') as _requirements:
 with open('./requirements/test.txt') as _tests_requirements:
     tests_requirements = [r.strip() for r in _tests_requirements.readlines()]
 
-DESCRIPTION = """Architect API is server-side of service modeling,
-management and visualization platform."""
+DESCRIPTION = "architect-api is a server API and UI of Architect, the service modeling, management and visualization platform."
+
 
 setup(
     name='architect-api',

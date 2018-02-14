@@ -62,15 +62,6 @@ class InventoryDetailView(TemplateView):
         inventory = Inventory.objects.get(name=kwargs.get('inventory_name'))
         context = super().get_context_data(**kwargs)
         context['inventory'] = inventory
-#        resource_list = {}
-#        classes = inventory.client().class_list()
-#        parameters = inventory.client().parameter_list()
-#        for parameter in parameters:
-#            resource_list[parameter] = {
-#                'classes': classes[parameter],
-#                'parameters': parameters[parameter]
-#            }
-#        context['resource_list'] = resource_list
         return context
 
 
