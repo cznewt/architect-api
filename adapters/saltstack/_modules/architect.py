@@ -5,46 +5,21 @@ Salt modules to work with the Architect service.
 
 # Import python libs
 from __future__ import absolute_import
+import yaml
+from architect_client.libarchitect import ArchitectClient
 import logging
 
 __virtualname__ = 'architect'
 
-log = logging.getlogger(__name__)
+logger = logging.getLogger(__name__)
 
 
 def __virtual__():
     return __virtualname__
 
 
-def _get_url(opts):
-    '''
-    Get the Architect service url from options.
-    '''
-    return "{}://{}:{}/salt/{}/enc/{}".format('http',
-                                              opts.get('host'),
-                                              opts.get('port'),
-                                              'v1',
-                                              opts.get('project'))
-
-
-def _get_options():
-    '''
-    Get the Architect service options from Salt config.
-    '''
-    defaults = {
-        'project': 'newt.work',
-        'host': '127.0.0.1',
-        'port': 8181,
-        'username': None,
-        'passwd': None
-    }
-    _options = {}
-
-    for key, default in defaults.items():
-        config_key = '{}.{}'.format(__virtualname__, key)
-        _options[key] = __salt__['config.get'](config_key, default)
-
-    return _options
+def _client():
+    return ArchitectClient()
 
 
 def get_inventory():
@@ -57,19 +32,9 @@ def get_inventory():
 
         salt-call architect.get_inventory
     '''
-    options = _get_options()
-    url = _get_url(options)
-    data = __salt__['http.query'](url=url, decode=True, decode_type='yaml')
+    data = yaml.load(_client().get_data())
 
-    if 'dict' in data:
-        return data['dict']
-
-    log.error("Error on query: %s\nMore Info:\n", url)
-
-    for key in data:
-        log.error('%s: %s', key, data[key])
-
-    return {}
+    return data
 
 
 def get_node(name):
@@ -82,18 +47,28 @@ def get_node(name):
 
         salt-call architect.get_node node.domain
     '''
-    options = _get_options()
-    url = _get_url(options)
-    data = __salt__['http.query'](url=url, decode=True, decode_type='yaml')
 
-    if 'dict' in data:
-        return {
-            name: data['dict'][name]
-        }
+    data = yaml.load(_client().get_data(name))
 
-    log.error("Error on query: %s\nMore Info:\n", url)
+    return {
+        name: data
+    }
 
-    for key in data:
-        log.error('%s: %s', key, data[key])
 
-    return {}
+def collect_minion_info():
+    '''
+    Get Salt minion metadata and forward it to the Architect master.
+
+    CLI Examples:
+
+    .. code-block:: bash
+
+        salt-call architect.collect_minion_info
+    '''
+
+    data = {
+        'pillar': __salt__['pillar.data'](),
+        'grain': __salt__['grains.items'](),
+    }
+    output = _client().push_salt_minion({data['grain']['id']: data})
+    return output

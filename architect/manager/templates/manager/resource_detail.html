@@ -46,7 +46,7 @@
         {% for source in resource.sources.all %}
         <tr>
           <th scope="row">
-            <a href="{% url 'manager:resource_detail' manager.name source.uid %}">{{ source.name }}</a>
+            <a href="{% url 'manager:resource_detail' manager.name source.id %}">{{ source.name }}</a>
             <span class="badge badge-{{ source.color }}">{{ source.status }}</span>
           </td>
           <td>{{ source.kind }}</td>
@@ -56,7 +56,7 @@
         {% for target in resource.targets.all %}
         <tr>
           <th scope="row">
-            <a href="{% url 'manager:resource_detail' manager.name target.uid %}">{{ target.name }}</a>
+            <a href="{% url 'manager:resource_detail' manager.name target.id %}">{{ target.name }}</a>
             <span class="badge badge-{{ target.color }}">{{ target.status }}</span>
           </td>
           <td>{{ target.kind }}</td>

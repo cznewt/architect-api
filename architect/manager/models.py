@@ -1,4 +1,5 @@
 
+import urllib
 from django.db import models
 from django.db.models import Q
 from django.contrib.postgres.fields import JSONField

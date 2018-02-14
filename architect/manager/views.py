@@ -117,7 +117,6 @@ class ManagerCreateJSONView(View):
         return JsonResponse(status)
 
 
-
 class ManagerSyncView(RedirectView):
 
     permanent = False
@@ -225,5 +224,5 @@ class ResourceDetailView(TemplateView):
         resource_uid = kwargs.get('resource_uid')
         context['manager'] = manager
         context['resource'] = Resource.objects.get(manager=manager,
-                                                   uid=resource_uid)
+                                                   id=resource_uid)
         return context

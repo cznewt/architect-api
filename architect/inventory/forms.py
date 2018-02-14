@@ -182,6 +182,16 @@ class SaltFormulasInventoryCreateForm(forms.Form):
                         'master': {
                             'pillar': {
                                 'engine': 'architect'
+                            },
+                            'engine': {
+                                'architect': {
+                                    'engine': 'architect',
+                                    'host': '172.19.84.169',
+                                    'port': '8181',
+                                    'username': 'salt',
+                                    'password': 'password',
+                                    'project': self.cleaned_data['cluster_domain']
+                                }
                             }
                         }
                     }

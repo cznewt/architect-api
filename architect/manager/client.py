@@ -114,9 +114,13 @@ class BaseClient(object):
                 if relation['source'] not in res_list:
                     logger.error('No resource with'
                                  ' uid {} found'.format(relation['source']))
+                    print('No resource with'
+                                 ' uid {} found'.format(relation['source']))
                     continue
                 if relation['target'] not in res_list:
                     logger.error('No resource with'
+                                 ' uid {} found'.format(relation['target']))
+                    print('No resource with'
                                  ' uid {} found'.format(relation['target']))
                     continue
                 rel_key = '{}-{}-{}'.format(relation['source'],
