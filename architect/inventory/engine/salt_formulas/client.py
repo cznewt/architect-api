@@ -317,8 +317,30 @@ class SaltFormulasClient(BaseClient):
         with open(file_name, 'w+') as file_handler:
             yaml.safe_dump(metadata, file_handler, default_flow_style=False)
 
+    def resource_delete(self, name):
+        file_name = '{}/{}.yml'.format(self.metadata['node_dir'], name)
+        os.remove(file_name)
+        inventory = Inventory.objects.get(name=self.name)
+        resource = Resource.objects.get(inventory=inventory, name=name)
+        resource.delete()
+
+    def save_override_param(self, name, value):
+        file_name = '{}/overrides/{}.yml'.format(self.metadata['class_dir'],
+                                                 self.name.replace('.', '-'))
+        inventory = Inventory.objects.get(name=self.name)
+        inventory.cache['overrides'][name] = value
+        inventory.save()
+        metadata = {
+            'parameters': {
+                '_param': inventory.cache['overrides']
+            }
+        }
+        with open(file_name, 'w+') as file_handler:
+            yaml.safe_dump(metadata, file_handler, default_flow_style=False)
+
     def init_overrides(self):
-        file_name = '{}/overrides/{}.yml'.format(self.metadata['class_dir'], self.name)
+        file_name = '{}/overrides/{}.yml'.format(self.metadata['class_dir'],
+                                                 self.name.replace('.', '-'))
         if 'cluster_name' not in self.metadata:
             return
         metadata = {
@@ -333,25 +355,38 @@ class SaltFormulasClient(BaseClient):
             yaml.safe_dump(metadata, file_handler, default_flow_style=False)
 
     def get_overrides(self):
-        file_name = '{}/overrides/{}.yml'.format(self.metadata['class_dir'], self.name)
+        file_name = '{}/overrides/{}.yml'.format(self.metadata['class_dir'],
+                                                 self.name.replace('.', '-'))
         if 'cluster_name' not in self.metadata:
+            return {}
+        if not os.path.isfile(file_name):
+            with open(file_name, 'w') as file_handler:
+                metadata = {
+                    'parameters': {
+                        '_param': {
+                            'cluster_name': self.metadata['cluster_name'],
+                            'cluster_domain': self.metadata['cluster_domain']
+                        }
+                    }
+                }
+                file_handler.save(yaml.dump(metadata))
             return {}
         with open(file_name, 'r') as file_handler:
             metadata = yaml.load(file_handler.read())
         return metadata.get('parameters', {}).get('_param', {})
 
-    def node_classify(self, node_name, node_data={}, class_mapping={}, **kwargs):
+    def classify_node(self, node_name, node_data={}):
         '''
-        CLassify node by given class_mapping dictionary
+        CLassify node by current class_mapping dictionary
         '''
-        node_data = {k: v for (k, v) in node_data.items() if not k.startswith('__')}
+        inventory = Inventory.objects.get(name=self.name)
+        node_data = {k: v for (k, v) in node_data.items() if not k.startswith('__pub_')}
 
         classes = []
         node_params = {}
         cluster_params = {}
-        ret = {'node_create': '', 'cluster_param': {}}
 
-        for type_name, node_type in class_mapping.items():
+        for type_name, node_type in inventory.cache.get('class_mapping', {}).items():
             valid = self._validate_condition(node_data, node_type.get('expression', ''))
             if valid:
                 gen_classes = self._get_node_classes(node_data, node_type.get('node_class', {}))
@@ -362,13 +397,25 @@ class SaltFormulasClient(BaseClient):
                 cluster_params.update(gen_cluster_params)
 
         if classes:
-            create_kwargs = {'name': node_name, 'path': '_generated', 'classes': classes, 'parameters': node_params}
-            ret['node_create'] = node_create(**create_kwargs)
+            node_metadata = {
+                'classes': classes + ['overrides.{}'.format(self.name.replace('.', '-'))],
+                'parameters': {
+                    '_param': node_params,
+                    'linux': {
+                        'system': {
+                            'name': node_name.split('.')[0],
+                            'domain': '.'.join(node_name.split('.')[1:])
+                        }
+                    }
+                }
+            }
+            inventory.client().resource_create(node_name, node_metadata)
 
-        for name, value in cluster_params.items():
-            ret['cluster_param'][name] = cluster_meta_set(name, value)
+        self.update_resources()
 
-        return ret
+        if len(cluster_params) > 0:
+            for name, value in cluster_params.items():
+                self.save_override_param(name, value)
 
     def _get_node_classes(self, node_data, class_mapping_fragment):
         classes = []
@@ -396,8 +443,8 @@ class SaltFormulasClient(BaseClient):
                 value_tmpl = Template(value_tmpl_string.replace('<<', '${')
                                                        .replace('>>', '}'))
                 rendered_value = value_tmpl.safe_substitute(node_data)
-                params.update({param_name: rendered_value})
-
+                if value_tmpl_string.replace('<<', '${').replace('>>', '}') != rendered_value:
+                    params.update({param_name: rendered_value})
         return params
 
     def _validate_condition(self, node_data, expressions):

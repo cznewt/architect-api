@@ -147,7 +147,7 @@ class SaltStackClient(BaseClient):
                 errors = 0
                 unknown = 0
                 to_save = False
-                lowstate_links = service.source.filter(kind='contains_salt_lowstate')
+                lowstate_links = service.target.filter(kind='state_of_service')
                 for lowstate_link in lowstate_links:
                     if lowstate_link.target.status == 'error':
                         errors += 1
@@ -226,34 +226,30 @@ class SaltStackClient(BaseClient):
         for resource_id, resource in self.resources.get('salt_service',
                                                         {}).items():
             self._create_relation(
-                'on_salt_minion',
+                'runs_on_minion',
                 resource_id,
                 resource_id.split('|')[0])
 
         # Define relationships between lowstates and minions
         for resource_id, resource in self.resources.get('salt_lowstate',
                                                         {}).items():
-            self._create_relation(
-                'on_salt_minion',
-                resource_id,
-                resource['metadata']['minion'])
             split_service = resource['metadata']['__sls__'].split('.')
             self._create_relation(
-                'contains_salt_lowstate',
+                'state_of_service',
+                resource_id,
                 '{}|{}-{}'.format(resource['metadata']['minion'],
-                                  split_service[0], split_service[1]),
-                resource_id)
+                                  split_service[0], split_service[1]))
 
         for resource_id, resource in self.resources.get('salt_job',
                                                         {}).items():
             self._create_relation(
-                'by_salt_user',
+                'action_by_user',
                 resource_id,
                 resource['metadata']['User'])
             for minion_id, result in resource['metadata'].get('Result',
                                                               {}).items():
                 self._create_relation(
-                    'on_salt_minion',
+                    'applied_on_minion',
                     resource_id,
                     minion_id)
                 if type(result) is list:
@@ -264,6 +260,6 @@ class SaltStackClient(BaseClient):
                             result_id = '{}|{}'.format(minion_id,
                                                        state['__id__'])
                             self._create_relation(
-                                'contains_salt_lowstate',
+                                'applied_lowstate',
                                 resource_id,
                                 result_id)

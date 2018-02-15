@@ -23,7 +23,7 @@ query:
       1:
         kind: salt_minion
       2:
-        target: on_salt_minion
+        target: runs_on_minion
         kind: salt_service
   salt_minion_lowstates_tree:
     layout: hierarchy
@@ -34,25 +34,31 @@ query:
       1:
         kind: salt_minion
       2:
-        target: on_salt_minion
+        target: runs_on_minion
         kind: salt_service
       3:
-        source: contains_salt_lowstate
+        target: state_of_service
         kind: salt_lowstate
 relation:
-  at_salt_master:
+  controlled_by_master:
     relation:
       default: master
-  contains_salt_lowstate:
-    relation:
-      default: lowstate
-  on_salt_minion:
+  applied_on_minion:
     relation:
       default: minion
-  by_salt_user:
+  runs_on_minion:
+    relation:
+      default: minion
+  applied_lowstate:
+    relation:
+      default: lowstate
+  state_of_service:
+    relation:
+      default: service
+  action_by_user:
     relation:
       default: user
-  requires_salt_service:
+  requires_service:
     relation:
       default: require
 default_resource: salt_minion
@@ -68,13 +74,9 @@ resource:
     name: Minion
     resource: minion
     model:
-      lowstate:
-        type: relationship_to
-        model: contains_salt_lowstate
-        target: salt_lowstate
       master:
         type: relationship_to
-        model: at_salt_master
+        model: controlled_by_master
         target: salt_master
   salt_lowstate:
     client: ''
@@ -82,10 +84,10 @@ resource:
     name: Lowstate
     resource: lowstate
     model:
-      minion:
+      service:
         type: relationship_to
-        model: on_salt_minion
-        target: salt_minion
+        model: state_of_service
+        target: salt_service
   salt_job:
     client: ''
     icon: fa:clock-o
@@ -94,15 +96,15 @@ resource:
     model:
       user:
         type: relationship_to
-        model: by_salt_user
+        model: action_by_user
         target: salt_user
       minion:
         type: relationship_to
-        model: on_salt_minion
+        model: applied_on_minion
         target: salt_minion
       lowstate:
         type: relationship_to
-        model: contains_salt_lowstate
+        model: applied_lowstate
         target: salt_lowstate
   salt_service:
     client: ''
@@ -110,17 +112,13 @@ resource:
     name: Service
     resource: service
     model:
-      lowstate:
-        type: relationship_to
-        model: contains_salt_lowstate
-        target: salt_lowstate
       minion:
         type: relationship_to
-        model: on_salt_minion
+        model: runs_on_minion
         target: salt_minion
       require:
         type: relationship_to
-        model: requires_salt_service
+        model: requires_service
         target: salt_service
   salt_user:
     client: ''

@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
-import yaml
 import json
 from django.http import HttpResponse, JsonResponse
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
+from architect.inventory.models import Inventory
 from architect.manager.engine.saltstack.client import SaltStackClient
 from architect.manager.models import Manager
 from celery.utils.log import get_logger
@@ -33,7 +33,7 @@ class ProcessEventView(View):
         update_client.process_resource_metadata('salt_event', metadata)
         cache_client = SaltStackClient(**manager_kwargs)
         cache_client.refresh_cache()
-        return HttpResponse('OK')
+        return JsonResponse({'success': 'Event synced.'})
 
 
 class ProcessMinionView(View):
@@ -54,70 +54,21 @@ class ProcessMinionView(View):
             client.process_resource_metadata('salt_service', {minion_id: minion_data['pillar']})
             client.process_resource_metadata('salt_lowstate', {minion_id: minion_data['lowstate']})
             client.process_relation_metadata()
-            print(client.relations)
             client.save()
         return JsonResponse({'success': 'Minion metadata synced.'})
 
 
-class ProcessGrainView(View):
+class ProcessClassView(View):
 
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
-        return super(ProcessGrainView, self).dispatch(request, *args, **kwargs)
+        return super(ProcessClassView, self).dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         return HttpResponse('Only POST method is supported.')
 
     def post(self, request, *args, **kwargs):
-        metadata = json.loads(request.body.decode("utf-8"))
-        manager_client = SaltStackClient(**{
-            'name': kwargs.get('master_id'),
-            'engine': 'saltstack',
-        })
-        manager_client.process_resource_metadata('salt_minion', metadata)
-        manager_client.save()
-        return HttpResponse('OK')
-
-
-class ProcessLowstateView(View):
-
-    @method_decorator(csrf_exempt)
-    def dispatch(self, request, *args, **kwargs):
-        return super(ProcessLowstateView, self).dispatch(request,
-                                                         *args,
-                                                         **kwargs)
-
-    def get(self, request, *args, **kwargs):
-        return HttpResponse('Only POST method is supported.')
-
-    def post(self, request, *args, **kwargs):
-        metadata = json.loads(request.body.decode("utf-8"))
-        manager_client = SaltStackClient(**{
-            'name': kwargs.get('master_id'),
-            'engine': 'saltstack',
-        })
-        manager_client.process_resource_metadata('salt_lowstate', metadata)
-        manager_client.save()
-        return HttpResponse('OK')
-
-
-class ProcessPillarView(View):
-
-    @method_decorator(csrf_exempt)
-    def dispatch(self, request, *args, **kwargs):
-        return super(ProcessPillarView, self).dispatch(request,
-                                                       *args,
-                                                       **kwargs)
-
-    def get(self, request, *args, **kwargs):
-        return HttpResponse('Only POST method is supported.')
-
-    def post(self, request, *args, **kwargs):
-        metadata = json.loads(request.body.decode("utf-8"))
-        manager_client = SaltStackClient(**{
-            'name': kwargs.get('master_id'),
-            'engine': 'saltstack',
-        })
-        manager_client.process_resource_metadata('salt_service', metadata)
-        manager_client.save()
-        return HttpResponse('OK')
+        data = json.loads(request.body.decode("utf-8"))
+        inventory = Inventory.objects.get(name=kwargs.get('master_id'))
+        inventory.client().classify_node(data['name'], data['data'])
+        return JsonResponse({'success': 'Node classified.'})

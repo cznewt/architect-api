@@ -7,7 +7,7 @@ from crispy_forms.layout import Layout, Fieldset, Div, Submit, HTML
 from django import forms
 from django.urls import reverse
 from django.core import validators
-from .models import Inventory
+from .models import Inventory, Resource
 from django.conf import settings
 
 
@@ -47,6 +47,45 @@ class InventoryDeleteForm(forms.Form):
         data = self.clean()
         inventory = Inventory.objects.get(name=data.get('inventory_name'))
         inventory.delete()
+
+
+class ResourceDeleteForm(forms.Form):
+
+    inventory_name = forms.CharField(widget=forms.HiddenInput())
+    resource_name = forms.CharField(widget=forms.HiddenInput())
+
+    def __init__(self, *args, **kwargs):
+        super(ResourceDeleteForm, self).__init__(*args, **kwargs)
+        inventory_name = self.initial.get('inventory_name')
+        resource_name = self.initial.get('resource_name')
+        delete_url = reverse('inventory:resource_delete',
+                             kwargs={'inventory_name': inventory_name,
+                                     'resource_name': resource_name})
+        self.label = 'Delete resource'
+        self.modal_class = 'modal-sm'
+        self.helper = FormHelper()
+        self.helper.form_id = 'modal-form'
+        self.helper.form_action = delete_url
+        self.helper.layout = Layout(
+            Div(
+                Div(
+                    Div('inventory_name', css_class='col-md-12'),
+                    Div('resource_name', css_class='col-md-12'),
+                    css_class='form-row'),
+                HTML('<h6>Are you sure to delete <span class="badge badge-warning">{}</span> ?</h6>'.format(resource_name)),
+                css_class='modal-body',
+            ),
+            Div(
+                Submit('submit', 'Submit', css_class='btn border-primary'),
+                css_class='modal-footer',
+            )
+        )
+
+    def handle(self):
+        data = self.clean()
+        inventory = Inventory.objects.get(name=data.get('inventory_name'))
+        resource = Resource.objects.get(inventory=inventory, name=data.get('resource_name'))
+        resource.delete()
 
 
 class SaltFormulasInventoryCreateForm(forms.Form):
@@ -166,7 +205,7 @@ class SaltFormulasInventoryCreateForm(forms.Form):
             node_metadata = {
                 'classes': [
                     'cluster.{}.infra.config'.format(self.cleaned_data['cluster_name']),
-                    'overrides.{}'.format(self.cleaned_data['inventory_name'])
+                    'overrides.{}'.format(self.cleaned_data['inventory_name'].replace('.', '-'))
                 ],
                 'parameters': {
                     '_param': {
@@ -197,12 +236,13 @@ class SaltFormulasInventoryCreateForm(forms.Form):
                     }
                 }
             }
-            inventory.client().init_overrides()
             inventory.client().resource_create(node_name, node_metadata)
+            inventory.client().init_overrides()
+
             reclass_meta = inventory.client().inventory()[node_name]['parameters'].get('reclass', {}).get('storage', {})
             for node_name, node in reclass_meta.get('node', {}).items():
                 node_name = '{}.{}'.format(node['name'], node['domain'])
-                node_classes = node['classes'] + ['overrides.{}'.format(self.cleaned_data['inventory_name'])]
+                node_classes = node['classes'] + ['overrides.{}'.format(self.cleaned_data['inventory_name'].replace('.', '-'))]
                 node_metadata = {
                     'classes': node_classes,
                     'parameters': {

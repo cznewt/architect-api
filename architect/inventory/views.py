@@ -13,7 +13,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from architect.views import JSONDataView
 from .models import Inventory
-from .forms import SaltFormulasInventoryCreateForm, InventoryDeleteForm
+from .forms import SaltFormulasInventoryCreateForm, InventoryDeleteForm, \
+    ResourceDeleteForm
 from .tasks import get_inventory_status_task, \
     sync_inventory_resources_task
 
@@ -193,6 +194,30 @@ class ResourceCreateView(View):
         cache_client = SaltStackClient(**manager_kwargs)
         cache_client.refresh_cache()
         return HttpResponse('OK')
+
+
+class ResourceDeleteView(FormView):
+
+    template_name = "base_form.html"
+    form_class = ResourceDeleteForm
+    success_url = '/inventory/v1/success'
+
+    def get_success_url(self):
+        return reverse('inventory:inventory_list')
+
+    def get_form_kwargs(self):
+        inventory_name = self.kwargs.get('inventory_name')
+        resource_name = self.kwargs.get('resource_name')
+        kwargs = super(ResourceDeleteView, self).get_form_kwargs()
+        kwargs.update({'initial': {
+            'inventory_name': inventory_name,
+            'resource_name': resource_name
+        }})
+        return kwargs
+
+    def form_valid(self, form):
+        form.handle()
+        return super().form_valid(form)
 
 
 class ResourceClassifyView(View):
