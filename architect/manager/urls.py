@@ -29,7 +29,4 @@ urlpatterns = [
     path('v1/<manager_name>/resource/<resource_uid>/<resource_action>',
          views.ResourceActionView.as_view(),
          name='resource_action'),
-    path('v1/<manager_name>/resource/<resource_uid>/<resource_action>/success',
-         views.ResourceActionSuccessView.as_view(),
-         name='resource_action_success'),
 ]

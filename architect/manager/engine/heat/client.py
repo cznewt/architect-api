@@ -15,6 +15,7 @@ from urllib.error import URLError
 from architect.manager.client import BaseClient
 from architect.manager.models import Manager
 from architect.manager.tasks import wait_for_resource_state_task
+from architect.document.models import Document
 
 from celery.utils.log import get_logger
 
@@ -58,6 +59,7 @@ class HeatClient(BaseClient):
                 resources = [
                     'heat_template',
                     'heat_stack',
+                    # 'heat_resource',
                 ]
             for resource in resources:
                 metadata = self.get_resource_metadata(resource)
@@ -105,6 +107,33 @@ class HeatClient(BaseClient):
             else:
                 stack = self.api.stacks.get(uid)
                 resource = stack.to_dict()
+                response[resource['id']] = resource
+        elif kind == 'heat_resource':
+            stacks = self.orch_api.stacks.list()
+            for stack in stacks:
+                resource = stack.to_dict()
+                resource['resources'] = {}
+                try:
+                    resources = self.api.resources.list(resource['id'],
+                                                        nested_depth=2)
+                    for stack_resource in resources:
+                        res_dict = stack_resource.to_dict()
+                        stack_id = None
+                        nested_stack_id = None
+                        for link in res_dict['links']:
+                            if link['rel'] == 'stack':
+                                stack_id = link['href'].split('/')[-2]
+                            if link['rel'] == 'nested':
+                                nested_stack_id = link['href'].split('/')[-2]
+                        if nested_stack_id is None:
+                            res_stack = stack_id
+                        else:
+                            res_stack = nested_stack_id
+                        if res_stack not in resource['resources']:
+                            resource['resources'][res_stack] = {'res': {}, 'stack': resource}
+                        resource['resources'][res_stack]['res'][res_dict['resource_name']] = res_dict
+                except HTTPBadRequest as exception:
+                    logger.error(exception)
                 response[resource['id']] = resource
         return response
 
@@ -164,6 +193,31 @@ class HeatClient(BaseClient):
                     resource['id'],
                     metadata['template_name'])
                 self.save()
+                document_name = '{}.{}'.format(
+                    resource['parameters']['OS::stack_name'],
+                    resource['parameters']['cluster_domain']
+                )
+                widget_name = '01-heat-stack-resources'
+                widget_meta = {
+                    'name': 'Heat resources',
+                    'update_interval': 9,
+                    'width': 'col-sm-6 col-md-6 mb-3',
+                    'height': 1,
+                    'chart': 'tree',
+                    'data_source': {
+                        'default': {
+                            'type': 'relational',
+                            'source': self.name,
+                            'query': 'heat_template_stacks_tree',
+                        }
+                    }
+                }
+                document, created = Document.objects.get_or_create(name=document_name)
+                if created:
+                    document.metadata = {'widget': {}}
+                    document.save()
+                document.add_widget(widget_name, widget_meta)
+                document.save()
                 logger.info(stack)
                 wait_for_resource_state_task.apply_async((self.name,
                                                           resource['id'],

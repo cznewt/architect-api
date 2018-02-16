@@ -6,6 +6,7 @@ from django.urls import path
 from django.views import generic
 from django.conf.urls import include
 from graphene_django.views import GraphQLView
+from architect.views import FormSuccessView
 
 urlpatterns = [
     path('',
@@ -18,14 +19,22 @@ urlpatterns = [
     path('select2/',
          include('django_select2.urls')),
     path('document/',
-         include('architect.document.urls', namespace='document')),
+         include('architect.document.urls',
+                 namespace='document')),
     path('inventory/',
-         include('architect.inventory.urls', namespace='inventory')),
+         include('architect.inventory.urls',
+                 namespace='inventory')),
     path('manager/',
-         include('architect.manager.urls', namespace='manager')),
+         include('architect.manager.urls',
+                 namespace='manager')),
     path('monitor/',
-         include('architect.monitor.urls', namespace='monitor')),
+         include('architect.monitor.urls',
+                 namespace='monitor')),
     path('salt/',
          include('architect.manager.engine.saltstack.urls')),
-    path('graphql/', GraphQLView.as_view(graphiql=True)),
+    path('graphql/',
+         GraphQLView.as_view(graphiql=True)),
+    path('success',
+         FormSuccessView.as_view(),
+         name='form_success'),
 ]

@@ -77,7 +77,7 @@ class InventoryCreateView(FormView):
 
     template_name = "base_form.html"
     form_class = SaltFormulasInventoryCreateForm
-    success_url = '/inventory/v1/success'
+    success_url = '/success'
     initial = {
         'classes_dir': '/srv/salt/reclass/classes',
         'nodes_dir': '/srv/salt/reclass/nodes',
@@ -124,11 +124,6 @@ class InventoryCreateJSONView(View):
                     errors.append('{}: {}'.format(field.name, error))
             status = {'failure': 'Inventory form validation failed: {}.'.format(errors)}
         return JsonResponse(status)
-
-
-class InventoryCreateSuccessView(TemplateView):
-
-    template_name = "inventory/inventory_create_success.html"
 
 
 class InventoryDeleteView(FormView):

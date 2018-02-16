@@ -17,6 +17,7 @@ from .tasks import get_manager_status_task, \
     sync_manager_resources_task
 from .transform import transform_data, filter_node_types, \
     filter_lone_nodes, clean_relations
+from architect.document.models import Document
 
 
 class ManagerListView(TemplateView):
@@ -61,7 +62,7 @@ class ManagerActionView(FormView):
 
     template_name = "manager/manager_action.html"
     form_class = ManagerActionForm
-    success_url = '/managerger/v1'
+    success_url = '/success'
 
     def get_form_kwargs(self):
         manager = Manager.objects.get(name=self.kwargs.get('manager_name'))
@@ -105,13 +106,35 @@ class ManagerCreateJSONView(View):
                 "username": metadata.get('manager_user')
             }
         }
-        print(manager_kwargs)
         manager = Manager(**manager_kwargs)
         if manager.client().check_status():
             manager.status = 'active'
         else:
             manager.status = 'error'
         manager.save()
+        document_name = manager.name
+        widget_name = '02-manager-resources'
+        widget_meta = {
+            'name': 'SaltStack resources',
+            'update_interval': 5,
+            'width': 'col-sm-6 col-md-6 mb-3',
+            'height': 1,
+            'chart': 'sunburst',
+            'data_source': {
+                'default': {
+                    'type': 'relational',
+                    'source': manager.name,
+                    'query': 'salt_minion_lowstates_tree',
+                }
+            }
+        }
+        document, created = Document.objects.get_or_create(name=document_name)
+        if created:
+            document.metadata = {'widget': {}}
+            document.save()
+        document.add_widget(widget_name, widget_meta)
+        document.save()
+
         status = {'success': "Manager '{}' was created.".format(metadata.get('manager_name'))}
 #        status = {'failure': 'Inventory form validation failed: {}.'.format(errors)}
         return JsonResponse(status)
@@ -186,7 +209,7 @@ class ResourceActionView(FormView):
             'resource_uid': self.kwargs.get('resource_uid'),
             'resource_action': self.kwargs.get('resource_action')
         }
-        action_url = reverse('manager:resource_action_success', kwargs=kwargs)
+        action_url = reverse('form_success')
         return action_url
 
     def get_form_kwargs(self):
@@ -207,11 +230,6 @@ class ResourceActionView(FormView):
     def form_valid(self, form):
         form.handle()
         return super().form_valid(form)
-
-
-class ResourceActionSuccessView(TemplateView):
-
-    template_name = "manager/resource_action_success.html"
 
 
 class ResourceDetailView(TemplateView):

@@ -3,18 +3,19 @@
 
 {% block nav_manager_cls %} navigation__sub--active{% endblock %}
 
-{% block page_title %}{% trans "Action success" %}{% endblock %}
+{% block page_title %}{% trans "Form processed" %}{% endblock %}
 
-{% block title %}{% trans "Action success" %}{% endblock %}
+{% block title %}{% trans "Form processed" %}{% endblock %}
 
 {% block classes %}modal-sm{% endblock %}
 
 {% block content %}
-<div class="alert alert-success">{% trans "Action success" %}</div>
+<div class="alert alert-success">{% trans "Form processed successfuly" %}</div>
 {% endblock %}
 
 {% block extra_js %}
 {% if XHR_REQUEST|default:False %}
 $('#modal-container').modal('hide');
+window.location.reload(false); 
 {% endif %}
 {% endblock %}

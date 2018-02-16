@@ -7,15 +7,6 @@
   pointer-events: none;
 }
 
-h4.card-title {
-  font-size: 1.1rem;
-}
-
-.content .card {
-   background-color: transparent;
-  border-width: 2px;
-}
-
 .list-group-item {
   background-color: transparent;
 }
@@ -40,34 +31,65 @@ h4.card-title {
   padding-left: 2rem;
 }
 
-.card-actions {
-  margin-top: -2rem;
-  margin-bottom: 0;
-  text-align: right;
-  clear: both;
+.content .card-widget {
+
+  .card-title {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    text-shadow:
+      0 1px 0 $body-bg,
+      0 -1px 0 $body-bg,
+      1px 0 0 $body-bg,
+      -1px 0 0 $body-bg;
+  }
+
+  .card-actions {
+    margin-bottom: 0;
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+  }
+
+  .card-actions li {
+    float: right;
+    padding-left: 0.3rem;
+  }
+
+  .card-body {
+    position: relative;
+  }
+
+  .card-fullscreen {
+    display: block;
+    z-index: 9999;
+    position: fixed;
+    width: 96%;
+    height: 96%;
+    top: 2%;
+    right: 0;
+    left: 2%;
+    bottom: 0;
+    overflow: auto;
+    background-color: $body-bg!important;
+  }
+
+  .card-fullscreen .card-body {
+    background-color: $body-bg!important;
+  }
+
 }
 
-.card-actions li {
-  float: right;
-  padding-left: 0.3rem;
-}
+.content .card {
 
-.card-fullscreen {
-  display: block;
-  z-index: 9999;
-  position: fixed;
-  width: 96%;
-  height: 96%;
-  top: 2%;
-  right: 0;
-  left: 2%;
-  bottom: 0;
-  overflow: auto;
-  background-color: $body-bg!important;
-}
+  background-color: transparent;
+  border-width: 2px;
 
-.card-fullscreen .card-body {
-  background-color: $body-bg!important;
+  .card-title {
+    font-size: 1.1rem;
+    color: $primary;
+  }
+
 }
 
 .modal-title {

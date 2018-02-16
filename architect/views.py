@@ -19,6 +19,8 @@ Generic View classes for JSON in  Django
 
 from django.views.generic import View
 from django.views.generic.detail import BaseDetailView
+from django.views.generic.base import TemplateView
+
 from django.views.generic.list import BaseListView
 from django.views.generic.edit import BaseFormView
 from django.utils.encoding import force_text
@@ -354,3 +356,8 @@ class JSONFormView(JSONResponseMixin, BaseFormView):
         off the bat to ensure no screwiness or excessive net traffic.
         """
         return HttpResponseNotAllowed(['GET', ])
+
+
+class FormSuccessView(TemplateView):
+
+    template_name = "base_form_handle.html"

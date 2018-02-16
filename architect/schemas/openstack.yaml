@@ -10,6 +10,7 @@ query:
     - os_network
     - os_subnet
     - os_floating_ip
+    - os_port
     - os_router
     filter_lone_nodes:
     - os_key_pair
@@ -20,7 +21,9 @@ query:
     - os_server
     - os_network
     - os_subnet
+    - os_port
     - os_floating_ip
+    - os_router
 relation:
   in_os_project:
     relation:

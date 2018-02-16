@@ -13,14 +13,14 @@
 {% endblock %}
 
 {% block actions %}
-<a href="{% url 'document:document_list' %}" class="btn btn-sm btn-outline-primary">List</a>
+<a href="{% url 'document:document_list' %}" class="btn btn-sm btn-outline-primary">Visualizations</a>
 {% endblock %}
 
 {% block content %}
 <div class="row">
   {% for widget_name, widget in document.widgets.items %}
   <div class="{{ widget.width }}">
-    <div class="card border-primary h-100">
+    <div class="card card-widget border-primary h-100">
       <div class="card-body">
         <h4 class="card-title">{{ widget.name|default:widget_name }}</h4>
         <ul class="list-inline card-actions">

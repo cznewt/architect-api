@@ -21,6 +21,9 @@ class Document(models.Model):
     def widgets(self):
         return self.metadata.get('widget', {})
 
+    def add_widget(self, widget_name, widget_meta):
+        self.metadata['widget'][widget_name] = widget_meta
+
     def color(self):
         if self.status == 'active':
             return 'success'

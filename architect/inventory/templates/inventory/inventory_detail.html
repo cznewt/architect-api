@@ -15,7 +15,6 @@
 <a href="{% url 'inventory:inventory_delete' inventory.name %}" class="open-modal btn btn-sm btn-outline-danger">Delete</a>
 <a href="{% url 'inventory:inventory_list' %}" class="btn btn-sm btn-outline-primary">Inventories</a>
 {% if inventory.engine == 'salt-formulas' %}
-<a href="{% url 'inventory:inventory_list' %}" class="btn btn-sm btn-outline-primary">Inventories</a>
 {% endif %}
 {% endblock %}
 

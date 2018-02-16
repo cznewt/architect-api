@@ -147,7 +147,7 @@ class SaltStackClient(BaseClient):
                 errors = 0
                 unknown = 0
                 to_save = False
-                lowstate_links = service.target.filter(kind='state_of_service')
+                lowstate_links = service.source.filter(kind='state_of_service')
                 for lowstate_link in lowstate_links:
                     if lowstate_link.target.status == 'error':
                         errors += 1

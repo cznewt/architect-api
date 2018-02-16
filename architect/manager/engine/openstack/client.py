@@ -60,7 +60,7 @@ class OpenStackClient(BaseClient):
         if self.auth():
             if resources is None:
                 resources = [
-                    'os_stack',
+                    # 'os_stack',
                     'os_server',
                     # 'os_security_group',
                     'os_key_pair',
@@ -75,8 +75,8 @@ class OpenStackClient(BaseClient):
                 ]
                 if self.scope == 'global':
                     resources += [
-                        'os_project',
-                        'os_user',
+                        # 'os_project',
+                        # 'os_user',
                         'os_aggregate',
                         'os_hypervisor'
                     ]

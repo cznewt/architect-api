@@ -196,8 +196,14 @@ else:
         "prometheus": "architect.monitor.engine.prometheus.client.PrometheusClient",
     }
 
+if 'public_endpoint' in CONFIG:
+    PUBLIC_ENDPOINT = CONFIG['public_endpoint']
+else:
+    PUBLIC_ENDPOINT = ''
+
 RECLASS_SERVICE_BLACKLIST = [
     '_param',
+    '_jenkins',
     'private_keys',
     'public_keys',
     'known_hosts'
@@ -248,5 +254,3 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
     ]
 }
-
-PUBLIC_ENDPOINT = ''

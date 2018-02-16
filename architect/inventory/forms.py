@@ -1,14 +1,13 @@
 
-import yaml
 import os
 import re
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, Div, Submit, HTML
 from django import forms
 from django.urls import reverse
+from django.conf import settings
 from django.core import validators
 from .models import Inventory, Resource
-from django.conf import settings
 
 
 class SlugField(forms.CharField):
@@ -200,6 +199,7 @@ class SaltFormulasInventoryCreateForm(forms.Form):
             kwargs['metadata']['cluster_domain'] = self.cleaned_data['cluster_domain']
         inventory = Inventory(**kwargs)
         inventory.save()
+
         if self.cleaned_data['cluster_name'] != '' and self.cleaned_data['cluster_domain'] != '':
             node_name = 'cfg01.{}'.format(self.cleaned_data['cluster_domain'])
             node_metadata = {
@@ -219,13 +219,14 @@ class SaltFormulasInventoryCreateForm(forms.Form):
                     },
                     'salt': {
                         'master': {
+                            'worker_threads': 10,
                             'pillar': {
                                 'engine': 'architect'
                             },
                             'engine': {
                                 'architect': {
                                     'engine': 'architect',
-                                    'host': '172.19.84.169',
+                                    'host': settings.PUBLIC_ENDPOINT,
                                     'port': '8181',
                                     'username': 'salt',
                                     'password': 'password',

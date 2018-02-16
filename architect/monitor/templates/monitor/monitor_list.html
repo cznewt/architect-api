@@ -15,7 +15,7 @@
       <div class="card-body">
         <h4 class="card-title">{{ monitor.metadata.name|default:monitor.name }}</h4>
         <h6 class="card-subtitle mb-2 text-muted">{{ monitor.engine }}, {{ monitor.resources.count }} metrics</h6>
-        <h6 class="card-subtitle mb-2 text-muted">{{ monitor.conn_detail }}</h6>
+        <h6 class="card-subtitle mb-2">{{ monitor.conn_detail }}</h6>
         <a href="{% url 'monitor:monitor_detail' monitor.name %}" class="btn btn-sm btn-outline-primary">Details</a>
       </div>
     </div>
