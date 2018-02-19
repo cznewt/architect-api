@@ -198,11 +198,15 @@ class SaltStackClient(BaseClient):
                                           'salt_lowstate',
                                           metadata=low_state)
         elif kind == 'salt_minion':
+            self._create_resource('salt-master',
+                                  'salt-master',
+                                  'salt_master',
+                                  metadata={})
             for minion_id, minion_data in metadata.items():
                 self._create_resource(minion_id,
                                       minion_id,
                                       'salt_minion',
-                                      metadata=minion_data)
+                                      metadata={'grains': minion_data})
         elif kind == 'salt_service':
             for minion_id, minion_data in metadata.items():
                 if not isinstance(minion_data, dict):
@@ -220,9 +224,17 @@ class SaltStackClient(BaseClient):
                                 self._create_resource('{}|{}'.format(minion_id, service_key),
                                                       service_key,
                                                       'salt_service',
-                                                      metadata=minion_data)
+                                                      metadata={'pillar': {service_name: {role_name: role}}})
 
     def process_relation_metadata(self):
+        # Define relationships between minions and master
+        for resource_id, resource in self.resources.get('salt_minion',
+                                                        {}).items():
+            self._create_relation(
+                'controlled_by_master',
+                resource_id,
+                'salt-master')
+
         # Define relationships between services and minions
         for resource_id, resource in self.resources.get('salt_service',
                                                         {}).items():
@@ -231,7 +243,7 @@ class SaltStackClient(BaseClient):
                 resource_id,
                 resource_id.split('|')[0])
 
-        # Define relationships between lowstates and minions
+        # Define relationships between lowstates and services
         for resource_id, resource in self.resources.get('salt_lowstate',
                                                         {}).items():
             split_service = resource['metadata']['__sls__'].split('.')
@@ -271,7 +283,7 @@ class SaltStackClient(BaseClient):
             if action == 'run_module':
                 fields['function'] = forms.CharField(label='Module function',
                                                      initial='cmd.run')
-                fields['arguments'] = forms.CharField(widget=forms.Textarea,
+                fields['arguments'] = forms.CharField(widget=forms.Textarea(attrs={'rows': 3, 'cols': 40}),
                                                       required=False,
                                                       label='Function arguments')
         return fields

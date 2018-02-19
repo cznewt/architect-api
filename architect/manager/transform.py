@@ -104,6 +104,8 @@ def default_hier(orig_data, layers):
             'status': 'unknown',
             'kind': 'root',
         }
+    else:
+        root_resource = data['resources'][root_layer['kind']]
     root_resource = parse_hier_level(data['resources'],
                                      data['relations'],
                                      root_resource,

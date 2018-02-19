@@ -4,6 +4,7 @@ query:
   salt_minion_service_graph:
     layout: graph
     filter_node_types:
+    - salt_master
     - salt_minion
     - salt_service
   salt_minions_tree:

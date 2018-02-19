@@ -1,0 +1,74 @@
+[
+{
+  "model": "document.document",
+  "pk": 23,
+  "fields": {
+    "name": "sample-saltstack",
+    "description": "",
+    "engine": "dashboard",
+    "metadata": {
+      "widget": {
+        "arc": {
+          "chart": "arc",
+          "name": "Arc diagram",
+          "data_source": {
+            "default": {
+              "query": "salt_minion_service_graph",
+              "type": "relational",
+              "source": "domain.work"
+            }
+          },
+          "width": "col-sm-12 col-md-6 mb-3",
+          "update_interval": 600,
+          "height": 0.7
+        },
+        "hive-plot": {
+          "chart": "hive",
+          "name": "Hive plot",
+          "data_source": {
+            "default": {
+              "query": "salt_complete_graph",
+              "type": "relational",
+              "source": "domain.work"
+            }
+          },
+          "width": "col-sm-12 col-md-6 mb-3",
+          "update_interval": 600,
+          "height": 0.7
+        },
+        "force-directed": {
+          "chart": "force",
+          "name": "Force-directed graph",
+          "data_source": {
+            "default": {
+              "query": "salt_minion_service_graph",
+              "type": "relational",
+              "source": "domain.work"
+            }
+          },
+          "width": "col-sm-12 col-md-6 mb-3",
+          "update_interval": 600,
+          "height": 0.7
+        },
+        "tree-structure": {
+          "chart": "tree",
+          "name": "Node-link tree",
+          "data_source": {
+            "default": {
+              "query": "salt_minions_tree",
+              "type": "relational",
+              "source": "domain.work"
+            }
+          },
+          "width": "col-sm-12 col-md-6 mb-3",
+          "update_interval": 600,
+          "height": 0.7
+        }
+      },
+      "name": "Sample SaltStack",
+      "update_interval": 600
+    },
+    "status": "active"
+  }
+}
+]
