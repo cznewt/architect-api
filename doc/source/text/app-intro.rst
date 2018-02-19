@@ -77,15 +77,34 @@ IT infrastructures.
 PhD Thesis Abstract
 ===================
 
-This thesis provides an insight to important Cloud computing metrics. It
-describes which Cloud computing can be measured and means how to do the actual
-measurements. Next part covers service architecture of applications and
-underlying infrastructural systems. Final part of the work presents modern
-ways to display service relations and gathered metrics.
+This thesis provides implementation of platform for holistic system modeling.
+It tries to define the main components of system governance, that are required
+for autonomous long-term opertations and interactions. These compoents are the
+brain, source of truth that provides models to the muscles and senses. The
+muscles are the orchestration platforms, cloud service providess. The senses
+are the tools that create and process the metrics and event data. Usually
+sences are backed by multiple levels of human powered support teams. The
+proposed platform allows combination of brain, muscles and senses to create
+entity which can displayes in different perspectives by well tailored
+visualizations that reflect the actual life-cycle state of the governed
+infrastructures.
 
-Modern systems rely closely on cloud and virtualisation architectures. To
-optimize utilization of resources, applications and infrastructure must not be
-controlled separately.
+The main part of work presents implementation of Architect project, that has
+been developed as proof-of-concept implementation of holistic governance
+system capable of modern user and systems interactions. It can display service
+relations and gathered metrics and give advanced insight to important Cloud
+computing performance qualities. Modern systems rely closely on cloud and
+virtualisation architectures. To optimize utilization of resources,
+applications and infrastructure must not be controlled separately.
+
+We propose platform that can discribe major orchestration engines and
+monitoring solutions in common schema, create metadata service that can
+provide proper context to any of these services. On top of this infrastructure
+you have powerful interfactive visualizations that can be used to display
+properties of interest. On other side the models of actual infrastructure
+states are good entry point for further machine assisted analysis and learning
+techniques.
+
 
 Keywords
 --------
