@@ -4,10 +4,11 @@ Architect Introduction
 ======================
 
 The aim of this project is to provide unified service modeling, management and
-visualization platform agnostic of delivery method. It creates virtual
-representations of any software services or physical resources and allows
-control over their entire life-cycle. The name of project comes from Architect
-program in Matrix movie series:
+visualization platform agnostic of delivery or orchestration method. It
+creates virtual representations of any software services or physical resources
+and allows control over crucial steps in their life cycle. Both reductionist
+and holistic approaches are used to descibe target systems. The project name
+comes from Architect program in Matrix movie series:
 
     In the Matrix the Architect is a highly specialized, humorless program of
     the machine world as well as the creator of the Matrix. As the chief
@@ -18,40 +19,77 @@ program in Matrix movie series:
 The The Architect project was started as part of my thesis "Visualization of
 cloud performace metrics". Now we explore the possible implications of
 combining the relational models of infrastructures with quantitative data that
-relates to it.
+relates to it. This the implementation of holistic approach to the IT system
+modeling. You combine the capabilities of the brain (inventory), muscles
+(manager) and senses (monitor) to create the full body of IT system. This
+vague analogy, but you seldom see all the parts of infrastrucure working
+together as one, the source of truth providing the vital information to the
+orchestration engines and configuring the monitoring to reflect the actual
+state. Then you can start implementing your policy engines and machine
+learching techiques to improve the state of your initial models. This is not
+possible to achieve withnout proper decomposition your system to individual
+pieces but also you need to put it back together and look at it as whole.
 
-It is useful to identify three main categories of data visualizations in terms
-of what their main (intended or unintended) purpose is.
 
-**Inspirational**
+The Project History
+===================
 
-    The main goal here is to inspire people. To *wow* them! But not just on a
-    superficial level, but to really engage people into deeper thinking, sense
-    of beauty and awe. Visualization has an incredible power to attract
-    people’s attention but also to draw them into fantastic artificial worlds
-    that turn abstract concept into more tangible ones.
+Academic research in particular fields has been undergoing since 2013. We have
+published series of research papers covering in detail specificic areas of
+capabilities that became part of Architect project.
 
-**Explanatory**
+In 2014 we got published *Security information and event management in the
+cloud computing infrastructure* and presented at CINTI 2014 - 15th IEEE
+International Symposium on Computational Intelligence and Informatics,
+Proceedings.
 
-    The main goal here is to use graphics as a way to explain some complex
-    idea, phenomenon or process. This is an area where graphical
-    representation shines: we are visual creatures and a picture is sometime
-    really worth a thousand words.
+In 2015 we got published *Opensource automation in cloud computing* at Lecture
+Notes in Electrical Engineering and *Network visualization survey* at Lecture
+Notes in Computer Science (including subseries Lecture Notes in Artificial
+Intelligence and Lecture Notes in Bioinformatics).
 
-**Analytical**
+Also *High level models for IaaS cloud architectures* published at Studies in
+Computational Intelligence and *Measurement of cloud computing services
+availability* published in Lecture Notes of the Institute for Computer
+Sciences, Social-Informatics and Telecommunications Engineering, LNICST made
+in year 2015.
 
-    The main goal here is to extract information out of data with the purpose
-    of answering questions and advancing understanding of some phenomenon of
-    interest. Sure, explanatory visualization is also about helping people
-    understand something.
+In 2017 we got published *Hybrid system orchestration with TOSCA and salt* in
+Journal of Engineering and Applied Sciences and *VNF orchestration and
+modeling with ETSI MANO compliant frameworks* which got published at Lecture
+Notes in Computer Science (including subseries Lecture Notes in Artificial
+Intelligence and Lecture Notes in Bioinformatics).
 
-    But the main difference here is that in *explanatory visualization* the
-    author knows already what to visualize (after having performed some
-    analysis), whereas in analysis the main use of visualization is to
-    understand the data in the first place.
+We tried to identify possible options to model cloud architectures,
+ontologies, definition hiearchies. The good, the bad and the ugly of metadata.
+Then we focused on ways to manage orchestration processes, not only for
+compute servers but also for virtual network resources. Some works focuced on
+measuring cloud metrics and evaluating log event data important to undestand
+the types of data the systems emit and how to normalise these to consitent
+domains. And last type of works, some of them unpublished, were concerned with
+the visualization layout methods, transformation techniques for relational and
+quatitative data. The individual reseach papers were focusec on gaining
+expertise in given domain. The Architect project wraps the outcome of
+individual research into consistent holistic framework for modeling complete
+IT infrastructures.
 
-Data analysis is important because it can help people improve their
-understanding of complex phenomena in our case service models and can help
-solve important problems around it. It's an indirect link, but an important
-one: *If I understand a problem better, there are higher chances I can find a
-better solution for it*.
+
+PhD Thesis Abstract
+===================
+
+This thesis provides an insight to important Cloud computing metrics. It
+describes which Cloud computing can be measured and means how to do the actual
+measurements. Next part covers service architecture of applications and
+underlying infrastructural systems. Final part of the work presents modern
+ways to display service relations and gathered metrics.
+
+Modern systems rely closely on cloud and virtualisation architectures. To
+optimize utilization of resources, applications and infrastructure must not be
+controlled separately.
+
+Keywords
+--------
+
+Cloud Computing, Metadata, Virtualization, Metering, Monitoring, SOA, Data
+Transformation, Data Visualization, Chart, Time-series, Event, Holism, Service
+Science, System Science

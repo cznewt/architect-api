@@ -160,3 +160,4 @@ References
 * http://bl.ocks.org/alansmithy/d832fc03f6e6a91e99f4 Pictogram grid in d3js
 * https://bl.ocks.org/lelandlee/da2312cfbfcb5a311e68 Isotype - Squared
 * https://bl.ocks.org/lelandlee/e50859751f3b096e3b27 Isotype Donut Art?
+* http://bl.ocks.org/alandunning/51c76ec99c3ffee2fde6923ac14a4dd4 Bubble Matrix Chart V4

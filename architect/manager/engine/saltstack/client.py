@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.conf import settings
+from django import forms
 from urllib.error import URLError
 from pepper.libpepper import Pepper, PepperException
 from architect.manager.client import BaseClient
@@ -263,3 +264,32 @@ class SaltStackClient(BaseClient):
                                 'applied_lowstate',
                                 resource_id,
                                 result_id)
+
+    def get_resource_action_fields(self, resource, action):
+        fields = {}
+        if resource.kind == 'salt_minion':
+            if action == 'run_module':
+                fields['function'] = forms.CharField(label='Module function',
+                                                 initial='cmd.run')
+                fields['argument01'] = forms.CharField(required=False, label='First argument')
+                fields['argument02'] = forms.CharField(required=False, label='Second argument')
+        return fields
+
+    def process_resource_action(self, resource, action, data):
+        if resource.kind == 'salt_minion':
+            if action == 'run_module':
+                run_metadata = {
+                    'client': 'local',
+                    'tgt': resource.uid,
+                    'fun': data['fields'],
+                    'timeout': 60
+                }
+                arg = []
+                if data['argument01'] != '':
+                    arg.append(data['argument01'])
+                if data['argument02'] != '':
+                    arg.append(data['argument02'])
+                if len(arg) > 0:
+                    run_metadata['arg'] = arg
+                metadata = self.api.low([run_metadata]).get('return')[0]
+                logger.info(metadata)

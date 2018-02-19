@@ -98,7 +98,7 @@ References
 * http://bl.ocks.org/biovisualize/5801758 dag layout
 * http://bl.ocks.org/bobbydavid/5841683 DAG visualization
 * https://bl.ocks.org/emeeks/302096884d5fbc1817062492605b50dd D3v4 Constraint-Based Layout
-
+* https://bl.ocks.org/denisemauldin/cdd667cbaf7b45d600a634c8ae32fae5 Filtering Nodes on Force-Directed Graphs (D3 V4)
 
 Hierarchical Edge Bundling
 ==========================

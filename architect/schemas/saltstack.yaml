@@ -73,6 +73,9 @@ resource:
     icon: fa:server
     name: Minion
     resource: minion
+    workflow:
+      run_module:
+        name: Run module
     model:
       master:
         type: relationship_to
