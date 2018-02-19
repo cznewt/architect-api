@@ -117,9 +117,16 @@ You need also setup your user credentials if creating a new deployment.
 
     python manage.py createsuperuser
 
-The default database is sqlite file in the base directory, but you can easily
-override the database configuration by settings in architect-api configuration
-file. For example the PostgreSQL settings in architect-api configuration file.
+You can install sample metadata fixtures by following command.
+
+.. code-block:: bash
+
+    # python manage.py loaddata sample_saltstack
+
+    Installed 614 object(s) from 2 fixture(s)
+
+You must set database configuration by settings in architect-api configuration
+file. Example PostgreSQL settings in architect-api configuration file.
 
 .. code-block:: yaml
 
