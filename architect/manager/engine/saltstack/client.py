@@ -270,26 +270,23 @@ class SaltStackClient(BaseClient):
         if resource.kind == 'salt_minion':
             if action == 'run_module':
                 fields['function'] = forms.CharField(label='Module function',
-                                                 initial='cmd.run')
-                fields['argument01'] = forms.CharField(required=False, label='First argument')
-                fields['argument02'] = forms.CharField(required=False, label='Second argument')
+                                                     initial='cmd.run')
+                fields['arguments'] = forms.CharField(widget=forms.Textarea,
+                                                      required=False,
+                                                      label='Function arguments')
         return fields
 
     def process_resource_action(self, resource, action, data):
         if resource.kind == 'salt_minion':
             if action == 'run_module':
-                run_metadata = {
-                    'client': 'local',
-                    'tgt': resource.uid,
-                    'fun': data['fields'],
-                    'timeout': 60
-                }
-                arg = []
-                if data['argument01'] != '':
-                    arg.append(data['argument01'])
-                if data['argument02'] != '':
-                    arg.append(data['argument02'])
-                if len(arg) > 0:
-                    run_metadata['arg'] = arg
-                metadata = self.api.low([run_metadata]).get('return')[0]
-                logger.info(metadata)
+                if self.auth():
+                    run_metadata = {
+                        'client': 'local',
+                        'tgt': resource.uid,
+                        'fun': data['function'],
+                        'timeout': 60
+                    }
+                    if data['arguments'] != '':
+                        run_metadata['arg'] = [s.strip() for s in data['arguments'].splitlines()]
+                    metadata = self.api.low([run_metadata]).get('return')[0]
+                    logger.info(metadata)
