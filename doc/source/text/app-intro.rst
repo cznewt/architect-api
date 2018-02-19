@@ -112,3 +112,12 @@ Keywords
 Cloud Computing, Metadata, Virtualization, Metering, Monitoring, SOA, Data
 Transformation, Data Visualization, Chart, Time-series, Event, Holism, Service
 Science, System Science
+
+
+Resources
+---------
+
+* Documentation: https://architect-api.readthedocs.io/en/latest/
+* API source: https://github.com/cznewt/architect-api
+* Client source: https://github.com/cznewt/architect-client
+* Research papers: https://www.scopus.com/authid/detail.uri?authorId=56501819000
