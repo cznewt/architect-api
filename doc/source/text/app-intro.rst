@@ -79,13 +79,13 @@ PhD Thesis Abstract
 
 This thesis provides implementation of platform for holistic system modeling.
 It tries to define the main components of system governance, that are required
-for autonomous long-term opertations and interactions. These compoents are the
-brain, source of truth that provides models to the muscles and senses. The
-muscles are the orchestration platforms, cloud service providess. The senses
-are the tools that create and process the metrics and event data. Usually
-sences are backed by multiple levels of human powered support teams. The
-proposed platform allows combination of brain, muscles and senses to create
-entity which can displayes in different perspectives by well tailored
+for autonomous long-term opertations and interactions. These components are
+the brain, source of truth that provides models to the muscles and senses. The
+orchestration platforms or cloud service providers are the virtual muscles.
+The senses are the tools that create and process the metrics and event data.
+Usually sences are backed by multiple levels of human powered support teams.
+The proposed platform allows combination of brain, muscles and senses to
+create entity which can displayes in different perspectives by well tailored
 visualizations that reflect the actual life-cycle state of the governed
 infrastructures.
 
@@ -97,13 +97,13 @@ computing performance qualities. Modern systems rely closely on cloud and
 virtualisation architectures. To optimize utilization of resources,
 applications and infrastructure must not be controlled separately.
 
-We propose platform that can discribe major orchestration engines and
-monitoring solutions in common schema, create metadata service that can
+We propose a united platform that can discribe major orchestration engines and
+monitoring solutions in common schema, create metadata inventories that can
 provide proper context to any of these services. On top of this infrastructure
-you have powerful interfactive visualizations that can be used to display
-properties of interest. On other side the models of actual infrastructure
-states are good entry point for further machine assisted analysis and learning
-techniques.
+models, you have powerful interfactive visualizations that can be used to
+display properties of interest. On other side the models of actual
+infrastructure states are good entrypoint for further machine assisted
+analysis and learning techniques.
 
 
 Keywords
