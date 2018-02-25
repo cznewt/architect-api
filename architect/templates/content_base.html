@@ -55,7 +55,10 @@
               <a href="{% url 'manager:manager_list' %}"><i class="fa fa-cogs"></i>Managers</a>
             </li>
             <li class="navigation__sub{% block nav_monitor_cls %}{% endblock %}">
-              <a href="{% url 'monitor:monitor_list' %}"><i class="fa fa-search"></i>Monitors</a>
+              <a href="{% url 'monitor:monitor_list' %}"><i class="fa fa-pie-chart"></i>Monitors</a>
+            </li>
+            <li class="navigation__sub{% block nav_repository_cls %}{% endblock %}">
+              <a href="{% url 'repository:repository_list' %}"><i class="fa fa-cubes"></i>Repositories</a>
             </li>
             <li class="navigation__sub{% block nav_document_cls %}{% endblock %}">
               <a href="{% url 'document:document_list' %}"><i class="fa fa-line-chart"></i>Visualizations</a>

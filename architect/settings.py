@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     'architect.inventory',
     'architect.manager',
     'architect.monitor',
+    'architect.repository',
     'architect.document',
     'architect.manager.engine.saltstack',
     'graphene_django',
@@ -156,6 +157,7 @@ INVENTORY_ENGINES = CONFIG.get('inventory', {})
 MANAGER_ENGINES = CONFIG.get('manager', {})
 MONITOR_ENGINES = CONFIG.get('monitor', {})
 DOCUMENT_ENGINES = CONFIG.get('document', {})
+REPOSITORY_ENGINES = CONFIG.get('repository', {})
 
 INVENTORY_BASE_DIR = '/srv/architect/nodes'
 INVENTORY_RECLASS_CLASSES_DIRS = CONFIG.get('inventory_reclass_classes_dirs', [])
@@ -166,8 +168,9 @@ if 'inventory_classes' in CONFIG:
 else:
     INVENTORY_CLASS_MAPPINGS = {
         "architect": "architect.inventory.engine.architect.client.ArchitectClient",
-        "salt-formulas": "architect.inventory.engine.salt_formulas.client.SaltFormulasClient",
         "reclass": "architect.inventory.engine.reclass.client.ReclassClient",
+        "hier-cluster": "architect.inventory.engine.hier_cluster.client.HierClusterClient",
+        "hier-deploy": "architect.inventory.engine.hier_deploy.client.HierDeployClient",
     }
 
 if 'manager_classes' in CONFIG:
@@ -195,6 +198,17 @@ else:
         "influxdb": "architect.monitor.engine.influxdb.client.InfluxDbClient",
         "prometheus": "architect.monitor.engine.prometheus.client.PrometheusClient",
     }
+
+if 'repository_classes' in CONFIG:
+    REPOSITORY_CLASS_MAPPINGS = CONFIG['repository_classes']
+else:
+    REPOSITORY_CLASS_MAPPINGS = {
+        "bbb": "architect.repository.engine.bbb.client.BbbClient",
+        "esp": "architect.repository.engine.esp.client.EspClient",
+        "rpi": "architect.repository.engine.rpi.client.RpiClient",
+        "packer": "architect.repository.engine.packer.client.PackerClient",
+    }
+
 
 if 'public_endpoint' in CONFIG:
     PUBLIC_ENDPOINT = CONFIG['public_endpoint']

@@ -1,0 +1,33 @@
+{% extends TEMPLATE_BASE|default:"content_base.html" %}
+
+{% load static compress %}
+
+{% block nav_repository_cls %} navigation__sub--active{% endblock %}
+
+{% block page_title %}
+"{{ repository.metadata.name|default:repository.name }}" {{ repository.engine }} repository
+{% endblock %}
+
+{% block title %}
+"{{ repository.metadata.name|default:repository.name }}" {{ repository.engine }} repository
+{% endblock %}
+
+{% block actions %}
+<a href="{% url 'repository:repository_list' %}" class="btn btn-sm btn-outline-primary">Repositories</a>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <table class="table bordered">
+    <thead>
+      <tr class="row m-0">
+        <th class="d-inline-block col-6">Series</th>
+        <th class="d-inline-block col-6">Properties</th>
+      </tr>
+    </thead>
+    <tbody>
+    </tbody>
+  </table>
+  
+</div>
+{% endblock %}

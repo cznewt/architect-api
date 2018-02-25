@@ -23,7 +23,8 @@ References
 * https://en.wikipedia.org/wiki/Line_chart
 * https://naver.github.io/billboard.js/demo/#Chart.TimeseriesChart
 * https://naver.github.io/billboard.js/demo/#Chart.SplineChart
-
+* https://bl.ocks.org/d3noob/ced1b9b18bd8192d2c898884033b5529 v4 curve interpolation comparison
+* http://bl.ocks.org/emmasaunders/c25a147970def2b02d8c7c2719dc7502 Interpolation (v4)
 
 Area Chart
 ==========

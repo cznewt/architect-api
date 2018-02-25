@@ -6,6 +6,7 @@ from architect.inventory.models import Inventory, Resource
 @admin.register(Inventory)
 class InventoryAdmin(admin.ModelAdmin):
     list_display = ('name', 'engine', 'status')
+    list_filter = ('status', 'engine')
 
 
 @admin.register(Resource)

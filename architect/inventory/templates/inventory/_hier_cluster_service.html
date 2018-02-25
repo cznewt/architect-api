@@ -1,0 +1,90 @@
+{% load architect %}
+<table class="table bordered">
+  <thead>
+    <tr class="row m-0">
+      <th class="d-inline-block col-2">Name</th>
+      <th class="d-inline-block col-4">Metadata</th>
+      <th class="d-inline-block col-2">Schemas</th>
+      <th class="d-inline-block col-4">README</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for formula in service_formula_list %}
+    <tr class="row m-0">
+      <th class="d-inline-block col-2" scope="row">
+        <strong>{{ formula.uid }}</strong>
+        <div>
+          {% if not formula.metadata.metadata.source %}
+          <span class="badge badge-danger">No metadata file found.</span>
+          {% endif %}
+          {% if formula.metadata.schemas|length == 0 %}
+          <span class="badge badge-danger">No schema found.</span>
+          {% endif %}
+          {% if formula.metadata.support_files|length == 0 %}
+          <span class="badge badge-danger">No support files found.</span>
+          {% endif %}
+        </div>
+      </td>
+      <td class="d-inline-block col-4">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">Path
+            <span class="badge">{{ formula.metadata.path }}</span>
+          </li>
+          {% if formula.metadata.source %}
+          <li class="list-group-item">Source
+            <span class="badge">{{ formula.metadata.metadata.source }}</span>
+          </li>
+          <li class="list-group-item">Version
+            <span class="badge">{{ formula.metadata.metadata.version }}</span>
+          </li>
+          <li class="list-group-item">Dependencies
+            {% if formula.metadata.metadata.dependencies|length > 0 %}
+          {% for dep in formula.metadata.metadata.dependencies %}
+            <span class="badge">{{ dep.name }}</span>
+            {% endfor %}
+            {% else %}
+            <span class="badge">none</span>
+            {% endif %}
+          </li>
+          {% endif %}
+          {% if formula.metadata.support_files|length > 0 %} 
+          <li class="list-group-item">Support services
+            {% for sup in formula.metadata.support_files %}
+            <span class="badge">{{ sup }}</span>
+            {% endfor %}
+          </li>
+          {% endif %}
+        </ul>
+      </td>
+      <td class="d-inline-block col-2">
+        {% if formula.metadata.schemas|length > 0 %}
+        <ul class="list-group list-group-flush">
+          {% for schema in formula.metadata.schemas %}
+          <li class="list-group-item">{{ schema }}</li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+      </td>
+      <td class="d-inline-block col-4">
+        <ul class="list-group list-group-flush list-tree">
+          {% for readme_name, readme in formula.metadata.readme.items %}
+          <li class="list-tree-item list-tree-level0">
+            <span class="badge">{{ readme_name }} ({{ readme|length }})</span>
+          </li>
+          {% for sub_readme_name, sub_readme in readme.items %}
+          <li class="list-tree-item list-tree-level1">
+            <span class="badge">{{ sub_readme_name }} ({{ sub_readme|length }})</span>
+          </li>
+          {% for sub_sub_readme_name, sub_sub_readme in sub_readme.items %}
+          <li class="list-tree-item list-tree-level2">
+            <span class="badge">{{ sub_sub_readme_name }} ({{ sub_sub_readme|length }})</span>
+          </li>
+          {% endfor %}
+          {% endfor %}
+          {% endfor %}
+        </ul>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>

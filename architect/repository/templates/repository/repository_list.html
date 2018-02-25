@@ -1,0 +1,25 @@
+{% extends TEMPLATE_BASE|default:"content_base.html" %}
+{% load i18n %}
+
+{% block nav_repository_cls %} navigation__sub--active{% endblock %}
+
+{% block page_title %}{% trans "Available repository_lists" %}{% endblock %}
+
+{% block title %}{% trans "Available repositories" %}{% endblock %}
+
+{% block content %}
+<div class="row">
+  {% for repository in repository_list %}
+  <div class="col-sm-6 col-md-4 mb-3">
+    <div class="card border-{{ repository.color }}">
+      <div class="card-body">
+        <h4 class="card-title">{{ repository.metadata.name|default:repository.name }}</h4>
+        <h6 class="card-subtitle mb-2 text-muted">{{ repository.engine }}, {{ repository.resources.count }} resources</h6>
+        <h6 class="card-subtitle mb-2">{{ repository.conn_detail }}</h6>
+        <a href="{% url 'repository:repository_detail' repository.name %}" class="btn btn-sm btn-outline-primary">Details</a>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

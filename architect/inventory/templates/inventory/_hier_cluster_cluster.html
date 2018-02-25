@@ -1,0 +1,41 @@
+{% load architect i18n %}
+{% for unit in cluster_unit_list %}
+<h5 class="mt-2">Cluster {{ unit.name }}</h5>
+{{ unit.metadata }}
+<table class="table bordered">
+  <thead>
+    <tr class="row m-0">
+      <th class="d-inline-block col-3">Class</th>
+      <th class="d-inline-block col-9">Detais</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for class_name, class in unit.metadata.items %}
+    <tr class="row m-0">
+      <th class="d-inline-block col-3" scope="row">
+        <strong>{{ class_name }}</strong>
+      </th>
+      <td class="d-inline-block col-9">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">Included classes
+            {% for param in class.includes %}
+            <span class="badge">{{ param }}</span>
+            {% endfor %}
+          </li>
+          <li class="list-group-item">Required parameters
+            {% for param in class.params_required %}
+            <span class="badge">{{ param }}</span>
+            {% endfor %}
+          </li>
+          <li class="list-group-item">Created parameters
+            {% for param in class.params_created %}
+            <span class="badge">{{ param }}</span>
+            {% endfor %}
+          </li>
+        </ul>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endfor %}

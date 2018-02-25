@@ -1,5 +1,4 @@
 {% load architect %}
-
 <table class="table bordered">
   <thead>
     <tr class="row m-0">
@@ -8,10 +7,10 @@
     </tr>
   </thead>
   <tbody>
-    {% for class_name, class in inventory.client.cluster_class_list.items %}
+    {% for unit in system_unit_list %}
     <tr class="row m-0">
       <th class="d-inline-block col-6" scope="row">
-        <a href="#">{{ class_name|lcut:"cluster." }}</a>
+        <strong>{{ unit.name }}</strong>
       </th>
       <td class="d-inline-block col-6">
         <ul class="list-group list-group-flush">

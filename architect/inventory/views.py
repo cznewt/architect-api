@@ -12,8 +12,8 @@ from django.views.generic.base import RedirectView
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from architect.views import JSONDataView
-from .models import Inventory
-from .forms import SaltFormulasInventoryCreateForm, InventoryDeleteForm, \
+from .models import Inventory, Resource
+from .forms import HierDeployInventoryCreateForm, InventoryDeleteForm, \
     ResourceDeleteForm
 from .tasks import get_inventory_status_task, \
     sync_inventory_resources_task
@@ -51,7 +51,8 @@ class InventorySyncView(RedirectView):
     pattern_name = 'inventory:inventory_detail'
 
     def get_redirect_url(self, *args, **kwargs):
-        sync_inventory_resources_task.apply_async((kwargs.get('inventory_name'),))
+        sync_inventory_resources_task.apply_async(
+            (kwargs.get('inventory_name'),))
         return super().get_redirect_url(*args, **kwargs)
 
 
@@ -63,6 +64,25 @@ class InventoryDetailView(TemplateView):
         inventory = Inventory.objects.get(name=kwargs.get('inventory_name'))
         context = super().get_context_data(**kwargs)
         context['inventory'] = inventory
+        if inventory.engine == 'hier-cluster':
+            context['service_formula_list'] = Resource.objects.filter(
+                inventory=inventory,
+                kind='service_formula')
+            context['service_class_list'] = Resource.objects.filter(
+                inventory=inventory,
+                kind='service_class')
+            context['system_unit_list'] = Resource.objects.filter(
+                inventory=inventory,
+                kind='system_unit')
+            context['system_class_list'] = Resource.objects.filter(
+                inventory=inventory,
+                kind='system_class')
+            context['cluster_class_list'] = Resource.objects.filter(
+                inventory=inventory,
+                kind='cluster_class')
+            context['cluster_unit_list'] = Resource.objects.filter(
+                inventory=inventory,
+                kind='cluster_unit')
         return context
 
 
@@ -76,12 +96,11 @@ class InventoryDetailJSONView(JSONDataView):
 class InventoryCreateView(FormView):
 
     template_name = "base_form.html"
-    form_class = SaltFormulasInventoryCreateForm
+    form_class = HierDeployInventoryCreateForm
     success_url = '/success'
     initial = {
         'classes_dir': '/srv/salt/reclass/classes',
         'nodes_dir': '/srv/salt/reclass/nodes',
-        'formulas_dir': '/srv/salt/env/prd'
     }
 
     def form_valid(self, form):
@@ -93,14 +112,16 @@ class InventoryCreateJSONView(View):
 
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
-        return super(InventoryCreateJSONView, self).dispatch(request, *args, **kwargs)
+        return super(InventoryCreateJSONView, self).dispatch(
+            request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         return HttpResponse('Only POST method is supported.')
 
     def post(self, request, *args, **kwargs):
         metadata = json.loads(request.body.decode("utf-8"))
-        current_inventories = Inventory.objects.filter(name=metadata.get('inventory_name'))
+        current_inventories = Inventory.objects.filter(
+            name=metadata.get('inventory_name'))
         if current_inventories.count() > 0:
             return JsonResponse({'error': "Inventory with name '{}' already exists.".format(metadata.get('inventory_name'))})
         inventory_kwargs = {
@@ -108,10 +129,9 @@ class InventoryCreateJSONView(View):
             'cluster_name': metadata.get('cluster_name'),
             'inventory_name': metadata.get('inventory_name'),
             'class_dir': settings.INVENTORY_RECLASS_CLASSES_DIRS[0][0],
-            'formula_dir': settings.INVENTORY_SALT_FORMULAS_DIRS[0][0],
         }
         print(inventory_kwargs)
-        form = SaltFormulasInventoryCreateForm(inventory_kwargs)
+        form = HierDeployInventoryCreateForm(inventory_kwargs)
         if form.is_valid():
             form.handle()
             status = {'success': "Inventory '{}' was created.".format(metadata.get('inventory_name'))}

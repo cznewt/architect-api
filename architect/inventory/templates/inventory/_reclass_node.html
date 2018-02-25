@@ -1,0 +1,26 @@
+{% load architect i18n %}
+
+<table class="table bordered">
+  <thead>
+    <tr>
+      <th>Node</th>
+      <th>Classes</th>
+      <th>Parameters</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for resource in inventory.resources.all %}
+    <tr>
+      <th scope="row">
+        <a href="#">{{ resource.name }}</a>
+      </td>
+      <td>
+        <pre class="text-light"><code>{{ resource.metadata.classes|to_yaml }}</code></pre>
+      </td>
+      <td>
+        <pre class="text-light"><code>{{ resource.metadata.parameters|to_yaml }}</code></pre>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>

@@ -59,6 +59,7 @@ browsers and the freedom to design the right visual interface for your data.
 * http://bl.ocks.org/giuliano108/7482331 d3.layout.colgrid
 * http://bl.ocks.org/biovisualize/8187844 direct svg to canvas to png conversion
 * http://bl.ocks.org/vicapow/758fce6aa4c5195d24be  An example of creating a PNG from an SVG in D3.
+* https://bl.ocks.org/feyderm/ba5a80beec95ff39b5267554b590993f A change of perspective...
 
 Presentation Helper Libraries
 =============================

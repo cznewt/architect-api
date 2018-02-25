@@ -83,23 +83,24 @@ class ResourceDeleteForm(forms.Form):
     def handle(self):
         data = self.clean()
         inventory = Inventory.objects.get(name=data.get('inventory_name'))
-        resource = Resource.objects.get(inventory=inventory, name=data.get('resource_name'))
+        resource = Resource.objects.get(
+            inventory=inventory, name=data.get('resource_name'))
         resource.delete()
 
 
-class SaltFormulasInventoryCreateForm(forms.Form):
+class HierDeployInventoryCreateForm(forms.Form):
 
     inventory_name = forms.CharField(label="Inventory name")
     display_name = forms.CharField(required=False, label="Display name")
     cluster_name = forms.SlugField(required=False)
     cluster_domain = forms.CharField(required=False)
-    class_dir = forms.ChoiceField(choices=settings.INVENTORY_RECLASS_CLASSES_DIRS)
-    formula_dir = forms.ChoiceField(choices=settings.INVENTORY_SALT_FORMULAS_DIRS)
+    class_dir = forms.ChoiceField(
+        choices=settings.INVENTORY_RECLASS_CLASSES_DIRS)
 
     def __init__(self, *args, **kwargs):
-        super(SaltFormulasInventoryCreateForm, self).__init__(*args, **kwargs)
+        super(HierDeployInventoryCreateForm, self).__init__(*args, **kwargs)
         create_url = reverse('inventory:inventory_create')
-        self.label = 'Create new Salt-formulas inventory'
+        self.label = 'Create new hier-cluster inventory'
         self.help_text = 'Optional help text'
         self.modal_class = 'modal-lg'
         self.helper = FormHelper()
@@ -122,7 +123,6 @@ class SaltFormulasInventoryCreateForm(forms.Form):
                     'Directories',
                     Div(
                         Div('class_dir', css_class='col-md-6'),
-                        Div('formula_dir', css_class='col-md-6'),
                         css_class='form-row'),
                 ),
                 css_class='modal-body',
@@ -182,16 +182,12 @@ class SaltFormulasInventoryCreateForm(forms.Form):
             os.makedirs(data_dir)
         kwargs = {
             'name': self.cleaned_data['inventory_name'],
-            'engine': 'salt-formulas',
+            'engine': 'hier-deploy',
             'status': 'active',
             'metadata': {
                 'name': self.cleaned_data['inventory_name'],
                 'class_dir': self.cleaned_data['class_dir'],
-                'formula_dir': self.cleaned_data['formula_dir'],
                 'node_dir': data_dir,
-                'cluster_class_dir': None,
-                'service_class_dir': None,
-                'system_class_dir': None,
             }
         }
         if self.cleaned_data['cluster_name'] != '':
@@ -200,12 +196,15 @@ class SaltFormulasInventoryCreateForm(forms.Form):
         inventory = Inventory(**kwargs)
         inventory.save()
 
-        if self.cleaned_data['cluster_name'] != '' and self.cleaned_data['cluster_domain'] != '':
+        if self.cleaned_data['cluster_name'] != '' and \
+           self.cleaned_data['cluster_domain'] != '':
             node_name = 'cfg01.{}'.format(self.cleaned_data['cluster_domain'])
             node_metadata = {
                 'classes': [
-                    'cluster.{}.infra.config'.format(self.cleaned_data['cluster_name']),
-                    'overrides.{}'.format(self.cleaned_data['inventory_name'].replace('.', '-'))
+                    'cluster.{}.infra.config'.format(
+                        self.cleaned_data['cluster_name']),
+                    'overrides.{}'.format(
+                        self.cleaned_data['inventory_name'].replace('.', '-'))
                 ],
                 'parameters': {
                     '_param': {

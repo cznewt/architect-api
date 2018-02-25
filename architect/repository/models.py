@@ -1,20 +1,19 @@
 
 from architect import utils
 from django.db import models
-from django.utils.safestring import mark_safe
 from django.contrib.postgres.fields import JSONField
 
 
-class Inventory(models.Model):
+class Repository(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
-    engine = models.CharField(max_length=32, default='reclass')
+    engine = models.CharField(max_length=32, default='packer')
     metadata = JSONField(blank=True, null=True)
     cache = JSONField(blank=True, null=True)
     status = models.CharField(max_length=32, default='unknown')
 
     def client(self):
-        client_class = utils.get_module(self.engine, 'inventory')
+        client_class = utils.get_module(self.engine, 'repository')
         return client_class(**{
             'name': self.name,
             'engine': self.engine,
@@ -42,12 +41,8 @@ class Inventory(models.Model):
     def conn_detail(self):
         if self.metadata is None:
             return '-'
-        elif self.engine in ['reclass', 'hier-deploy']:
-            return mark_safe("{}<br/>{}".format(self.metadata.get('node_dir', '-'),
-                                                self.metadata.get('class_dir', '-')))
-        elif self.engine == 'hier-cluster':
-            return mark_safe("{}<br/>{}".format(self.metadata.get('formula_dir', '-'),
-                                                self.metadata.get('class_dir', '-')))
+        elif self.engine in ['esp', 'packer', 'rpi']:
+            return self.metadata.get('image_dir', '-')
         else:
             return '-'
 
@@ -55,14 +50,14 @@ class Inventory(models.Model):
         return self.name
 
     class Meta:
-        verbose_name_plural = "Inventories"
+        verbose_name_plural = "Repositories"
         ordering = ['name']
 
 
 class Resource(models.Model):
     uid = models.CharField(max_length=511)
     name = models.CharField(max_length=511)
-    inventory = models.ForeignKey(Inventory,
+    repository = models.ForeignKey(Repository,
                                   on_delete=models.CASCADE,
                                   related_name='resources')
     kind = models.CharField(max_length=32)
