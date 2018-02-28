@@ -1,0 +1,19 @@
+version: '2'
+services:
+  psql:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: password
+  redis:
+    image: redis
+  memcached:
+    image: memcached
+  api:
+    build: .
+    ports:
+      # TODO: set listened ports
+      - 5000:5000
+  worker:
+    build: .
+    # TODO: set worker command
+    command: celery ...
