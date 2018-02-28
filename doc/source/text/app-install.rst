@@ -25,7 +25,7 @@ commands:
 
 .. code-block:: bash
 
-    virtualenv venv -p python3
+    virtualenv -p python3 venv
     source venv/bin/activate
 
     git clone git@github.com:cznewt/architect-api.git
@@ -83,7 +83,7 @@ base dir and sourced.
 
 .. code-block:: bash
 
-    # python manage.py collectstatic --noinput
+    $ python manage.py collectstatic --noinput
 
     X static files copied to '/python-apps/architect/static', Y unmodified.
 
@@ -93,7 +93,7 @@ sourced run following command.
 
 .. code-block:: bash
 
-    # python manage.py compress
+    $ python manage.py compress
 
     Found 'compress' tags in:
         /python-apps/architect/architect/templates/_head.html
@@ -121,7 +121,7 @@ You can install sample metadata fixtures by following command.
 
 .. code-block:: bash
 
-    # python manage.py loaddata sample_saltstack
+    $ python manage.py loaddata sample_saltstack
 
     Installed 614 object(s) from 2 fixture(s)
 
@@ -194,17 +194,17 @@ sourced.
 
 .. code-block:: bash
 
-    # python manage.py sync_inventories
+    $ python manage.py sync_inventories
 
     Inventory "inventory01" resource updated
     ...
 
-    # python manage.py sync_managers
+    $ python manage.py sync_managers
 
     Manager "manager01" resource updated
     ...
 
-    # python manage.py sync_monitors
+    $ python manage.py sync_monitors
 
     Monitor "monitor01" resource updated
     ...
@@ -226,7 +226,7 @@ command.
 
 .. code-block:: bash
 
-    # python manage.py runserver 0.0.0.0:8181
+    $ python manage.py runserver 0.0.0.0:8181
 
     Performing system checks...
 
@@ -261,7 +261,7 @@ command.
 
 .. code-block:: bash
 
-    # celery -A architect worker -l info
+    $ celery -A architect worker -l info
 
      -------------- celery@wst01 v4.1.0 (latentcall)
     ---- **** -----

@@ -1,4 +1,4 @@
-engine: salt-formulas
+engine: hier-cluster
 service_class_dir:
 system_class_dir:
 cluster_class_dir:
