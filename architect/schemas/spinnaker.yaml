@@ -1,0 +1,73 @@
+query:
+  spinnaker_complete_graph:
+    layout: graph
+  spinnaker_clean_graph:
+    layout: graph
+    filter_lone_nodes:
+    - spinnaker_application
+  spinnaker_application_pipeline_tree:
+    layout: hierarchy
+    hierarchy_layers:
+      0:
+        name: Spinnaker
+        kind:
+      1:
+        kind: spinnaker_application
+      2:
+        kind: spinnaker_pipeline
+        target: application_pipeline
+relation:
+  application_pipeline:
+    relation:
+      default: application
+  application_pipeline_config:
+    relation:
+      default: application
+  uses_account:
+    relation:
+      default: accounts
+  defined_by:
+    relation:
+      default: config
+default_resource: spinnaker_application
+resource:
+  spinnaker_account:
+    client: spinnaker
+    icon: fa:cube
+    name: Account
+    resource: Spinnaker::Account
+  spinnaker_application:
+    client: spinnaker
+    icon: fa:cube
+    name: Application
+    resource: Spinnaker::Application
+    model:
+      accounts:
+        type: relationship_to
+        model: uses_account
+        target: spinnaker_account
+  spinnaker_pipeline_config:
+    client: spinnaker
+    icon: fa:cube
+    name: Pipeline Config
+    resource: Spinnaker::PipelineConfig
+    model:
+      application:
+        type: relationship_to
+        model: application_pipeline_config
+        target: spinnaker_application
+  spinnaker_pipeline:
+    client: spinnaker
+    icon: fa:cube
+    name: Pipeline
+    resource: Spinnaker::Pipeline
+    model:
+      application:
+        type: relationship_to
+        model: application_pipeline
+        target: spinnaker_application
+      config:
+        type: relationship_to
+        model: defined_by
+        target: spinnaker_pipeline_config
+

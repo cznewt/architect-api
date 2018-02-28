@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import json
-import pyaml
 import jenkins
 import xml.etree.ElementTree as ET
 from architect.manager.client import BaseClient

@@ -14,7 +14,6 @@ var RelationalPlot = function(RelationalPlot){
         var margin = { top: 0, right: 18, bottom: 18, left: 18 };
 
         var width = $(graphSelector).width() - margin.left - margin.right;
-        //var height = $(graphSelector).innerWidth() * 2/3 - margin.top - margin.bottom;
         var height = $(graphSelector).height() - margin.top - margin.bottom;
 
         var x = d3.scaleLinear().range([0, width]);
@@ -25,7 +24,7 @@ var RelationalPlot = function(RelationalPlot){
 
         this.init = function(alreadyRunning) {
             if(alreadyRunning && graph.svg) {
-                graph.svg.remove()
+                graph.svg.remove();
             }
 
             graph.svg = d3.select(graphSelector).append("svg")
@@ -65,13 +64,6 @@ var RelationalPlot = function(RelationalPlot){
             return output;
         };
 
-        this.createAxes = function(items) {
-          items.map(function(item, index) {
-            item.icon.color = d3.schemeCategory20[index];
-            iconMapping[item.kind] = item.icon;
-          });
-        };
-
         this.createLinks = function(nodes, relations) {
           return relations.map(function(link) {
             var retLink = {};
@@ -94,7 +86,6 @@ var RelationalPlot = function(RelationalPlot){
 
             nodeCount = Object.keys(graph._data.resources).length;
             nodes = graph.createNodes(graph._data.resources);
-            graph.createAxes(Object.values(graph._data.axes));
             links = graph.createLinks(nodes, graph._data.relations);
 
             nodeRadius.domain(d3.extent(nodes, function (d) { return 18 }));
@@ -112,7 +103,6 @@ var RelationalPlot = function(RelationalPlot){
                     d.source.x < d.target.x ? 1 : 0, d.target.x, ',', height]
                     .join(' ');
                 })
-                .attr('stroke-width', function (d) { return 2; })
                 .on('mouseover', function (d) {
                   link.style('stroke', null);
                   d3.select(this).style('stroke', '#d62333');
