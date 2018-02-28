@@ -25,7 +25,7 @@ commands:
 
 .. code-block:: bash
 
-    virtualenv venv
+    virtualenv venv -p python3
     source venv/bin/activate
 
     git clone git@github.com:cznewt/architect-api.git
@@ -69,7 +69,7 @@ http://sass-lang.com/install.
 
 .. code-block:: bash
 
-    apt install gem
+    apt install gem ruby-dev
 
     sudo gem install sass --no-user-install
 
@@ -131,7 +131,7 @@ file. Example PostgreSQL settings in architect-api configuration file.
 .. code-block:: yaml
 
     databases:
-      default: 
+      default:
         ENGINE: django.db.backends.postgresql_psycopg2
         NAME: architect
         USER: architect
@@ -167,7 +167,7 @@ The configuration file currently supports following options:
 .. code-block:: yaml
 
     databases:
-      default: 
+      default:
         ENGINE: django.db.backends.postgresql_psycopg2
         ...
     caches:
@@ -264,16 +264,16 @@ command.
     # celery -A architect worker -l info
 
      -------------- celery@wst01 v4.1.0 (latentcall)
-    ---- **** ----- 
+    ---- **** -----
     --- * ***  * -- Linux-4.10.0-42
-    -- * - **** --- 
+    -- * - **** ---
     - ** ---------- [config]
     - ** ---------- .> app:         architect:0x7ff566a38e80
     - ** ---------- .> transport:   redis://localhost:6379//
     - ** ---------- .> results:     redis://localhost:6379/
     - *** --- * --- .> concurrency: 4 (prefork)
     -- ******* ---- .> task events: OFF
-    --- ***** ----- 
+    --- ***** -----
      -------------- [queues]
                     .> celery           exchange=celery(direct) key=celery
 
