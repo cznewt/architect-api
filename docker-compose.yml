@@ -11,9 +11,7 @@ services:
   api:
     build: .
     ports:
-      # TODO: set listened ports
-      - 5000:5000
+      - 8181:8181
   worker:
     build: .
-    # TODO: set worker command
-    command: celery ...
+    command: celery -A architect worker -l info

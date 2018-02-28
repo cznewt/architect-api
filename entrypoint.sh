@@ -12,10 +12,5 @@ while true; do
 	fi
 done
 
-# collect statics
-python manage.py collectstatic --noinput
-
-# start app
-# TODO: cznewt - howto start
-exec gunicorn app.wsgi:application --bind 0.0.0.0:8000
+exec python manage.py runserver 0.0.0.0:8181
 
