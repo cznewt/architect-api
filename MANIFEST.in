@@ -1,0 +1,14 @@
+include README.rst requirements/base.txt requirements/test.txt
+recursive-include architect/document *
+recursive-include architect/inventory *
+recursive-include architect/manager *
+recursive-include architect/monitor *
+recursive-include architect/repository *
+recursive-include architect/schemas *
+recursive-include architect/templates *
+recursive-include architect/templatetags *
+recursive-include architect/tests *
+recursive-exclude * __pycache__
+recursive-exclude * *.pyc
+recursive-exclude * *.pyo
+recursive-exclude * *.orig

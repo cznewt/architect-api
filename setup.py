@@ -15,7 +15,6 @@ with open('./requirements/test.txt') as _tests_requirements:
 
 DESCRIPTION = "architect-api is a server API and UI of Architect, the service modeling, management and visualization platform."
 
-
 setup(
     name='architect-api',
     version=VERSION,
@@ -26,6 +25,7 @@ setup(
     license='Apache License, Version 2.0',
     url='https://github.com/cznewt/architect-api/',
     packages=find_packages(),
+    include_package_data=True,
     install_requires=requirements,
     tests_require=tests_requirements,
     extras_require={
