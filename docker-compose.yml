@@ -1,17 +1,24 @@
 version: '2'
+networks:
+  default:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.16.240.0/24
+          gateway: 172.16.240.1
 services:
   psql:
     image: postgres
+    ports:
+      - 127.0.0.1:5432:5432
     environment:
       POSTGRES_PASSWORD: password
   redis:
     image: redis
+    ports:
+      - 127.0.0.1:6379:6379
   memcached:
     image: memcached
-  api:
-    build: .
     ports:
-      - 8181:8181
-  worker:
-    build: .
-    command: celery -A architect worker -l info
+      - 127.0.0.1:11211:11211

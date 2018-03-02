@@ -1,0 +1,9 @@
+version: '2'
+services:
+  api:
+    build: .
+    ports:
+      - 8181:8181
+  worker:
+    build: .
+    command: celery -A architect worker -l info
