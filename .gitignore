@@ -102,6 +102,7 @@ ENV/
 *.sqlite3
 architect_config.yml
 /static/
+/architect/static_dist/
 /media/
 /node_modules/
 .sass-cache/
