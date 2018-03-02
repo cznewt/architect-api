@@ -146,7 +146,7 @@ MEDIA_ROOT = os.path.abspath(os.path.join(BASE_DIR, 'media'))
 MEDIA_URL = WEBROOT + 'media/'
 
 if STATIC_ROOT is None:
-    STATIC_ROOT = os.path.abspath(os.path.join(BASE_DIR, 'static'))
+    STATIC_ROOT = os.path.abspath(os.path.join(BASE_DIR, 'architect', 'static_dist'))
 
 if STATIC_URL is None:
     STATIC_URL = WEBROOT + 'static/'
@@ -259,6 +259,17 @@ STATICFILES_FINDERS = (
     # 'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 )
+
+NPM_FILE_PATTERNS = {
+    'bootstrap': ['scss/*', 'dist/js/bootstrap.js'],
+    'bootstrap-notify': ['bootstrap-notify.js'],
+    'bootswatch': ['dist/cyborg/*', 'dist/materia/*', 'dist/united/*'],
+    'd3': ['build/d3.js'],
+    'font-awesome': ['scss/*', 'fonts/*'],
+    'jquery': ['dist/jquery.js'],
+    'jquery-form': ['src/jquery.form.js'],
+    'timeago': ['jquery.timeago.js']
+}
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
