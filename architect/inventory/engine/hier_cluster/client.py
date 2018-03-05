@@ -194,10 +194,17 @@ class HierClusterClient(BaseClient):
         for service in services:
             if os.path.exists(service):
                 service_name = service.split('/')[-1]
+
+                try:
+                    readme_data = self.parse_readme_file(service)
+                except FileNotFoundError as exception:
+                    logger.error(exception)
+                    readme_data = {}
+
                 output[service_name] = {
                     'path': service,
                     'metadata': self.parse_metadata_file(service),
-                    'readme': self.parse_readme_file(service),
+                    'readme': readme_data,
                     'schemas': self.parse_schema_files(service),
                     'support_files': self.parse_support_files(service),
                 }
