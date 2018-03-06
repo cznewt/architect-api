@@ -181,6 +181,7 @@ else:
         "ansible": "architect.manager.engine.ansible.client.AnsibleClient",
         "heat": "architect.manager.engine.heat.client.HeatClient",
         "helm": "architect.manager.engine.helm.client.HelmClient",
+        "homeassistant": "architect.manager.engine.homeassistant.client.HomeAssistantClient",
         "jenkins": "architect.manager.engine.jenkins.client.JenkinsClient",
         "kubernetes": "architect.manager.engine.kubernetes.client.KubernetesClient",
         "openstack": "architect.manager.engine.openstack.client.OpenStackClient",

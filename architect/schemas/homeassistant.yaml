@@ -1,0 +1,24 @@
+query:
+  hass_complete_graph:
+    layout: graph
+relation:
+  at_group:
+    relation:
+      default: group
+default_resource: hass_entity
+resource:
+  hass_entity:
+    client: hass
+    icon: fa:cube
+    name: Entity
+    resource: HomeAssistant::Entity
+    model:
+      group:
+        type: relationship_to
+        model: at_group
+        target: hass_group
+  hass_group:
+    client: hass
+    icon: fa:cube
+    name: Group
+    resource: HomeAssistant::Group
