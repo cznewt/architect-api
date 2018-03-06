@@ -1,0 +1,3 @@
+engine: hier-deploy
+class_dir: /srv/salt/reclass/classes
+node_dir: /srv/salt/reclass/nodes

@@ -57,7 +57,7 @@ class SpinnakerClient(BaseClient):
             applications = self.client('/applications')
             for app in applications:
                 data = self.client('/applications/{}/'
-                                   'pipelines'.format(app['name']))
+                                   'pipelines'.fromat(app['name']))
                 if len(data) > 0:
                     metadata += data
         elif kind == 'spinnaker_pipeline_config':

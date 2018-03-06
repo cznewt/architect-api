@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
 from django.views.generic.base import TemplateView
+from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Document
 
 
-class DocumentListView(TemplateView):
-
+class DocumentListView(LoginRequiredMixin, TemplateView):
     template_name = "document/document_list.html"
 
     def get_context_data(self, **kwargs):
@@ -14,8 +14,7 @@ class DocumentListView(TemplateView):
         return context
 
 
-class DocumentDetailView(TemplateView):
-
+class DocumentDetailView(LoginRequiredMixin, TemplateView):
     template_name = "document/document_detail.html"
 
     def get_context_data(self, **kwargs):

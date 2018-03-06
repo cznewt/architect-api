@@ -12,6 +12,8 @@ urlpatterns = [
     path('',
          generic.RedirectView.as_view(url='/manager/v1')),
     path('admin/', admin.site.urls),
+    path('auth/',
+         include('django.contrib.auth.urls')),
     path('doc/',
          include('django.contrib.admindocs.urls')),
     path('api-auth/',

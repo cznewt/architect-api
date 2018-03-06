@@ -11,6 +11,7 @@ from django.views.generic.edit import FormView
 from django.views.generic.base import RedirectView
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
+from django.contrib.auth.mixins import LoginRequiredMixin
 from architect.views import JSONDataView
 from .models import Inventory, Resource
 from .forms import HierDeployInventoryCreateForm, InventoryDeleteForm, \
@@ -19,8 +20,7 @@ from .tasks import get_inventory_status_task, \
     sync_inventory_resources_task
 
 
-class InventoryListView(TemplateView):
-
+class InventoryListView(LoginRequiredMixin, TemplateView):
     template_name = "inventory/inventory_list.html"
 
     def get_context_data(self, **kwargs):
@@ -29,8 +29,7 @@ class InventoryListView(TemplateView):
         return context
 
 
-class InventoryCheckView(RedirectView):
-
+class InventoryCheckView(LoginRequiredMixin, RedirectView):
     permanent = False
     query_string = True
     pattern_name = 'inventory:inventory_list'
@@ -45,8 +44,7 @@ class InventoryCheckView(RedirectView):
         return super().get_redirect_url(*args, **kwargs)
 
 
-class InventorySyncView(RedirectView):
-
+class InventorySyncView(LoginRequiredMixin, RedirectView):
     permanent = False
     pattern_name = 'inventory:inventory_detail'
 
@@ -56,8 +54,7 @@ class InventorySyncView(RedirectView):
         return super().get_redirect_url(*args, **kwargs)
 
 
-class InventoryDetailView(TemplateView):
-
+class InventoryDetailView(LoginRequiredMixin, TemplateView):
     template_name = "inventory/inventory_detail.html"
 
     def get_context_data(self, **kwargs):
@@ -93,8 +90,7 @@ class InventoryDetailJSONView(JSONDataView):
         return inventory.inventory()
 
 
-class InventoryCreateView(FormView):
-
+class InventoryCreateView(LoginRequiredMixin, FormView):
     template_name = "base_form.html"
     form_class = HierDeployInventoryCreateForm
     success_url = '/success'
@@ -146,8 +142,7 @@ class InventoryCreateJSONView(View):
         return JsonResponse(status)
 
 
-class InventoryDeleteView(FormView):
-
+class InventoryDeleteView(LoginRequiredMixin, FormView):
     template_name = "base_form.html"
     form_class = InventoryDeleteForm
     success_url = '/inventory/v1/success'
@@ -166,8 +161,7 @@ class InventoryDeleteView(FormView):
         return super().form_valid(form)
 
 
-class ResourceDetailView(TemplateView):
-
+class ResourceDetailView(LoginRequiredMixin, TemplateView):
     template_name = "inventory/resource_detail.html"
 
     def get_context_data(self, **kwargs):
@@ -211,8 +205,7 @@ class ResourceCreateView(View):
         return HttpResponse('OK')
 
 
-class ResourceDeleteView(FormView):
-
+class ResourceDeleteView(LoginRequiredMixin, FormView):
     template_name = "base_form.html"
     form_class = ResourceDeleteForm
     success_url = '/inventory/v1/success'

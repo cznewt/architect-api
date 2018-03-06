@@ -7,6 +7,7 @@ from django.conf import settings
 from django.http import HttpResponse, JsonResponse
 from django.views.generic.base import TemplateView, RedirectView
 from django.views.generic.edit import FormView
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
@@ -20,8 +21,7 @@ from .transform import transform_data, filter_node_types, \
 from architect.document.models import Document
 
 
-class ManagerListView(TemplateView):
-
+class ManagerListView(LoginRequiredMixin, TemplateView):
     template_name = "manager/manager_list.html"
 
     def get_context_data(self, **kwargs):
@@ -30,8 +30,7 @@ class ManagerListView(TemplateView):
         return context
 
 
-class ManagerDetailView(TemplateView):
-
+class ManagerDetailView(LoginRequiredMixin, TemplateView):
     template_name = "manager/manager_detail.html"
 
     def get_context_data(self, **kwargs):
@@ -45,8 +44,7 @@ class ManagerDetailView(TemplateView):
         return context
 
 
-class ManagerCheckView(RedirectView):
-
+class ManagerCheckView(LoginRequiredMixin, RedirectView):
     permanent = False
     query_string = True
     pattern_name = 'manager:manager_list'
@@ -58,8 +56,7 @@ class ManagerCheckView(RedirectView):
         return super().get_redirect_url(*args, **kwargs)
 
 
-class ManagerActionView(FormView):
-
+class ManagerActionView(LoginRequiredMixin, FormView):
     template_name = "manager/manager_action.html"
     form_class = ManagerActionForm
     success_url = '/success'
@@ -136,12 +133,10 @@ class ManagerCreateJSONView(View):
         document.save()
 
         status = {'success': "Manager '{}' was created.".format(metadata.get('manager_name'))}
-#        status = {'failure': 'Inventory form validation failed: {}.'.format(errors)}
         return JsonResponse(status)
 
 
-class ManagerSyncView(RedirectView):
-
+class ManagerSyncView(LoginRequiredMixin, RedirectView):
     permanent = False
     pattern_name = 'manager:manager_detail'
 
@@ -198,8 +193,7 @@ class ManagerQueryJSONView(JSONDataView):
         return data
 
 
-class ResourceActionView(FormView):
-
+class ResourceActionView(LoginRequiredMixin, FormView):
     template_name = "base_form.html"
     form_class = ResourceActionForm
 
@@ -232,8 +226,7 @@ class ResourceActionView(FormView):
         return super().form_valid(form)
 
 
-class ResourceDetailView(TemplateView):
-
+class ResourceDetailView(LoginRequiredMixin, TemplateView):
     template_name = "manager/resource_detail.html"
 
     def get_context_data(self, **kwargs):

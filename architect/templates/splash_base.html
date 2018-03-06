@@ -1,0 +1,32 @@
+{% load static compress i18n %}<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>{% block page_title %}{% endblock %} : {% trans "The Architect" %}</title>
+    {% compress css %}
+    <link rel="stylesheet" type="text/scss" href="{% static 'architect/scss/architect-cyborg.scss' %}">
+    <link rel="alternate stylesheet" type="text/scss" href="{% static 'architect/scss/architect-united.scss' %}">
+    <link rel="alternate stylesheet" type="text/scss" href="{% static 'architect/scss/architect-materia.scss' %}">
+    {% endcompress %}
+    {% block extra_css %}{% endblock %}
+  </head>
+  <body class="splash">
+    <div class="page-loader">
+      <div class="page-loader__spinner">
+        <svg viewBox="25 25 50 50">
+          <circle cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10" />
+        </svg>
+      </div>
+    </div>
+    {% block content %}{% endblock %}
+    {% compress js %}
+    <script src="{% static 'jquery/dist/jquery.js' %}"></script>
+    <script src="{% static 'jquery-form/src/jquery.form.js' %}"></script>
+    <script src="{% static 'timeago/jquery.timeago.js' %}"></script>
+    <script src="{% static 'bootstrap/dist/js/bootstrap.js' %}"></script>
+    <script src="{% static 'bootstrap-notify/bootstrap-notify.js' %}"></script>
+    <script src="{% static 'd3/build/d3.js' %}"></script>
+    <script src="{% static 'architect/js/app.js' %}"></script>
+    {% endcompress %}
+  </body>
+</html>

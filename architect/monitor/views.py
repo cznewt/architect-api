@@ -3,13 +3,13 @@
 from datetime import timedelta
 from django.core.cache import cache
 from django.views.generic.base import TemplateView
+from django.contrib.auth.mixins import LoginRequiredMixin
 from architect import utils
 from architect.views import JSONDataView
 from architect.monitor.models import Monitor
 
 
-class MonitorListView(TemplateView):
-
+class MonitorListView(LoginRequiredMixin, TemplateView):
     template_name = "monitor/monitor_list.html"
 
     def get_context_data(self, **kwargs):
@@ -18,8 +18,7 @@ class MonitorListView(TemplateView):
         return context
 
 
-class MonitorDetailView(TemplateView):
-
+class MonitorDetailView(LoginRequiredMixin, TemplateView):
     template_name = "monitor/monitor_detail.html"
 
     def get_context_data(self, **kwargs):

@@ -1,5 +1,4 @@
 {% load i18n %}
-
 <div class="modal-dialog {% block classes %}{% endblock %}" role="document">
   <div class="modal-content">
     <div class="modal-header">
@@ -9,8 +8,7 @@
         <span class="sr-only">{% trans "Close" %}</span>
       </button>
     </div>
-    {% block content %}
-    {% endblock %}
+    {% block content %}{% endblock %}
   </div>
 </div>
 <script>

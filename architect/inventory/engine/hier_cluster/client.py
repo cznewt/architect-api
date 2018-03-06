@@ -6,6 +6,7 @@ import yaml
 import glob
 import docutils
 from collections import OrderedDict
+from docutils import ApplicationError
 from docutils.frontend import OptionParser
 from docutils.utils import new_document
 from docutils.parsers.rst import Parser

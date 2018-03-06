@@ -136,9 +136,9 @@ LANGUAGES = [
 ]
 
 if LOGIN_URL is None:
-    LOGIN_URL = WEBROOT + 'accounts/login/'
+    LOGIN_URL = WEBROOT + 'auth/login/'
 if LOGOUT_URL is None:
-    LOGOUT_URL = WEBROOT + 'accounts/logout/'
+    LOGOUT_URL = WEBROOT + 'auth/logout/'
 if LOGIN_REDIRECT_URL is None:
     LOGIN_REDIRECT_URL = WEBROOT
 

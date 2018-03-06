@@ -1,8 +1,8 @@
-{% load static compress %}<!DOCTYPE html>
+{% load static compress i18n %}<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>{% block page_title %}{% endblock %} : The Architect</title>
+    <title>{% block page_title %}{% endblock %} : {% trans "The Architect" %}</title>
     {% compress css %}
     <link rel="stylesheet" type="text/scss" href="{% static 'architect/scss/architect-cyborg.scss' %}">
     <link rel="alternate stylesheet" type="text/scss" href="{% static 'architect/scss/architect-united.scss' %}">

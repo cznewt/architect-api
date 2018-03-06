@@ -21,13 +21,27 @@ References
 * https://github.com/salt-formulas/reclass
 
 
-Salt-formulas Inventory
-=======================
+Hierarchical Inventory
+======================
 
-Following configuration points to the reclass inventory storage on local
-filesystem with salt-formulas metadata and standards applied.
 
-.. literalinclude:: ../static/config/inventory-salt-formulas.yaml
+Hier-cluster Inventory
+----------------------
+
+Following configuration points to the hiearchical-cluster inventory storaged on
+local filesystem.
+
+.. literalinclude:: ../static/config/inventory-hier-cluster.yaml
+   :language: yaml
+
+
+Hier-deploy Inventory
+---------------------
+
+Following configuration points to the hiearchical-deploy inventory storaged on
+local filesystem.
+
+.. literalinclude:: ../static/config/inventory-hier-deploy.yaml
    :language: yaml
 
 
