@@ -200,6 +200,9 @@ class HierClusterClient(BaseClient):
                 except FileNotFoundError as exception:
                     logger.error(exception)
                     readme_data = {}
+                except ApplicationError as exception:
+                    logger.error(exception)
+                    readme_data = {}
 
                 output[service_name] = {
                     'path': service,
