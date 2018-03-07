@@ -3,6 +3,7 @@ import urllib
 from django.db import models
 from django.db.models import Q
 from django.contrib.postgres.fields import JSONField
+from django.core.serializers.json import DjangoJSONEncoder
 from architect import utils
 
 
@@ -10,7 +11,7 @@ class Manager(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
     engine = models.CharField(max_length=32, default='saltstack')
-    metadata = JSONField(blank=True, null=True)
+    metadata = JSONField(encoder=DjangoJSONEncoder, blank=True, null=True)
     status = models.CharField(max_length=32, default='unknown')
 
     def __str__(self):
@@ -91,7 +92,7 @@ class Resource(models.Model):
                                 related_name='resources')
     kind = models.CharField(max_length=32)
     size = models.IntegerField(default=1)
-    metadata = JSONField(blank=True, null=True)
+    metadata = JSONField(encoder=DjangoJSONEncoder, blank=True, null=True)
     status = models.CharField(max_length=32, default='unknown')
     sources = models.ManyToManyField(
         'Resource',
