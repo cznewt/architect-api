@@ -27,8 +27,10 @@ done
 
 cat << EOF > /srv/architect/mcp/classes/cluster/sample/infra/config.yml
 classes:
-- system.git.client
-- system.salt.master.git.saltstack
+- service.git.client
+- system.linux.system.single
+- system.linux.system.repo.mcp.salt
+- system.salt.master.pkg
 parameters:
   _param:
     salt_master_host: 127.0.0.1
@@ -56,10 +58,17 @@ parameters:
           password: password
 EOF
 
+cat << EOF > /srv/architect/mcp/classes/overrides/sample-deploy.yml
+parameters:
+  _param:
+    cluster_name: sample-deploy
+    cluster_domain: sample.deploy
+EOF
+
 cat << EOF > /srv/architect/mcp/nodes/sample-deploy/cfg01.sample.deploy.yml
 classes:
 - cluster.sample.infra.config
-#- override.sample-deploy
+- overrides.sample-deploy
 parameters:
   _param:
     linux_system_codename: xenial
