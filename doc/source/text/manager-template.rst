@@ -37,7 +37,7 @@ TerraForm Templates
 
 Configuration for parsing Hashicorp TerraForm templates.
 
-.. literalinclude:: ../static/config/manager-terraform.yaml
+.. literalinclude:: ../static/config/manager-terraform-local.yaml
    :language: yaml
 
 The metadata schema for Terraform manager:

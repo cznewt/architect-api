@@ -1,0 +1,4 @@
+engine: helm
+container_endpoint: {{ kubernetes-manager-name }}
+helm_bin: /path/to/helm-bin
+chart_path: /path/to/helm-charts

@@ -14,3 +14,4 @@ Architect Document
    document-vis-dag.rst
    document-vis-numeric.rst
    document-vis-time-series.rst
+   document-vis-temporal.rst

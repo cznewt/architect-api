@@ -1,0 +1,7 @@
+engine: terraform
+endpoints:
+- {{ kubernetes-manager-name }}
+- {{ openstack-manager-name }}
+- {{ amazon-manager-name }}
+terraform_bin: /path/to/terraform-bin
+template_path: /path/to/terraform-templates
