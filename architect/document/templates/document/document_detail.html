@@ -24,9 +24,9 @@
       <div class="card-body">
         <h4 class="card-title">{{ widget.name|default:widget_name }}</h4>
         <ul class="list-inline card-actions">
-          {% if widget.data_source.default.type == 'relational' %}
+          {% if widget.data_source.default.type == 'relational' or widget.chart == 'composite' %}
           <li>
-            <a href="#"  data-zoom="+1" id="{{ widget_name }}-zoom-in" title="Zoom in">
+            <a href="#" data-zoom="+1" id="{{ widget_name }}-zoom-in" title="Zoom in">
               <i class="fa fa-plus-circle"></i>
             </a>
           </li>
@@ -74,6 +74,7 @@
 <script src="{% static 'architect-document/js/d3.plot.area.js' %}"></script>
 <script src="{% static 'architect-document/js/d3.plot.bar.js' %}"></script>
 <script src="{% static 'architect-document/js/d3.plot.bundle.js' %}"></script>
+<script src="{% static 'architect-document/js/d3.plot.composite.js' %}"></script>
 <script src="{% static 'architect-document/js/d3.plot.force.js' %}"></script>
 <script src="{% static 'architect-document/js/d3.plot.gauge.js' %}"></script>
 <script src="{% static 'architect-document/js/d3.plot.hive.js' %}"></script>
@@ -126,13 +127,18 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
   {% endfor %}
 
-
   var src = {};
   var sel = {};
   var upd = {};
 
   {% for widget_name, widget in document.widgets.items %}
-  src['{{ widget_name }}'] = "/{% if widget.data_source.default.type == 'relational' %}manager{% else %}monitor{% endif %}/v1/{{ widget.data_source.default.source }}/query/{{ widget.data_source.default.query }}";
+  {% if widget.data_source.default.type == 'relational' %}
+  src['{{ widget_name }}'] = "/manager/v1/{{ widget.data_source.default.source }}/query/{{ widget.data_source.default.query }}";
+  {% elif widget.data_source.default.type == 'quantitative' %}
+  src['{{ widget_name }}'] = "/monitor/v1/{{ widget.data_source.default.source }}/query/{{ widget.data_source.default.query }}";
+  {% else %}
+  src['{{ widget_name }}'] = "{{ widget.background.url }}";
+  {% endif %}
   sel['{{ widget_name }}'] = "#chart-{{ widget_name }}";
   upd['{{ widget_name }}'] = {{ widget.update_interval|default:600 }};
   {% endfor %}
@@ -173,10 +179,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
   {% elif widget.chart == 'horizon' %}
   new QuantitativePlot.horizonChart(src['{{ widget_name }}'], sel['{{ widget_name }}'], upd['{{ widget_name }}']).init();
   {% elif widget.chart == 'composite' %}
-  d3.xml("{{ widget.background.url }}").mimeType("image/svg+xml").get(function(error, xml) {
-     if (error) throw error;
-     d3.select(sel['{{ widget_name }}']).node().appendChild(xml.documentElement);
-  });
+  new CompositePlot.chart(src['{{ widget_name }}'], sel['{{ widget_name }}'], upd['{{ widget_name }}']).init();
   {% endif %}{% endfor %}
 });
 

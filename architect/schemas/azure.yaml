@@ -1,0 +1,14 @@
+query:
+  az_complete_graph:
+    layout: graph
+relation:
+  in_az_resource_group:
+    relation:
+      default: resource_group
+default_resource: az_resource_group
+resource:
+  az_resource_group:
+    client: az
+    icon: fa:cube
+    name: Resource Group
+    resource: ResourceGroup

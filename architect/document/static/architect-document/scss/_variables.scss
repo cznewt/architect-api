@@ -15,3 +15,7 @@ $plot-node-background-color: $body-bg;
 $plot-link-width: 1;
 $plot-link-color: $body-color;
 $plot-link-opacity: 0.6;
+
+.plot-container {
+    overflow: hidden;
+}

@@ -1,0 +1,8 @@
+{
+    "restructuredtext.builtDocumentationPath": "${workspaceRoot}/doc/build/html",
+    "restructuredtext.confPath": "${workspaceRoot}/doc/source",
+    "restructuredtext.updateOnTextChanged": "false",
+    "restructuredtext.updateDelay": 1000,
+    "restructuredtext.linter.run": "onType"
+}
+

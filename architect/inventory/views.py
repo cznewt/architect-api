@@ -3,8 +3,8 @@
 import json
 from django.contrib import messages
 from django.conf import settings
-from django.urls import reverse
-from django.http import HttpResponse, JsonResponse
+from django.urls import reverse, reverse_lazy
+from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from django.views import View
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import FormView
@@ -12,10 +12,11 @@ from django.views.generic.base import RedirectView
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.contrib.auth.mixins import LoginRequiredMixin
+from formtools.wizard.views import SessionWizardView
 from architect.views import JSONDataView
 from .models import Inventory, Resource
 from .forms import HierDeployInventoryCreateForm, InventoryDeleteForm, \
-    ResourceDeleteForm
+    ResourceDeleteForm, ResourceCreateForm
 from .tasks import get_inventory_status_task, \
     sync_inventory_resources_task
 
@@ -244,3 +245,56 @@ class ResourceClassifyView(View):
             'engine': 'saltstack',
         }
         return HttpResponse('OK')
+
+
+class ClassGenerateView(LoginRequiredMixin, FormView):
+    template_name = "base_form.html"
+    form_class = ResourceCreateForm
+
+    def get_success_url(self):
+        return reverse('inventory:inventory_list')
+
+    def get_form_kwargs(self):
+        inventory_name = self.kwargs.get('inventory_name')
+        form_name = self.kwargs.get('form_name')
+        inventory = Inventory.objects.get(name=inventory_name)
+        form_meta = inventory.metadata['form'][form_name]['steps'][0]
+        kwargs = super(ClassGenerateView, self).get_form_kwargs()
+        kwargs.update({
+            'inventory': inventory,
+            'form_name': form_name,
+            'params': form_meta['fields']
+        })
+        return kwargs
+
+    def form_valid(self, form):
+        form.handle()
+        return super().form_valid(form)
+
+
+class ClassGenerateWizardView(SessionWizardView):
+    form_list = [('form01', ResourceCreateForm),]
+
+    initial_dict = {
+        'form01': {
+            'subject': 'test',
+            'sender': 'test@test.cz'
+        }
+    }
+
+    template_name = 'inventory/model_generate.html'
+
+    def get_context_data(self, form, **kwargs):
+        context = super(ClassGenerateWizardView, self).get_context_data(form=form, **kwargs)
+        inventory_name = self.kwargs.get('inventory_name')
+        form_name = self.kwargs.get('form_name')
+        inventory = Inventory.objects.get(name=inventory_name)
+        form_meta = inventory.metadata['form'][form_name]
+        context.update({
+            'inventory': inventory,
+            'form_meta': form_meta
+        })
+        return context
+
+    def done(self, form_list, **kwargs):
+        return ""#HttpResponseRedirect(reverse_lazy('inventory:inventory_detail', kwargs['inventory_name']))

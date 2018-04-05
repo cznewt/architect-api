@@ -263,3 +263,58 @@ class HierDeployInventoryCreateForm(forms.Form):
             }
             inventory.save()
             inventory.client().update_resources()
+
+
+class BootstrapFormMixin(object):
+
+    def __init__(self, *args, **kwargs):
+        super(BootstrapFormMixin, self).__init__(*args, **kwargs)
+        for field in iter(self.fields):
+            self.fields[field].widget.attrs.update({
+                'class': 'form-control'
+            })
+
+class ResourceCreateForm(forms.Form):
+
+    def __init__(self, *args, **kwargs):
+        self.inventory = kwargs.pop('inventory')
+        parameters = kwargs.pop('params')
+        form_name = kwargs.pop('form_name')
+        super(ResourceCreateForm, self).__init__(*args, **kwargs)
+
+        action_url = reverse('inventory:model_generate',
+                             kwargs={'inventory_name': self.inventory.name,
+                                     'form_name': form_name})
+        layout_fields = []
+
+        for param in parameters:
+            kwargs = {}
+            if 'label' in param:
+                kwargs['label'] = param['label']
+            else:
+                kwargs['label'] = param['name']
+            if 'help_text' in param:
+                kwargs['help_text'] = param['help_text']
+
+            if param.get('value_type', 'string') == 'string':
+                field = forms.CharField(**kwargs)
+
+            self.fields[param['name']] = field
+            layout_fields.append(param['name'])
+
+        self.label = "Generate class"
+        self.helper = FormHelper()
+        self.helper.form_id = 'modal-form'
+        self.helper.form_action = action_url
+        self.helper.layout = Layout(
+            Div(
+                Div(
+                    Div(*layout_fields, css_class='col-md-12'),
+                    css_class='form-row'),
+                css_class='modal-body',
+            ),
+            Div(
+                Submit('submit', 'Submit', css_class='btn border-primary'),
+                css_class='modal-footer',
+            )
+        )

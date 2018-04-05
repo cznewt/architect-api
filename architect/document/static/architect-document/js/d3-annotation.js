@@ -2092,4 +2092,3 @@ exports['default'] = index;
 Object.defineProperty(exports, '__esModule', { value: true });
 
 })));
-//# sourceMappingURL=d3-annotation.js.map

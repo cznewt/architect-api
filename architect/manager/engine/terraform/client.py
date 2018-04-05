@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import io
+import json
 import python_terraform
 from pydot import graph_from_dot_data
 from architect.manager.client import BaseClient
@@ -21,6 +22,13 @@ relation_mapping = {
 }
 
 
+DEFAULT_RESOURCES = [
+    'tf_template',
+    'tf_module',
+    'tf_resource',
+]
+
+
 class TerraformClient(BaseClient):
 
     def __init__(self, **kwargs):
@@ -29,62 +37,80 @@ class TerraformClient(BaseClient):
     def auth(self):
         self.client = python_terraform.Terraform(
             working_dir=self.metadata['template_path'])
+        self.status = python_terraform.Terraform(
+            working_dir=self.metadata['template_path'])
         return True
 
     def _clean_name(self, name):
         return name.replace('"', '').replace('[root] ', '').strip()
 
     def update_resources(self, resources=None):
-        self.process_resource_metadata()
-        self.process_relation_metadata()
+        if self.auth():
+            if resources is None:
+                resources = DEFAULT_RESOURCES
+            for resource in resources:
+                metadata = self.get_resource_metadata(resource)
+                self.process_resource_metadata(resource, metadata)
+                count = len(self.resources.get(resource, {}))
+                logger.info("Processed {} {} resources".format(count,
+                                                               resource))
+            self.process_relation_metadata()
 
     def get_resource_status(self, kind, metadata):
         return 'unknown'
 
-    def process_resource_metadata(self):
-        return_code, raw_data, stderr = self.client.graph(
-            no_color=python_terraform.IsFlagged)
-        graph = graph_from_dot_data(raw_data)[0]
-        nodes = {}
-        for node in graph.obj_dict['subgraphs']['"root"'][0]['nodes']:
-            clean_node = 'tf_{}'.format(self._clean_name(node).split('.')[0])
-            if clean_node in self._schema['resource']:
-                nodes[self._clean_name(node)] = {
-                    'id': self._clean_name(node),
-                    'name': self._clean_name(node).split('.')[1],
-                    'kind': 'tf_{}'.format(self._clean_name(node).split('.')[0]),
-                    'metadata': {}
-                }
-        res = None
-        return_code, raw_data, stderr = self.client.show(
-            no_color=python_terraform.IsFlagged)
-        raw_data = raw_data.split('Outputs:')[0]
-        data_buffer = io.StringIO(raw_data)
-        for line in data_buffer.readlines():
-            if line.strip() == '':
-                pass
-            elif line.startswith('  '):
-                meta_key, meta_value = line.split(' = ')
-                res['metadata'][meta_key.strip()] = meta_value.strip()
-            else:
-                if res is not None:
-                    nodes[res['id']]['metadata'] = res['metadata']
-                resource_id = line.replace(' (tainted', '') \
-                    .replace(':', '').replace('(', '').replace(')', '').strip()
-                try:
-                    resource_kind, resource_name = str(resource_id).split('.')
-                    res = {
-                        'id': resource_id,
-                        'name': resource_name.strip(),
-                        'kind': 'tf_{}'.format(resource_kind),
+    def get_resource_metadata(self, kind):
+        logger.info("Getting {} resources".format(kind))
+        metadata = []
+        if kind == 'tf_resource':
+            return_code, raw_data, stderr = self.client.graph(
+                no_color=python_terraform.IsFlagged)
+            graph = graph_from_dot_data(raw_data)[0]
+            metadata = graph.obj_dict['subgraphs']['"root"'][0]['nodes']
+        return metadata
+
+    def process_resource_metadata(self, kind, metadata):
+        if kind == 'tf_resource':
+            nodes = {}
+            for node in metadata:
+                clean_node = 'tf_{}'.format(self._clean_name(node).split('.')[0])
+                if clean_node in self._schema['resource']:
+                    nodes[self._clean_name(node)] = {
+                        'id': self._clean_name(node),
+                        'name': self._clean_name(node).split('.')[1],
+                        'kind': 'tf_{}'.format(self._clean_name(node).split('.')[0]),
                         'metadata': {}
                     }
-                except Exception as exception:
-                    logger.error(exception)
-        for node_name, node in nodes.items():
-            self._create_resource(node['id'], node['name'],
-                                  node['kind'], None,
-                                  metadata=node['metadata'])
+            res = None
+            return_code, raw_data, stderr = self.client.show(
+                no_color=python_terraform.IsFlagged)
+            raw_data = raw_data.split('Outputs:')[0]
+            data_buffer = io.StringIO(raw_data)
+            for line in data_buffer.readlines():
+                if line.strip() == '':
+                    pass
+                elif line.startswith('  '):
+                    meta_key, meta_value = line.split(' = ')
+                    res['metadata'][meta_key.strip()] = meta_value.strip()
+                else:
+                    if res is not None:
+                        nodes[res['id']]['metadata'] = res['metadata']
+                    resource_id = line.replace(' (tainted', '') \
+                        .replace(':', '').replace('(', '').replace(')', '').strip()
+                    try:
+                        resource_kind, resource_name = str(resource_id).split('.')
+                        res = {
+                            'id': resource_id,
+                            'name': resource_name.strip(),
+                            'kind': 'tf_{}'.format(resource_kind),
+                            'metadata': {}
+                        }
+                    except Exception as exception:
+                        logger.error(exception)
+            for node_name, node in nodes.items():
+                self._create_resource(node['id'], node['name'],
+                                    node['kind'], None,
+                                    metadata=node['metadata'])
 
     def process_relation_metadata(self):
         return_code, raw_data, stderr = self.client.graph(

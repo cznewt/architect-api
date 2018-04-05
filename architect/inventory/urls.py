@@ -42,4 +42,11 @@ urlpatterns = [
     path('v1/<inventory_name>/<resource_name>/data.json',
          views.ResourceDetailJSONView.as_view(),
          name='resource_json_detail'),
+    path('v1/<inventory_name>/model/<form_name>/simple-generate',
+         views.ClassGenerateView.as_view(),
+         name='model_generate'),
+    path('v1/<inventory_name>/model/<form_name>/wizard-generate',
+         views.ClassGenerateWizardView.as_view(),
+         name='model_generate_wizard'),
+
 ]

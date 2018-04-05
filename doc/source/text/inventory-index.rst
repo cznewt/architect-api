@@ -9,5 +9,5 @@ the required parameters to setup individual inventory backends.
 .. toctree::
    :maxdepth: 2
 
-   inventory-backends.rst
-   inventory-consumers.rst
+   inventory-backends
+   inventory-consumers

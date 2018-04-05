@@ -54,15 +54,23 @@ approach to DOM manipulation, giving you the full capabilities of modern
 browsers and the freedom to design the right visual interface for your data.
 
 * https://github.com/d3/d3
-* http://blog.visual.ly/cartesian-vs-radial-charts/ Battle of the Charts: Why Cartesian Wins Against Radial
 * http://bost.ocks.org/mike/chart/ Towards Reusable Charts
-* http://bl.ocks.org/giuliano108/7482331 d3.layout.colgrid
+* https://bocoup.com/blog/reusability-with-d3 Exploring Reusalibility with D3.js
+* https://github.com/springload/react-d3-integration An example on how to integrate D3 into React
 * http://bl.ocks.org/biovisualize/8187844 direct svg to canvas to png conversion
 * http://bl.ocks.org/vicapow/758fce6aa4c5195d24be  An example of creating a PNG from an SVG in D3.
-* https://bl.ocks.org/feyderm/ba5a80beec95ff39b5267554b590993f A change of perspective...
+
 
 Presentation Helper Libraries
 =============================
+
+
+d3 layouts
+----------
+
+* http://blog.visual.ly/cartesian-vs-radial-charts/ Battle of the Charts: Why Cartesian Wins Against Radial
+* http://bl.ocks.org/giuliano108/7482331 d3.layout.colgrid
+* https://bl.ocks.org/feyderm/ba5a80beec95ff39b5267554b590993f A change of perspective...
 
 
 d3-legend

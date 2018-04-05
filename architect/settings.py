@@ -177,6 +177,7 @@ if 'manager_classes' in CONFIG:
     MANAGER_CLASS_MAPPINGS = CONFIG['manager_classes']
 else:
     MANAGER_CLASS_MAPPINGS = {
+        "azure": "architect.manager.engine.azure.client.MicrosoftAzureClient",
         "amazon": "architect.manager.engine.amazon.client.AmazonWebServicesClient",
         "ansible": "architect.manager.engine.ansible.client.AnsibleClient",
         "heat": "architect.manager.engine.heat.client.HeatClient",

@@ -11,6 +11,7 @@ petname
 
 Django
 djangorestframework
+django-formtools
 django-compressor
 django-jsonview
 django-extensions
@@ -30,6 +31,7 @@ python-novaclient
 python-neutronclient
 pykube
 boto3
+azure
 tosca-parser
 salt-pepper
 python-terraform

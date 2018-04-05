@@ -6,7 +6,7 @@ Architect Manager
 .. toctree::
    :maxdepth: 2
 
-   manager-config.rst
-   manager-cloud.rst
-   manager-container.rst
-   manager-template.rst
+   manager-config
+   manager-cloud
+   manager-container
+   manager-template

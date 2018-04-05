@@ -1,0 +1,37 @@
+{% extends TEMPLATE_BASE|default:"content_base.html" %}
+
+{% load architect i18n %}
+
+{% block nav_inventory_cls %} navigation__sub--active{% endblock %}
+
+{% block title %}Generate {{ inventory.name }} model{% endblock %}
+
+{% block content %}
+{% if multistep %}
+{{ form_meta.steps.0|to_yaml }}
+{{ wizard.form.media }}
+<div class="col-xs-12">
+    <p class="text-center">Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</p>
+    <form action="" method="post">{% csrf_token %}
+        <table>
+            {{ wizard.management_form }}
+            {% if wizard.form.forms %}
+            {{ wizard.form.management_form }}
+            {% for form in wizard.form.forms%}
+            {{ form }}
+            {% endfor %}
+            {% else %}
+            {{ wizard.form }}
+            {% endif %}
+        </table>
+        {% if wizard.steps.prev %}
+        <button class="btn btn-secondary" name="wizard_goto_step" type="submit" value="{{ wizard.steps.first }}">{% trans "first step" %}</button>
+        <button class="btn btn-secondary" name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">{% trans "prev step" %}</button>
+        {% endif %}
+        <input class="btn btn-primary" type="submit" value="{% trans " submit " %}"/>
+    </form>
+</div>
+{% else %}
+{{ form.as_p }}
+{% endif %}
+{% endblock %}
