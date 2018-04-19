@@ -30,7 +30,8 @@ var RelationalPlot = function(RelationalPlot){
             graph.svg = d3.select(graphSelector).append("svg")
                 .attr('width', width + margin.left + margin.right)
                 .attr('height', height + margin.top + margin.bottom)
-                .append('g')
+
+            graph.svg.append('g')
                 .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
             if(!alreadyRunning){
@@ -148,7 +149,6 @@ var RelationalPlot = function(RelationalPlot){
                 .attr('font-family', function(d) { return iconFunctions.family(d.kind); })
                 .text(function(d) { return iconFunctions.character(d.kind); })
                 .attr("transform", function(d) { return iconFunctions.transform(d.kind); })
-              
         };
 
         this.requestData = function(dataUrl, callback){
