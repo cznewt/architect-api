@@ -109,19 +109,19 @@ var iconMapping = {};
 
 var iconFunctions = {
     family: function(d) {
-       return iconMapping[d].family;
+       return (iconMapping[d] || {family: "Arial"}).family;
     },
     color: function(d) {
-        return iconMapping[d].color;
+        return (iconMapping[d] || {color: "#888888"}).color;
     },
     character: function(d) {
-        return String.fromCharCode(iconMapping[d].char);
+        return String.fromCharCode((iconMapping[d] || {char: 120}).char);
     },
     size: function(d) {
-        return iconMapping[d].size + 'px';
+        return (iconMapping[d] || {size: 20}).size + 'px';
     },
     transform: function(d) {
-        return 'translate('+ iconMapping[d].x + ', ' + iconMapping[d].y + ')';
+        return 'translate('+ (iconMapping[d] || {x:0}).x + ', ' + (iconMapping[d] || {y:0}).y + ')';
     }
 };
 

@@ -7,14 +7,14 @@ var RelationalPlot = function(RelationalPlot){
      */
     RelationalPlot.arc = function(dataUrl, graphSelector, refreshInterval) {
 
-        var nodeCount;
-        var nodeRadius = d3.scaleSqrt().range([3, 7]);
-        var linkWidth = d3.scaleLinear().range([1.5, 2 * nodeRadius.range()[0]]);
+        var width,
+            height,
+            nodeCount,
+            nodeRadius = d3.scaleSqrt().range([3, 7]),
+            linkWidth = d3.scaleLinear().range([1.5, 2 * nodeRadius.range()[0]]);
 
         var margin = { top: 0, right: 18, bottom: 18, left: 18 };
 
-        var width = $(graphSelector).width() - margin.left - margin.right;
-        var height = $(graphSelector).height() - margin.top - margin.bottom;
 
         var x = d3.scaleLinear().range([0, width]);
 
@@ -23,6 +23,8 @@ var RelationalPlot = function(RelationalPlot){
         this._data = {};
 
         this.init = function(alreadyRunning) {
+            width = $(graphSelector).width() - margin.left - margin.right;
+            height = $(graphSelector).height() - margin.top - margin.bottom;
             if(alreadyRunning && graph.svg) {
                 graph.svg.remove();
             }

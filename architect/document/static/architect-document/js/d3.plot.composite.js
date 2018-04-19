@@ -10,14 +10,14 @@ var CompositePlot = function (CompositePlot) {
         var graph = this;
         this._data = null;
 
-        var width = $(graphSelector).innerWidth(),
-            height = $(graphSelector).innerHeight();
+        var width, height;
 
         this.init = function (alreadyRunning) {
-
             if (alreadyRunning && graph.svg) {
-  //              graph.chart.remove()
+                graph.chart.remove()
             }
+            width = $(graphSelector).innerWidth();
+            height = $(graphSelector).innerHeight();
 
             if (!alreadyRunning) {
                 graph.requestData(dataUrl, graph.render);

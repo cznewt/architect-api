@@ -11,20 +11,21 @@ var RelationalPlot = function(RelationalPlot){
     RelationalPlot.tree = function(dataUrl, graphSelector, refreshInterval) {
 
         var margin = {top: 20, right: 160, bottom: 20, left: 120},
-            width = $(graphSelector).innerWidth() - margin.right - margin.left,
-            height = $(graphSelector).innerHeight() - margin.top - margin.bottom;
+            width,
+            height,
+            treemap,
+            graph = this;
 
-        var treemap = d3.tree()
-          .size([height, width]);
-
-        var graph = this;
         this._data = {};
 
         this.init = function(alreadyRunning) {
             if(alreadyRunning && graph.svg) {
-                graph.svg.remove()
+                graph.svg.remove();
             }
+            width = $(graphSelector).innerWidth() - margin.right - margin.left;
+            height = $(graphSelector).innerHeight() - margin.top - margin.bottom;
 
+            treemap = d3.tree().size([height, width]);
             graph.svg = d3.select(graphSelector).append("svg")
                 .attr("width", width + margin.left + margin.right)
                 .attr("height", height + margin.top + margin.bottom);

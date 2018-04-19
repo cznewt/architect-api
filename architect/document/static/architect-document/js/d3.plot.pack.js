@@ -10,27 +10,26 @@ var RelationalPlot = function(RelationalPlot){
      */
     RelationalPlot.circlePack = function(dataUrl, graphSelector, refreshInterval) {
 
-        var margin = 0,
+        var color = d3.scaleLinear()
+                .domain([-1, 5])
+                .range(["hsl(15,80%,77%)", "hsl(228,30%,40%)"])
+                .interpolate(d3.interpolateHcl),
+            margin = 0,
+            diameter,
+            pack,
+            graph = this;
+        this._data = {};
+
+        this.init = function(alreadyRunning) {
             diameter = Math.min(
                 $(graphSelector).innerWidth(),
                 $(graphSelector).innerHeight()
             );
-
-        var color = d3.scaleLinear()
-            .domain([-1, 5])
-            .range(["hsl(15,80%,77%)", "hsl(228,30%,40%)"])
-            .interpolate(d3.interpolateHcl);
-
-        var pack = d3.pack()
-            .size([diameter - margin, diameter - margin])
-            .padding(margin/2);
-
-        var graph = this;
-        this._data = {};
-
-        this.init = function(alreadyRunning) {
+            pack = d3.pack()
+                .size([diameter - margin, diameter - margin])
+                .padding(margin/2);
             if(alreadyRunning && graph.svg) {
-                graph.svg.remove()
+                graph.svg.remove();
             }
 
             graph.svg = d3.select(graphSelector).append("svg")

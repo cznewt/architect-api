@@ -7,26 +7,25 @@ var RelationalPlot = function(RelationalPlot){
      */
     RelationalPlot.treeMap = function(dataUrl, graphSelector, refreshInterval){
 
-      var width = $(graphSelector).innerWidth(),
-          height = width * 2/3;
+      var width,
+          height,
+          format = d3.format(",d"),
+          color = d3.scaleOrdinal()
+              .range(d3.schemeCategory10
+              .map(function(c) { c = d3.rgb(c); c.opacity = 0.6; return c; })),
 
-      var format = d3.format(",d");
+          stratify = d3.stratify()
+              .parentId(function(d) { return d.id.substring(0, d.id.lastIndexOf(".")); }),
 
-      var color = d3.scaleOrdinal()
-          .range(d3.schemeCategory10
-              .map(function(c) { c = d3.rgb(c); c.opacity = 0.6; return c; }));
-
-      var stratify = d3.stratify()
-          .parentId(function(d) { return d.id.substring(0, d.id.lastIndexOf(".")); });
-
-      var graph = this;
+          graph = this;
       this._data = {};
 
       this.init = function(alreadyRunning){
-          if(alreadyRunning && graph.treemap){
+          if (alreadyRunning && graph.treemap) {
              graph.treemap.remove();
           }
-
+          width = $(graphSelector).innerWidth();
+          height = width * 2/3;
           graph.treemap = d3.treemap()
               .size([width, height])
               .padding(1)
