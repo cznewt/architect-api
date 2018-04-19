@@ -2,6 +2,7 @@
 from architect import utils
 from django.db import models
 from django.contrib.postgres.fields import JSONField
+from django.utils.safestring import mark_safe
 
 
 class Repository(models.Model):
@@ -22,9 +23,6 @@ class Repository(models.Model):
     def class_list(self, resource=None):
         return self.client().class_list(resource=None)
 
-    def inventory(self, resource=None):
-        return self.client().inventory(resource=None)
-
     def resource_count(self, resource=None):
         return len(self.client().inventory(resource=None))
 
@@ -41,8 +39,9 @@ class Repository(models.Model):
     def conn_detail(self):
         if self.metadata is None:
             return '-'
-        elif self.engine in ['esp', 'packer', 'rpi']:
-            return self.metadata.get('image_dir', '-')
+        elif self.engine in ['rpi23', 'bbb']:
+            return mark_safe('Build: {}<br>Manager/Inventory: {}/{}'.format(self.metadata.get('builder_dir', '-'),
+            self.metadata.get('manager', '-'), self.metadata.get('inventory', '-')))
         else:
             return '-'
 
@@ -59,9 +58,9 @@ class Resource(models.Model):
     name = models.CharField(max_length=511)
     repository = models.ForeignKey(Repository,
                                   on_delete=models.CASCADE,
-                                  related_name='resources')
+                                  related_name='images')
     kind = models.CharField(max_length=32)
-    size = models.IntegerField(default=1)
+    size = models.IntegerField(default=0)
     metadata = JSONField(blank=True, null=True)
     cache = JSONField(blank=True, null=True)
     status = models.CharField(max_length=32, default='unknown')
@@ -80,4 +79,4 @@ class Resource(models.Model):
             return 'warning'
 
     class Meta:
-        ordering = ['name']
+        ordering = ['-id']

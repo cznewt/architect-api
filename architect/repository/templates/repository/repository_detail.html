@@ -1,18 +1,19 @@
 {% extends TEMPLATE_BASE|default:"content_base.html" %}
 
-{% load static compress %}
+{% load static compress i18n %}
 
 {% block nav_repository_cls %} navigation__sub--active{% endblock %}
 
 {% block page_title %}
-"{{ repository.metadata.name|default:repository.name }}" {{ repository.engine }} repository
+"{{ repository.name }}" {{ repository.engine }} repository
 {% endblock %}
 
 {% block title %}
-"{{ repository.metadata.name|default:repository.name }}" {{ repository.engine }} repository
+"{{ repository.name }}" {{ repository.engine }} repository
 {% endblock %}
 
 {% block actions %}
+<a href="{% url 'repository:image_create' repository.name %}" class="open-modal btn btn-sm btn-outline-primary">{% trans "Build Image" %}</a>
 <a href="{% url 'repository:repository_list' %}" class="btn btn-sm btn-outline-primary">Repositories</a>
 {% endblock %}
 
@@ -21,13 +22,27 @@
   <table class="table bordered">
     <thead>
       <tr class="row m-0">
-        <th class="d-inline-block col-6">Series</th>
-        <th class="d-inline-block col-6">Properties</th>
+        <th class="d-inline-block col-6">Name</th>
+        <th class="d-inline-block col-2">Created</th>
+        <th class="d-inline-block col-2">Size</th>
+        <th class="d-inline-block col-2">Actions</th>
       </tr>
     </thead>
     <tbody>
-    </tbody>
+      {% for resource in repository.images.all %}
+      <tr>
+        <th class="d-inline-block col-6">
+          <a href="#">{{ resource.name }}</a>
+          <span class="badge badge-{{ resource.color }}">{{ resource.status }}</span>
+        </th>
+        <td class="d-inline-block col-2">{{ resource.metadata.create_time }}</td>
+        <td class="d-inline-block col-2">{{ resource.size }}</td>
+        <td class="d-inline-block col-2">
+          <a href="{% url 'repository:image_create' repository.name %}" class="open-modal btn btn-sm btn-outline-primary">{% trans "Rebuild" %}</a>
+        </td>
+      </tr>
+      {% endfor %}
+  </tbody>
   </table>
-  
 </div>
 {% endblock %}

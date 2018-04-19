@@ -3,15 +3,22 @@
 
 {% block nav_inventory_cls %} navigation__sub--active{% endblock %}
 
-{% block page_title %}"{{ inventory.metadata.name|default:inventory.name }}" {{ inventory.engine }} inventory{% endblock %}
+{% block page_title %}"{{ inventory.metadata.name|default:inventory.name }}" Inventory{% endblock %}
 
-{% block title %}"{{ inventory.metadata.name|default:inventory.name }}" {{ inventory.engine }} inventory{% endblock %}
+{% block title %}"{{ inventory.metadata.name|default:inventory.name }}" Inventory{% endblock %}
 
 {% block actions %}
-<a href="{% url 'inventory:inventory_delete' inventory.name %}" class="open-modal btn btn-sm btn-outline-danger">Delete</a>
-<a href="{% url 'inventory:inventory_list' %}" class="btn btn-sm btn-outline-primary">Inventories</a>
-{% if inventory.engine == 'hier-deploy' %}
+{% if inventory.engine == 'hier-cluster' %}
+{% for form_name, form in inventory.metadata.form.items %}
+<a href="{% url 'inventory:model_generate' inventory.name form_name %}" class="open-modal btn btn-sm btn-outline-primary">{{ form_name }}</a>
+{% endfor %}
+{% elif inventory.engine == 'hier-deploy' %}
+<a href="{% url 'inventory:node_create' inventory.name %}" class="open-modal btn btn-sm btn-outline-primary">{% trans "Create Node" %}</a>
+<a href="#" class="btn btn-sm btn-outline-primary">{% trans "Create Param" %}</a>
 {% endif %}
+<a href="{% url 'inventory:inventory_sync' inventory.name %}" class="btn btn-sm btn-outline-primary">{% trans "Synchronise" %}</a>
+<a href="{% url 'inventory:inventory_list' %}" class="btn btn-sm btn-outline-primary">Inventories</a>
+<a href="{% url 'inventory:inventory_delete' inventory.name %}" class="open-modal btn btn-sm btn-outline-danger">Delete</a>
 {% endblock %}
 
 {% block sidebar %}
@@ -26,18 +33,24 @@
   <li class="list-group-item">{% trans "Nodes" %}
     <span class="badge badge-info">{{ inventory.resources.all|length }} nodes</span>
   </li>
-  <li class="list-group-item">{% trans "Class directory" %}
+  <li class="list-group-item">{% trans "Class Directory" %}
     <span class="badge">{{ inventory.metadata.class_dir }}</span>
   </li>
-  <li class="list-group-item">{% trans "Node directory" %}
+  <li class="list-group-item">{% trans "Resource Directory" %}
     <span class="badge">{{ inventory.metadata.node_dir }}</span>
   </li>
 {% elif inventory.engine == 'hier-deploy' %}
   <li class="list-group-item">{% trans "Nodes" %}
     <span class="badge badge-info">{{ inventory.resources.all|length }} nodes</span>
   </li>
+  <li class="list-group-item">{% trans "Class Directory" %}
+    <span class="badge">{{ inventory.metadata.class_dir }}</span>
+  </li>
+  <li class="list-group-item">{% trans "Node Directory" %}
+    <span class="badge">{{ inventory.metadata.node_dir }}</span>
+  </li>
 {% elif inventory.engine == 'hier-cluster' %}
-  <li class="list-group-item">{% trans "Cluster models" %}
+  <li class="list-group-item">{% trans "Cluster Models" %}
     <span class="badge badge-info">{{ cluster_unit_list.count }} clusters / {{ cluster_class_list.count }} classes</span>
   </li>
   <li class="list-group-item">{% trans "System models" %}
@@ -54,18 +67,24 @@
 {% if inventory.engine == 'hier-deploy' %}
 <ul class="nav nav-tabs" role="tablist">
   <li class="nav-item">
-    <a class="nav-link active" data-toggle="tab" href="#overview" role="tab">{% trans "Inventory overview" %}</a>
+    <a class="nav-link active" data-toggle="tab" href="#node" role="tab">{% trans "Node Definitions" %}</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link" data-toggle="tab" href="#node" role="tab">{% trans "Node definitions" %}</a>
+    <a class="nav-link" data-toggle="tab" href="#param" role="tab">{% trans "Deployment Parameters" %}</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" data-toggle="tab" href="#map" role="tab">{% trans "Dynamic Class Mapping" %}</a>
   </li>
 </ul>
 <div class="tab-content">
-  <div class="tab-pane active" id="overview" role="tabpanel">
-    {% include "inventory/_hier_deploy_overview.html" %}
-  </div>
-  <div class="tab-pane" id="node" role="tabpanel">
+  <div class="tab-pane active" id="node" role="tabpanel">
     {% include "inventory/_hier_deploy_node.html" %}
+  </div>
+  <div class="tab-pane" id="param" role="tabpanel">
+    {% include "inventory/_hier_deploy_param.html" %}
+  </div>
+  <div class="tab-pane" id="map" role="tabpanel">
+    {% include "inventory/_hier_deploy_map.html" %}
   </div>
 </div>
 {% elif inventory.engine == 'hier-cluster' %}
@@ -94,10 +113,10 @@
 {% elif inventory.engine == 'reclass' %}
 <ul class="nav nav-tabs" role="tablist">
   <li class="nav-item">
-    <a class="nav-link active" data-toggle="tab" href="#node" role="tab">{% trans "Nodes" %}</a>
+    <a class="nav-link active" data-toggle="tab" href="#node" role="tab">{% trans "Node Definitions" %}</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link" data-toggle="tab" href="#class" role="tab">{% trans "Classes" %}</a>
+    <a class="nav-link" data-toggle="tab" href="#class" role="tab">{% trans "Class Definitions" %}</a>
   </li>
 </ul>
 <div class="tab-content">

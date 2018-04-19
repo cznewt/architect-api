@@ -1,25 +1,26 @@
 {% load architect i18n %}
 <table class="table table-striped">
   <thead>
-    <tr>
-      <th>Resource</th>
-      <th>Classes</th>
-      <th></th>
+    <tr class="row m-0">
+      <th class="d-inline-block col-3">{% trans "Node Name" %}</th>
+      <th class="d-inline-block col-7">{% trans "Classes" %}</th>
+      <th class="d-inline-block col-2"></th>
     </tr>
   </thead>
   <tbody>
     {% for resource in inventory.resources.all %}
-    <tr>
-      <th scope="row">
+    <tr class="row m-0">
+      <th class="d-inline-block col-3" scope="row">
         <a href="#">{{ resource.name }}</a>
-      </td>
-      <td>
+      </th>
+      <td class="d-inline-block col-7">
         {% for class in resource.metadata.applications %}
         <span class="badge">{{ class }}</span>
         {% endfor %}
       </td>
-      <td>
-        <a href="{% url 'inventory:resource_delete' inventory.name resource.name %}" class="open-modal btn btn-sm btn-outline-danger">Delete</a>
+      <td class="d-inline-block col-2">
+        <a href="{% url 'inventory:node_update' inventory.name resource.name %}" class="open-modal btn btn-sm btn-outline-primary">{% trans "Update" %}</a>
+        <a href="{% url 'inventory:resource_delete' inventory.name resource.name %}" class="open-modal btn btn-sm btn-outline-danger">{% trans "Delete" %}</a>
       </td>
     </tr>
     {% endfor %}

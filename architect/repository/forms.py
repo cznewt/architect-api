@@ -1,18 +1,125 @@
 
 import os
+import uuid
+import time
+import datetime
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Div, Submit, HTML
 from django import forms
 from django.urls import reverse
 from django.core import validators
-from .models import Repository
+from .tasks import generate_image_task
+from .models import Repository, Resource
+from architect.inventory.models import Inventory, Resource as InventoryResource
+from architect.manager.models import Manager, Resource as ManagerResource
+from architect.manager.tasks import process_resource_action_task
 
 
 class SlugField(forms.CharField):
     default_validators = [validators.validate_slug]
 
+KEY_CHOICES=[('keep', "Reuse keypair from last image build"),
+             ('generate','Generate and only accept new keypair'),
+             ('force_generate','Generate and force accept new keypair')]
 
-class RepositoryDeleteForm(forms.Form):
+class ImageCreateForm(forms.Form):
+
+    key_strategy = forms.ChoiceField(label="Key management",
+                                     choices=KEY_CHOICES,
+                                     widget=forms.RadioSelect(),
+                                     initial='keep',
+                                     help_text="If you force generate new keypair for node that is active, you will loose connection to this running node. You cannot reuse keypair if no image for given node exists.")
+
+    def __init__(self, *args, **kwargs):
+        super(ImageCreateForm, self).__init__(*args, **kwargs)
+        repository_name = self.initial.get('repository_name')
+        create_url = reverse('repository:image_create',
+                             kwargs={'repository_name': repository_name})
+        repository = Repository.objects.get(name=repository_name)
+        inventory = Inventory.objects.get(name=repository.metadata['inventory'])
+        nodes = InventoryResource.objects.filter(inventory=inventory).order_by('name')
+        hostname_choices = []
+        for node in nodes:
+            hostname_choices.append((node.name, node.name))
+        self.fields['type'] = forms.ChoiceField(label='Image Type',
+                                                choices=repository.client().get_image_types(),
+                                                help_text="Select hardware definion for the new image.")
+        self.fields['hostname'] = forms.ChoiceField(label='Node',
+                                                    choices=hostname_choices,
+                                                    help_text="Select node from {} inventory.".format(inventory.name))
+        self.label = 'Create New Image in {} Repository'.format(repository_name)
+        self.modal_class = 'modal-lg'
+
+        self.helper = FormHelper()
+        self.helper.form_id = 'modal-form'
+        self.helper.form_action = create_url
+        self.helper.layout = Layout(
+            Div(
+                Div(
+                    Div('type', css_class='col-md-6'),
+                    Div('hostname', css_class='col-md-6'),
+                    css_class='form-row'),
+                Div(
+                    Div('key_strategy', css_class='col-md-12'),
+                    css_class='form-row'),
+                css_class='modal-body',
+            ),
+            Div(
+                Submit('submit', 'Create', css_class='btn border-primary'),
+                css_class='modal-footer',
+            )
+        )
+
+    def handle(self):
+        data = self.clean()
+        key_strategy = data.pop('key_strategy')
+        now = datetime.datetime.now()
+        data['create_time'] = time.mktime(now.timetuple())
+        repository_name = self.initial.get('repository_name')
+        repository = Repository.objects.get(name=repository_name)
+        image_uuid = str(uuid.uuid4())
+        image_name = '{}-{}'.format(data['hostname'],
+                                    now.strftime('%Y%m%d%H%M%S'))
+        kwargs = {
+            'uid': image_uuid,
+            'name': image_name,
+            'repository': repository,
+            'kind': 'image',
+            'status': 'build',
+            'metadata': data,
+        }
+        resource = Resource(**kwargs)
+        resource.save()
+
+        data['image_uid'] = image_uuid
+        data['image_name'] = image_name
+
+        manager = Manager.objects.get(name=repository.metadata['manager'])
+        if key_strategy == 'keep':
+            last_images = Resource.objects.filter(name__contains='{}-'.format(data['hostname'])).order_by('-id')
+            for last_image in last_images:
+                if 'config' in last_image.metadata:
+                    data['config'] = last_image.metadata['config']
+                    break
+        else:
+            salt_master = ManagerResource.objects.get(manager=manager, kind='salt_master')
+            keys = process_resource_action_task.apply((manager.name,
+                                                    salt_master.uid,
+                                                    'generate_key',
+                                                    {'minion_id': data['hostname']}))
+            data['config'] = {
+                'master': '127.0.0.1',
+                'pub_key': keys.result['pub'],
+                'priv_key': keys.result['priv']
+            }
+
+        resource.metadata['config'] = data['config']
+        resource.save()
+
+        generate_image_task.apply_async((repository_name,
+                                         data))
+
+class ImageDeleteForm(forms.Form):
 
     repository_name = forms.CharField(widget=forms.HiddenInput())
 
@@ -53,7 +160,7 @@ class RepositoryCreateForm(forms.Form):
     repository_engine = forms.ChoiceField(
         choices=(
             ('bbb', 'BeagleBone images'),
-            ('rpi', 'RaspberryPi images'),
+            ('rpi23', 'RaspberryPi images'),
             ('esp', 'ESP MicroPython images'),
             ('packer', 'Packer images'),
         ))
@@ -104,5 +211,3 @@ class RepositoryCreateForm(forms.Form):
                 'image_dir': self.cleaned_data['image_dir'],
             }
         }
-        repository = Repository(**kwargs)
-        repository.save()

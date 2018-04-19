@@ -44,8 +44,8 @@ def process_resource_action_task(manager_name, resource_uid, action, data={}):
                                     uid=resource_uid)
     logger.info('Commiting action {} on resource {}'.format(action,
                                                             resource.name))
-    manager.client().process_resource_action(resource, action, data)
-    return True
+    result = manager.client().process_resource_action(resource, action, data)
+    return result
 
 
 @task(name="wait_for_resource_state_task")

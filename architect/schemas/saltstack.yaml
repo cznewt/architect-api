@@ -69,6 +69,10 @@ resource:
     icon: fa:server
     name: Master
     resource: master
+    workflow:
+      generate_key:
+        name: Generate key
+
   salt_minion:
     client: ''
     icon: fa:server

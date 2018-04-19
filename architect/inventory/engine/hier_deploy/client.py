@@ -42,6 +42,10 @@ class HierDeployClient(BaseClient):
                 res.kind = 'reclass_node'
                 res.metadata = metadata
                 res.save()
+            else:
+                if res.metadata != metadata:
+                    res.metadata = metadata
+                    res.save()
 
     def inventory(self, resource=None):
         '''

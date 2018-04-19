@@ -41,6 +41,7 @@
         <th>{% trans "Name" %}</th>
         <th>{% trans "Kind" %}</th>
         <th>{% trans "Relation" %}</th>
+        <th>{% trans "Options" %}</th>
       </thead>
       <tbody>
         {% for source in resource.sources.all %}
@@ -51,6 +52,11 @@
           </td>
           <td>{{ source.kind }}</td>
           <td>{% trans "Target" %}</td>
+          <td>
+            {% for action, workflow in source.workflow_options.items %}
+            <a href="{% url 'manager:resource_action' manager.name source.uid action %}" class="open-modal btn btn-sm btn-outline-primary">{{ workflow.name }}</a>
+            {% endfor %}
+          </td>
         </tr>
         {% endfor %}
         {% for target in resource.targets.all %}
@@ -61,6 +67,11 @@
           </td>
           <td>{{ target.kind }}</td>
           <td>{% trans "Source" %}</td>
+          <td>
+            {% for action, workflow in target.workflow_options.items %}
+            <a href="{% url 'manager:resource_action' manager.name target.uid action %}" class="open-modal btn btn-sm btn-outline-primary">{{ workflow.name }}</a>
+            {% endfor %}
+          </td>
         </tr>
         {% endfor %}
 

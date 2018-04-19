@@ -4,6 +4,8 @@ from azure.common.credentials import ServicePrincipalCredentials
 from azure.mgmt.resource import ResourceManagementClient
 from architect.manager.client import BaseClient
 from celery.utils.log import get_logger
+import json
+
 
 logger = get_logger(__name__)
 
@@ -98,14 +100,15 @@ class MicrosoftAzureClient(BaseClient):
         elif kind == '__all__':
             for item in metadata:
                 resource = item.__dict__
-                if resource.get('system_assigned', None) != None:
-                    resource['system_assigned'] = resource['system_assigned'].__dict__
                 if resource.get('sku', None) != None:
                     resource['sku'] = resource['sku'].__dict__
                 if resource.get('identity', None) != None:
-                    resource['identity'] = resource['identity'].__dict__
+                    identity = resource['identity'].__dict__
+                    identity['type'] = identity['type'].__dict__
+                    resource['identity'] = identity
                 if resource['type'] not in RESOURCE_MAP:
                     logger.info(resource['type'])
+                logger.info(resource)
                 self._create_resource(resource['id'],
                                       resource['name'],
                                       RESOURCE_MAP[resource['type']],

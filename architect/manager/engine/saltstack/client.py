@@ -286,6 +286,9 @@ class SaltStackClient(BaseClient):
                 fields['arguments'] = forms.CharField(widget=forms.Textarea(attrs={'rows': 3, 'cols': 40}),
                                                       required=False,
                                                       label='Function arguments')
+        elif resource.kind == 'salt_master':
+            if action == 'generate_key':
+                fields['minion_id'] = forms.CharField(label='Minion ID')
         return fields
 
     def process_resource_action(self, resource, action, data):
@@ -301,4 +304,18 @@ class SaltStackClient(BaseClient):
                     if data['arguments'] != '':
                         run_metadata['arg'] = [s.strip() for s in data['arguments'].splitlines()]
                     metadata = self.api.low([run_metadata]).get('return')[0]
-                    logger.info(metadata)
+        elif resource.kind == 'salt_master':
+            if action == 'generate_key':
+                if self.auth():
+                    run_metadata = {
+                        'client': 'wheel',
+                        'tgt': '*',
+                        'fun': 'key.gen_accept',
+                        'id_': data['minion_id'],
+                        'force': False,
+                    }
+                    metadata = self.api.low([run_metadata]).get('return')[0]['data']['return']
+        else:
+            metadata = None
+        logger.info(metadata)
+        return metadata
