@@ -14,7 +14,7 @@
 {% endfor %}
 {% elif inventory.engine == 'hier-deploy' %}
 <a href="{% url 'inventory:node_create' inventory.name %}" class="open-modal btn btn-sm btn-outline-primary">{% trans "Create Node" %}</a>
-<a href="#" class="btn btn-sm btn-outline-primary">{% trans "Create Param" %}</a>
+<a href="{% url 'inventory:param_create' inventory.name %}" class="open-modal btn btn-sm btn-outline-primary">{% trans "Create Param" %}</a>
 {% endif %}
 <a href="{% url 'inventory:inventory_sync' inventory.name %}" class="btn btn-sm btn-outline-primary">{% trans "Synchronise" %}</a>
 <a href="{% url 'inventory:inventory_list' %}" class="btn btn-sm btn-outline-primary">Inventories</a>
