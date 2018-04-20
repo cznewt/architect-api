@@ -1,24 +1,4 @@
 {% load i18n %}
-
-<h6 class="mt-3">{% trans "Current cluster overrides" %}</h6>
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th>{% trans "Parameter" %}</th>
-      <th>{% trans "Value" %}</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for param, value in inventory.cache.overrides.items %}
-    <tr>
-      <th scope="row">{{ param }}</th>
-      <td>{{ value }}</td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-
-<h6 class="mt-3">{% trans "Dynamic class mapping" %}</h6>
 <table class="table table-striped">
   <thead>
     <th>{% trans "Name" %}</th>

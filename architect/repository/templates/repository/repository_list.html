@@ -8,13 +8,14 @@
 {% block title %}{% trans "Available repositories" %}{% endblock %}
 
 {% block content %}
+{% comment %}
 <div class="row">
   {% for repository in repository_list %}
   <div class="col-sm-6 col-md-4 mb-3">
     <div class="card border-{{ repository.color }}">
       <div class="card-body">
         <h4 class="card-title">{{ repository.metadata.name|default:repository.name }}</h4>
-        <h6 class="card-subtitle mb-2 text-muted">{{ repository.engine }}, {{ repository.resources.count }} resources</h6>
+        <h6 class="card-subtitle mb-2 text-muted">{{ repository.engine }}, {{ repository.images.count }} images</h6>
         <h6 class="card-subtitle mb-2">{{ repository.conn_detail }}</h6>
         <a href="{% url 'repository:repository_detail' repository.name %}" class="btn btn-sm btn-outline-primary">Details</a>
       </div>
@@ -22,4 +23,32 @@
   </div>
   {% endfor %}
 </div>
+{% endcomment %}
+<table class="table bordered">
+  <thead>
+    <tr class="row m-0">
+      <th class="d-inline-block col-3">Repository</th>
+      <th class="d-inline-block col-1">Engine</th>
+      <th class="d-inline-block col-1 text-right">Images</th>
+      <th class="d-inline-block col-5">Details</th>
+      <th class="d-inline-block col-2"></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for repository in repository_list %}
+    <tr class="row m-0">
+      <th class="d-inline-block col-3" scope="row">
+        <strong>{{ repository.name }}</strong>
+        <span class="badge badge-{{ repository.color }}">{{ repository.status }}</span>
+      </th>
+      <td class="d-inline-block col-1">{{ repository.engine }}</td>
+      <td class="d-inline-block col-1 text-right">{{ repository.images.count }}</td>
+      <td class="d-inline-block col-5">{{ repository.conn_detail }}</td>
+      <td class="d-inline-block col-2 text-right">
+        <a href="{% url 'repository:repository_detail' repository.name %}" class="btn btn-sm btn-outline-primary">Details</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
 {% endblock %}

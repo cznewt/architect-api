@@ -10,8 +10,8 @@ from django.views.generic.edit import FormView
 from django.views.generic.base import RedirectView
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
-from .models import Repository
-from .forms import RepositoryCreateForm, RepositoryDeleteForm
+from .models import Repository, Resource
+from .forms import ImageCreateForm, ImageDeleteForm
 
 
 class RepositoryListView(TemplateView):
@@ -24,58 +24,38 @@ class RepositoryListView(TemplateView):
         return context
 
 
-class RepositoryCheckView(RedirectView):
-
-    permanent = False
-    query_string = True
-    pattern_name = 'repository:repository_list'
-
-    def get_redirect_url(self, *args, **kwargs):
-        repositories = Repository.objects.all()
-        messages.add_message(self.request,
-                             messages.SUCCESS,
-                             'Finished syncing of repositories.')
-        return super().get_redirect_url(*args, **kwargs)
-
-
-class RepositorySyncView(RedirectView):
-
-    permanent = False
-    pattern_name = 'repository:repository_detail'
-
-    def get_redirect_url(self, *args, **kwargs):
-        return super().get_redirect_url(*args, **kwargs)
-
-
 class RepositoryDetailView(TemplateView):
 
     template_name = "repository/repository_detail.html"
 
     def get_context_data(self, **kwargs):
-        repository = Repository.objects.get(name=kwargs.get('repository_name'))
         context = super().get_context_data(**kwargs)
-        context['repository'] = repository
+        context['repository'] = Repository.objects.get(name=kwargs.get('repository_name'))
+        return context
 
 
-class RepositoryCreateView(FormView):
+class ImageCreateView(FormView):
 
     template_name = "base_form.html"
-    form_class = RepositoryCreateForm
+    form_class = ImageCreateForm
     success_url = '/success'
-    initial = {
-        'classes_dir': '/srv/salt/reclass/classes',
-        'nodes_dir': '/srv/salt/reclass/nodes',
-    }
+    initial = {}
+
+    def get_form_kwargs(self):
+        repository_name = self.kwargs.get('repository_name')
+        kwargs = super(ImageCreateView, self).get_form_kwargs()
+        kwargs.update({'initial': {'repository_name': repository_name}})
+        return kwargs
 
     def form_valid(self, form):
         form.handle()
         return super().form_valid(form)
 
 
-class RepositoryDeleteView(FormView):
+class ImageDeleteView(FormView):
 
     template_name = "base_form.html"
-    form_class = RepositoryDeleteForm
+    form_class = ImageDeleteForm
     success_url = '/repository/v1/success'
 
     def get_success_url(self):
@@ -83,7 +63,7 @@ class RepositoryDeleteView(FormView):
 
     def get_form_kwargs(self):
         repository_name = self.kwargs.get('repository_name')
-        kwargs = super(RepositoryDeleteView, self).get_form_kwargs()
+        kwargs = super(ImageDeleteView, self).get_form_kwargs()
         kwargs.update({'initial': {'repository_name': repository_name}})
         return kwargs
 

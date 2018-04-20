@@ -12,4 +12,7 @@ class PackerClient(BaseClient):
         super(PackerClient, self).__init__(**kwargs)
 
     def check_status(self):
-        return False
+        return True
+
+    def generate_image(self, params):
+        return True

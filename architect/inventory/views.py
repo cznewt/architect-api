@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import json
+from collections import OrderedDict
+import six
+from functools import update_wrapper
 from django.contrib import messages
 from django.conf import settings
 from django.urls import reverse, reverse_lazy
@@ -10,12 +13,12 @@ from django.views.generic.base import TemplateView
 from django.views.generic.edit import FormView
 from django.views.generic.base import RedirectView
 from django.views.decorators.csrf import csrf_exempt
-from django.utils.decorators import method_decorator
+from django.utils.decorators import method_decorator, classonlymethod
 from django.contrib.auth.mixins import LoginRequiredMixin
 from formtools.wizard.views import SessionWizardView
 from architect.views import JSONDataView
 from .models import Inventory, Resource
-from .forms import HierDeployInventoryCreateForm, InventoryDeleteForm, \
+from .forms import InventoryDeleteForm, \
     ResourceDeleteForm, ResourceCreateForm
 from .tasks import get_inventory_status_task, \
     sync_inventory_resources_task
@@ -91,56 +94,6 @@ class InventoryDetailJSONView(JSONDataView):
         return inventory.inventory()
 
 
-class InventoryCreateView(LoginRequiredMixin, FormView):
-    template_name = "base_form.html"
-    form_class = HierDeployInventoryCreateForm
-    success_url = '/success'
-    initial = {
-        'classes_dir': '/srv/salt/reclass/classes',
-        'nodes_dir': '/srv/salt/reclass/nodes',
-    }
-
-    def form_valid(self, form):
-        form.handle()
-        return super().form_valid(form)
-
-
-class InventoryCreateJSONView(View):
-
-    @method_decorator(csrf_exempt)
-    def dispatch(self, request, *args, **kwargs):
-        return super(InventoryCreateJSONView, self).dispatch(
-            request, *args, **kwargs)
-
-    def get(self, request, *args, **kwargs):
-        return HttpResponse('Only POST method is supported.')
-
-    def post(self, request, *args, **kwargs):
-        metadata = json.loads(request.body.decode("utf-8"))
-        current_inventories = Inventory.objects.filter(
-            name=metadata.get('inventory_name'))
-        if current_inventories.count() > 0:
-            return JsonResponse({'error': "Inventory with name '{}' already exists.".format(metadata.get('inventory_name'))})
-        inventory_kwargs = {
-            'cluster_domain': metadata.get('domain_name'),
-            'cluster_name': metadata.get('cluster_name'),
-            'inventory_name': metadata.get('inventory_name'),
-            'class_dir': settings.INVENTORY_RECLASS_CLASSES_DIRS[0][0],
-        }
-        print(inventory_kwargs)
-        form = HierDeployInventoryCreateForm(inventory_kwargs)
-        if form.is_valid():
-            form.handle()
-            status = {'success': "Inventory '{}' was created.".format(metadata.get('inventory_name'))}
-        else:
-            errors = []
-            for error in form.non_field_errors():
-                errors.append(error)
-            for field in form:
-                for error in field.errors:
-                    errors.append('{}: {}'.format(field.name, error))
-            status = {'failure': 'Inventory form validation failed: {}.'.format(errors)}
-        return JsonResponse(status)
 
 
 class InventoryDeleteView(LoginRequiredMixin, FormView):
@@ -246,7 +199,6 @@ class ResourceClassifyView(View):
         }
         return HttpResponse('OK')
 
-
 class ClassGenerateView(LoginRequiredMixin, FormView):
     template_name = "base_form.html"
     form_class = ResourceCreateForm
@@ -272,15 +224,88 @@ class ClassGenerateView(LoginRequiredMixin, FormView):
         return super().form_valid(form)
 
 
-class ClassGenerateWizardView(SessionWizardView):
-    form_list = [('form01', ResourceCreateForm),]
+class InventorySessionWizardView(SessionWizardView):
 
-    initial_dict = {
-        'form01': {
-            'subject': 'test',
-            'sender': 'test@test.cz'
-        }
-    }
+    @classmethod
+    def get_initkwargs(cls, form_list=[], initial_dict=None, instance_dict=None,
+                       condition_dict=None, *args, **kwargs):
+        kwargs.update({
+            'form_list': form_list,
+            'initial_dict': (
+                initial_dict or
+                kwargs.pop('initial_dict', getattr(cls, 'initial_dict', None)) or {}
+            ),
+            'instance_dict': (
+                instance_dict or
+                kwargs.pop('instance_dict', getattr(cls, 'instance_dict', None)) or {}
+            ),
+            'condition_dict': (
+                condition_dict or
+                kwargs.pop('condition_dict', getattr(cls, 'condition_dict', None)) or {}
+            )
+        })
+        return kwargs
+
+    def set_form_list(self, request, *args, **kwargs):
+        """
+        Creates computed_form_list from the original form_list.
+        Separated from the original `set_initkwargs` method.
+        """
+        # this will be created with some other magic later, now just hardcoded POC
+        inventory_name = self.kwargs.get('inventory_name')
+        form_name = self.kwargs.get('form_name')
+        inventory = Inventory.objects.get(name=inventory_name)
+        form_meta = inventory.metadata['form'][form_name]['steps'][0]
+        print(kwargs)
+        form_list = []
+
+#        form_list = [('contact_form_1', ContactForm1), ('contact_form_2', ContactForm2)]
+
+        computed_form_list = OrderedDict()
+
+        # walk through the passed form list
+        for i, form in enumerate(form_list):
+            if isinstance(form, (list, tuple)):
+                # if the element is a tuple, add the tuple to the new created
+                # sorted dictionary.
+                computed_form_list[six.text_type(form[0])] = form[1]
+            else:
+                # if not, add the form with a zero based counter as unicode
+                computed_form_list[six.text_type(i)] = form
+
+        # walk through the new created list of forms
+        for form in six.itervalues(computed_form_list):
+            if issubclass(form, formsets.BaseFormSet):
+                # if the element is based on BaseFormSet (FormSet/ModelFormSet)
+                # we need to override the form variable.
+                form = form.form
+            # check if any form contains a FileField, if yes, we need a
+            # file_storage added to the wizardview (by subclassing).
+            for field in six.itervalues(form.base_fields):
+                if (isinstance(field, forms.FileField) and
+                        not hasattr(cls, 'file_storage')):
+                    raise NoFileStorageConfigured(
+                        "You need to define 'file_storage' in your "
+                        "wizard view in order to handle file uploads."
+                    )
+
+        self.form_list = computed_form_list
+
+    def dispatch(self, request, *args, **kwargs):
+        """
+        This method gets called by the routing engine. The first argument is
+        `request` which contains a `HttpRequest` instance.
+        The request is stored in `self.request` for later use. The storage
+        instance is stored in `self.storage`.
+        After processing the request using the `dispatch` method, the
+        response gets updated by the storage engine (for example add cookies).
+        Override: construct `form_list` here and save it on view instance
+        """
+        self.set_form_list(request, *args, **kwargs)
+        return super(GeneratedWizardView, self).dispatch(request, *args, **kwargs)
+
+
+class ClassGenerateWizardView(InventorySessionWizardView):
 
     template_name = 'inventory/model_generate.html'
 

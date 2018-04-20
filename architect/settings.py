@@ -207,7 +207,7 @@ else:
     REPOSITORY_CLASS_MAPPINGS = {
         "bbb": "architect.repository.engine.bbb.client.BbbClient",
         "esp": "architect.repository.engine.esp.client.EspClient",
-        "rpi": "architect.repository.engine.rpi.client.RpiClient",
+        "rpi23": "architect.repository.engine.rpi23.client.Rpi23Client",
         "packer": "architect.repository.engine.packer.client.PackerClient",
     }
 

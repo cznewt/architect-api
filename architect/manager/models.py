@@ -123,6 +123,9 @@ class Resource(models.Model):
     def relations(self):
         return Relationship.objects.filter(Q(source=self) | Q(target=self))
 
+    def workflow_options(self):
+        return self.manager.client()._schema['resource'][self.kind].get('workflow')
+
     class Meta:
         ordering = ['name']
 

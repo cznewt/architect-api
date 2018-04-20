@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from .engine.hier_deploy import views as hier_deploy_views
 
 app_name = 'inventory'
 urlpatterns = [
@@ -7,10 +8,10 @@ urlpatterns = [
          views.InventoryListView.as_view(),
          name='inventory_list'),
     path('v1/inventory-create',
-         views.InventoryCreateView.as_view(),
+         hier_deploy_views.InventoryCreateView.as_view(),
          name='inventory_create'),
     path('v1/inventory-create/data.json',
-         views.InventoryCreateJSONView.as_view(),
+         hier_deploy_views.InventoryCreateJSONView.as_view(),
          name='inventory_json_create'),
     path('v1/inventory-check',
          views.InventoryCheckView.as_view(),
@@ -30,6 +31,12 @@ urlpatterns = [
     path('v1/<inventory_name>/create',
          views.ResourceCreateView.as_view(),
          name='resource_create'),
+    path('v1/<inventory_name>/node-create',
+         hier_deploy_views.NodeCreateView.as_view(),
+         name='node_create'),
+    path('v1/<inventory_name>/node/<node_name>/update',
+         hier_deploy_views.NodeUpdateView.as_view(),
+         name='node_update'),
     path('v1/<inventory_name>/classify',
          views.ResourceClassifyView.as_view(),
          name='resource_classify'),
