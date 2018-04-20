@@ -11,7 +11,7 @@
     {% for resource in inventory.resources.all %}
     <tr class="row m-0">
       <th class="d-inline-block col-3" scope="row">
-        <a href="#">{{ resource.name }}</a>
+        <a href="{% url 'inventory:node_detail' inventory.name resource.name %}" class="open-modal">{{ resource.name }}</a>
       </th>
       <td class="d-inline-block col-7">
         {% for class in resource.metadata.applications %}

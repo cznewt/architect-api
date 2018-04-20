@@ -263,13 +263,16 @@ STATICFILES_FINDERS = (
 )
 
 NPM_FILE_PATTERNS = {
+    'billboard.js': ['scss/*', 'dist/billboard.js'],
     'bootstrap': ['scss/*', 'dist/js/bootstrap.js'],
     'bootstrap-notify': ['bootstrap-notify.js'],
     'bootswatch': ['dist/cyborg/*', 'dist/materia/*', 'dist/united/*'],
     'd3': ['build/d3.js'],
+    'd3-horizon-chart': ['scss/*', 'build/d3-horizon-chart.js'],
     'font-awesome': ['scss/*', 'fonts/*'],
     'jquery': ['dist/jquery.js'],
     'jquery-form': ['src/jquery.form.js'],
+    'skd3': ['scss/*', 'build/sk.d3.js'],
     'timeago': ['jquery.timeago.js']
 }
 

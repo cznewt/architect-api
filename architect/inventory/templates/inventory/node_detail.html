@@ -1,0 +1,31 @@
+{% extends TEMPLATE_BASE|default:"content_base.html" %}
+{% load i18n %}
+
+{% block nav_inventory_cls %} navigation__sub--active{% endblock %}
+
+{% block title %}Node {{ node.name }}{% endblock %}
+
+{% block content %}
+<div class="modal-body" style="max-height:80%;">
+    <ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" data-toggle="tab" href="#meta" role="tab">{% trans "Rendered Metadata" %}</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#classes" role="tab">{% trans "Implemented Classes" %}</a>
+        </li>
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane active" id="meta" role="tabpanel">
+            <p>{{ node.metadata.parameters }}</p>
+        </div>
+        <div class="tab-pane" id="classes" role="tabpanel" style="max-height:400px; overflow:auto;">
+            <ul>
+                {% for class in node.metadata.classes %}
+                <li>{{ class }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

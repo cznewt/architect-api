@@ -19,6 +19,18 @@ from formtools.wizard.views import SessionWizardView
 from architect.views import JSONDataView
 from .forms import InventoryCreateForm, NodeCreateForm, NodeUpdateForm, \
     ParamCreateForm, ParamUpdateForm, ParamDeleteForm
+from architect.inventory.models import Inventory, Resource
+
+
+class NodeDetailView(LoginRequiredMixin, TemplateView):
+    template_name = "inventory/node_detail.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['inventory'] = Inventory.objects.get(name=kwargs.pop('inventory_name'))
+        context['node'] = Resource.objects.get(name=kwargs.pop('node_name'),
+                                               inventory=context['inventory'])
+        return context
 
 
 class NodeCreateView(LoginRequiredMixin, FormView):
@@ -27,7 +39,7 @@ class NodeCreateView(LoginRequiredMixin, FormView):
     success_url = '/success'
 
     def get_form_kwargs(self):
-        kwargs = super(NodeCreateView, self).get_form_kwargs()
+        kwargs = super().get_form_kwargs()
         kwargs.update(self.kwargs)
         return kwargs
 
@@ -42,7 +54,7 @@ class NodeUpdateView(LoginRequiredMixin, FormView):
     success_url = '/success'
 
     def get_form_kwargs(self):
-        kwargs = super(NodeUpdateView, self).get_form_kwargs()
+        kwargs = super().get_form_kwargs()
         kwargs.update(self.kwargs)
         return kwargs
 
@@ -57,7 +69,7 @@ class ParamCreateView(LoginRequiredMixin, FormView):
     success_url = '/success'
 
     def get_form_kwargs(self):
-        kwargs = super(ParamCreateView, self).get_form_kwargs()
+        kwargs = super().get_form_kwargs()
         kwargs.update(self.kwargs)
         return kwargs
 
@@ -72,7 +84,7 @@ class ParamUpdateView(LoginRequiredMixin, FormView):
     success_url = '/success'
 
     def get_form_kwargs(self):
-        kwargs = super(ParamUpdateView, self).get_form_kwargs()
+        kwargs = super().get_form_kwargs()
         kwargs.update(self.kwargs)
         return kwargs
 
@@ -87,7 +99,7 @@ class ParamDeleteView(LoginRequiredMixin, FormView):
     success_url = '/success'
 
     def get_form_kwargs(self):
-        kwargs = super(ParamDeleteView, self).get_form_kwargs()
+        kwargs = super().get_form_kwargs()
         kwargs.update(self.kwargs)
         return kwargs
 
