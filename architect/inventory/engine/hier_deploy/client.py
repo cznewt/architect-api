@@ -94,8 +94,10 @@ class HierDeployClient(BaseClient):
         resource.delete()
 
     def save_override_param(self, name, value):
+        if 'cluster_name' not in self.metadata:
+            return
         file_name = '{}/overrides/{}.yml'.format(self.metadata['class_dir'],
-                                                 self.name.replace('.', '-'))
+                                                 self.metadata['cluster_name'],)
         inventory = Inventory.objects.get(name=self.name)
         inventory.cache['overrides'][name] = value
         inventory.save()
@@ -108,38 +110,32 @@ class HierDeployClient(BaseClient):
             yaml.safe_dump(metadata, file_handler, default_flow_style=False)
 
     def init_overrides(self):
-        file_name = '{}/overrides/{}.yml'.format(self.metadata['class_dir'],
-                                                 self.name.replace('.', '-'))
         if 'cluster_name' not in self.metadata:
             return
+        file_name = '{}/overrides/{}.yml'.format(self.metadata['class_dir'],
+                                                 self.metadata['cluster_name'],)
+        default_params = {
+            'cluster_name': self.metadata['cluster_name'],
+            'cluster_domain': self.metadata['cluster_domain']
+        }
         metadata = {
             'parameters': {
-                '_param': {
-                    'cluster_name': self.metadata['cluster_name'],
-                    'cluster_domain': self.metadata['cluster_domain']
-                }
+                '_param': default_params
             }
         }
         with open(file_name, 'w+') as file_handler:
             yaml.safe_dump(metadata, file_handler, default_flow_style=False)
+        inventory = Inventory.objects.get(name=self.name)
+        inventory.cache['overrides'] = default_params
+        inventory.save()
 
     def get_overrides(self):
-        file_name = '{}/overrides/{}.yml'.format(self.metadata['class_dir'],
-                                                 self.name.replace('.', '-'))
         if 'cluster_name' not in self.metadata:
             return {}
+        file_name = '{}/overrides/{}.yml'.format(self.metadata['class_dir'],
+                                                 self.metadata['cluster_name'],)
         if not os.path.isfile(file_name):
-            with open(file_name, 'w') as file_handler:
-                metadata = {
-                    'parameters': {
-                        '_param': {
-                            'cluster_name': self.metadata['cluster_name'],
-                            'cluster_domain': self.metadata['cluster_domain']
-                        }
-                    }
-                }
-                file_handler.save(yaml.dump(metadata))
-            return {}
+            self.init_overrides()
         with open(file_name, 'r') as file_handler:
             metadata = yaml.load(file_handler.read())
         return metadata.get('parameters', {}).get('_param', {})

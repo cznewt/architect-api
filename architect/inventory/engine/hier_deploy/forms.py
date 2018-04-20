@@ -9,6 +9,120 @@ from django.core import validators
 from architect.inventory.models import Inventory, Resource
 
 
+class ParamCreateForm(forms.Form):
+
+    name = forms.CharField(label="Name",
+                           initial='prefixed_parameter')
+    value = forms.CharField(label="Value",
+                            initial='parameter_value')
+
+    def __init__(self, *args, **kwargs):
+        self.inventory = Inventory.objects.get(name=kwargs.pop('inventory_name'))
+        super(ParamCreateForm, self).__init__(*args, **kwargs)
+        action_url = reverse('inventory:param_create',
+                             kwargs={'inventory_name': self.inventory.name})
+        self.label = "Create New Parameter at {} Inventory".format(self.inventory.name)
+        self.helper = FormHelper()
+        self.helper.form_id = 'modal-form'
+        self.modal_class = 'modal-md'
+        self.helper.form_action = action_url
+        self.helper.layout = Layout(
+            Div(
+                Div(
+                    Div('name', css_class='col-md-12'),
+                    css_class='form-row'
+                ),
+                Div(
+                    Div('value', css_class='col-md-12'),
+                    css_class='form-row'
+                ),
+                css_class='modal-body',
+            ),
+            Div(
+                Submit('submit', 'Submit', css_class='btn border-primary'),
+                css_class='modal-footer',
+            )
+        )
+
+    def handle(self):
+        data = self.cleaned_data
+        self.inventory.client().save_override_param(data['name'], data['value'])
+
+
+class ParamUpdateForm(forms.Form):
+
+    value = forms.CharField(label="Value")
+
+    def __init__(self, *args, **kwargs):
+        self.inventory = Inventory.objects.get(name=kwargs.pop('inventory_name'))
+        self.param = kwargs.pop('param_name')
+        super(ParamUpdateForm, self).__init__(*args, **kwargs)
+        action_url = reverse('inventory:param_update',
+                             kwargs={'inventory_name': self.inventory.name,
+                                     'param_name': self.param})
+        self.label = "Update Parameter {} at {} Inventory".format(self.param,
+                                                                  self.inventory.name)
+        self.fields['value'].initial = self.inventory.client().get_overrides()[self.param]
+        self.helper = FormHelper()
+        self.helper.form_id = 'modal-form'
+        self.modal_class = 'modal-md'
+        self.helper.form_action = action_url
+        self.helper.layout = Layout(
+            Div(
+                Div(
+                    Div('value', css_class='col-md-12'),
+                    css_class='form-row'
+                ),
+                css_class='modal-body'
+            ),
+            Div(
+                Submit('submit', 'Submit', css_class='btn border-primary'),
+                css_class='modal-footer'
+            )
+        )
+
+    def handle(self):
+        data = self.cleaned_data
+        self.inventory.client().save_override_param(self.param, data['value'])
+
+
+class ParamDeleteForm(forms.Form):
+
+    value = forms.CharField(label="Value")
+
+    def __init__(self, *args, **kwargs):
+        self.inventory = Inventory.objects.get(name=kwargs.pop('inventory_name'))
+        self.param = kwargs.pop('param_name')
+        super(ParamDeleForm, self).__init__(*args, **kwargs)
+        action_url = reverse('inventory:param_update',
+                             kwargs={'inventory_name': self.inventory.name,
+                                     'param_name': self.param})
+        self.label = "Delete Parameter {} at {} Inventory".format(self.param,
+                                                                  self.inventory.name)
+        self.fields['value'].initial = self.inventory.client().get_overrides()[self.param]
+        self.helper = FormHelper()
+        self.helper.form_id = 'modal-form'
+        self.modal_class = 'modal-md'
+        self.helper.form_action = action_url
+        self.helper.layout = Layout(
+            Div(
+                Div(
+                    Div('value', css_class='col-md-12'),
+                    css_class='form-row'
+                ),
+                css_class='modal-body'
+            ),
+            Div(
+                Submit('submit', 'Submit', css_class='btn border-primary'),
+                css_class='modal-footer'
+            )
+        )
+
+    def handle(self):
+        data = self.cleaned_data
+        self.inventory.client().save_override_param(self.param, data['value'])
+
+
 class NodeCreateForm(forms.Form):
 
     name = forms.CharField(label="Name",
@@ -29,8 +143,7 @@ class NodeCreateForm(forms.Form):
                               help_text="List of metadata classes node implements in YAML format.")
 
     def __init__(self, *args, **kwargs):
-        print(kwargs)
-        self.inventory = Inventory.objects.get(name=kwargs.pop('inventory'))
+        self.inventory = Inventory.objects.get(name=kwargs.pop('inventory_name'))
         super(NodeCreateForm, self).__init__(*args, **kwargs)
         action_url = reverse('inventory:node_create',
                              kwargs={'inventory_name': self.inventory.name})
@@ -87,7 +200,6 @@ class NodeUpdateForm(forms.Form):
                                    widget=forms.Textarea(attrs={'cols': 80, 'rows': 12}))
 
     def __init__(self, *args, **kwargs):
-        print(kwargs)
         self.inventory = Inventory.objects.get(name=kwargs.pop('inventory_name'))
         self.node = Resource.objects.get(name=kwargs.pop('node_name'),
                                          inventory=self.inventory)
@@ -210,7 +322,6 @@ class InventoryCreateForm(forms.Form):
         class_dir = cleaned_data.get("class_dir")
         if cluster_name != '':
             cluster_dir = '{}/cluster/{}'.format(class_dir, cluster_name)
-            print(cluster_dir)
             if not os.path.exists(cluster_dir):
                 raise forms.ValidationError(
                     "Cluster {} is not defined in selected classes {}.".format(

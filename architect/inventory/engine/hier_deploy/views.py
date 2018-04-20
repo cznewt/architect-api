@@ -17,7 +17,8 @@ from django.utils.decorators import method_decorator, classonlymethod
 from django.contrib.auth.mixins import LoginRequiredMixin
 from formtools.wizard.views import SessionWizardView
 from architect.views import JSONDataView
-from .forms import InventoryCreateForm, NodeCreateForm, NodeUpdateForm
+from .forms import InventoryCreateForm, NodeCreateForm, NodeUpdateForm, \
+    ParamCreateForm, ParamUpdateForm, ParamDeleteForm
 
 
 class NodeCreateView(LoginRequiredMixin, FormView):
@@ -26,9 +27,8 @@ class NodeCreateView(LoginRequiredMixin, FormView):
     success_url = '/success'
 
     def get_form_kwargs(self):
-        inventory_name = self.kwargs.get('inventory_name')
         kwargs = super(NodeCreateView, self).get_form_kwargs()
-        kwargs.update({'inventory': inventory_name})
+        kwargs.update(self.kwargs)
         return kwargs
 
     def form_valid(self, form):
@@ -43,6 +43,51 @@ class NodeUpdateView(LoginRequiredMixin, FormView):
 
     def get_form_kwargs(self):
         kwargs = super(NodeUpdateView, self).get_form_kwargs()
+        kwargs.update(self.kwargs)
+        return kwargs
+
+    def form_valid(self, form):
+        form.handle()
+        return super().form_valid(form)
+
+
+class ParamCreateView(LoginRequiredMixin, FormView):
+    template_name = "base_form.html"
+    form_class = ParamCreateForm
+    success_url = '/success'
+
+    def get_form_kwargs(self):
+        kwargs = super(ParamCreateView, self).get_form_kwargs()
+        kwargs.update(self.kwargs)
+        return kwargs
+
+    def form_valid(self, form):
+        form.handle()
+        return super().form_valid(form)
+
+
+class ParamUpdateView(LoginRequiredMixin, FormView):
+    template_name = "base_form.html"
+    form_class = ParamUpdateForm
+    success_url = '/success'
+
+    def get_form_kwargs(self):
+        kwargs = super(ParamUpdateView, self).get_form_kwargs()
+        kwargs.update(self.kwargs)
+        return kwargs
+
+    def form_valid(self, form):
+        form.handle()
+        return super().form_valid(form)
+
+
+class ParamDeleteView(LoginRequiredMixin, FormView):
+    template_name = "base_form.html"
+    form_class = ParamDeleteForm
+    success_url = '/success'
+
+    def get_form_kwargs(self):
+        kwargs = super(ParamDeleteView, self).get_form_kwargs()
         kwargs.update(self.kwargs)
         return kwargs
 
