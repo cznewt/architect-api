@@ -56,15 +56,11 @@ class ImageDeleteView(FormView):
 
     template_name = "base_form.html"
     form_class = ImageDeleteForm
-    success_url = '/repository/v1/success'
-
-    def get_success_url(self):
-        return reverse('repository:repository_list')
+    success_url = '/success'
 
     def get_form_kwargs(self):
-        repository_name = self.kwargs.get('repository_name')
         kwargs = super(ImageDeleteView, self).get_form_kwargs()
-        kwargs.update({'initial': {'repository_name': repository_name}})
+        kwargs.update(self.kwargs)
         return kwargs
 
     def form_valid(self, form):

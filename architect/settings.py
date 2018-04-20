@@ -211,7 +211,6 @@ else:
         "packer": "architect.repository.engine.packer.client.PackerClient",
     }
 
-
 if 'public_endpoint' in CONFIG:
     PUBLIC_ENDPOINT = CONFIG['public_endpoint']
 else:
@@ -251,14 +250,9 @@ COMPRESS_CSS_FILTERS = (
 COMPRESS_CSS_HASHING_METHOD = 'hash'
 COMPRESS_PARSER = 'compressor.parser.HtmlParser'
 
-# STATICFILES_DIRS = [
-#     os.path.join(BASE_DIR, 'architect', 'static'),
-# ]
-
 STATICFILES_FINDERS = (
     'npm.finders.NpmFinder',
     'compressor.finders.CompressorFinder',
-    # 'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 )
 
@@ -277,7 +271,6 @@ NPM_FILE_PATTERNS = {
 }
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
-
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [

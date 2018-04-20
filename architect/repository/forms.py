@@ -121,36 +121,39 @@ class ImageCreateForm(forms.Form):
 
 class ImageDeleteForm(forms.Form):
 
-    repository_name = forms.CharField(widget=forms.HiddenInput())
+    confirm = forms.CharField(widget=forms.HiddenInput(), required=False)
 
     def __init__(self, *args, **kwargs):
-        super(RepositoryDeleteForm, self).__init__(*args, **kwargs)
-        repository_name = self.initial.get('repository_name')
-        delete_url = reverse('repository:repository_delete',
-                             kwargs={'repository_name': repository_name})
-        self.label = 'Delete repository'
-        self.modal_class = 'modal-sm'
+        self.repository_name = kwargs.pop('repository_name')
+        self.image_name = kwargs.pop('image_name')
+        super(ImageDeleteForm, self).__init__(*args, **kwargs)
+        delete_url = reverse('repository:image_delete',
+                             kwargs={'repository_name': self.repository_name,
+                                     'image_name': self.image_name})
+        self.label = 'Delete Image {}?'.format(self.image_name)
+        self.modal_class = 'modal-md'
         self.helper = FormHelper()
         self.helper.form_id = 'modal-form'
         self.helper.form_action = delete_url
         self.helper.layout = Layout(
             Div(
                 Div(
-                    Div('repository_name', css_class='col-md-12'),
+                    Div('confirm', css_class='col-md-12'),
                     css_class='form-row'),
-                HTML('<h6>Are you sure to delete <span class="badge badge-warning">{}</span> ?</h6>'.format(repository_name)),
+                HTML('<p>Are you sure to delete image <span class="badge badge-warning">{}</span> from repository {}?</p><p>This action cannot be reversed.</p>'.format(self.image_name, self.repository_name)),
                 css_class='modal-body',
             ),
             Div(
-                Submit('submit', 'Submit', css_class='btn border-primary'),
+                Submit('submit', 'Commit Delete', css_class='btn border-primary'),
                 css_class='modal-footer',
             )
         )
 
     def handle(self):
         data = self.clean()
-        repository = Repository.objects.get(name=data.get('repository_name'))
-        repository.delete()
+        repository = Repository.objects.get(name=self.repository_name)
+        image = Resource.objects.get(name=self.image_name, repository=repository)
+        image.delete()
 
 
 class RepositoryCreateForm(forms.Form):

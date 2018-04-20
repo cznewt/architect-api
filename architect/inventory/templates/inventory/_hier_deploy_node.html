@@ -18,7 +18,7 @@
         <span class="badge">{{ class }}</span>
         {% endfor %}
       </td>
-      <td class="d-inline-block col-2">
+      <td class="d-inline-block col-2 text-right">
         <a href="{% url 'inventory:node_update' inventory.name resource.name %}" class="open-modal btn btn-sm btn-outline-primary">{% trans "Update" %}</a>
         <a href="{% url 'inventory:resource_delete' inventory.name resource.name %}" class="open-modal btn btn-sm btn-outline-danger">{% trans "Delete" %}</a>
       </td>

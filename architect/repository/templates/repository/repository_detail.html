@@ -25,7 +25,7 @@
         <th class="d-inline-block col-6">Name</th>
         <th class="d-inline-block col-2">Created</th>
         <th class="d-inline-block col-2">Size</th>
-        <th class="d-inline-block col-2">Actions</th>
+        <th class="d-inline-block col-2"></th>
       </tr>
     </thead>
     <tbody>
@@ -37,8 +37,9 @@
         </th>
         <td class="d-inline-block col-2">{{ resource.metadata.create_time }}</td>
         <td class="d-inline-block col-2">{{ resource.size }}</td>
-        <td class="d-inline-block col-2">
+        <td class="d-inline-block col-2 text-right">
           <a href="{% url 'repository:image_create' repository.name %}" class="open-modal btn btn-sm btn-outline-primary">{% trans "Rebuild" %}</a>
+          <a href="{% url 'repository:image_delete' repository.name resource.name %}" class="open-modal btn btn-sm btn-outline-danger">{% trans "Delete" %}</a>
         </td>
       </tr>
       {% endfor %}

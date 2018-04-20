@@ -14,7 +14,7 @@
       <th class="d-inline-block col-3"s scope="row">{{ param_name }}</th>
       <td class="d-inline-block col-4">{{ param_value }}</td>
       <td class="d-inline-block col-3">{{ inventory.metadata.cluster_name }}</td>
-      <td class="d-inline-block col-2">
+      <td class="d-inline-block col-2 text-right">
         <a href="{% url 'inventory:param_update' inventory.name param_name %}" class="open-modal btn btn-sm btn-outline-primary">{% trans "Update" %}</a>
         <a href="{% url 'inventory:param_delete' inventory.name param_name %}" class="open-modal btn btn-sm btn-outline-danger">{% trans "Delete" %}</a>
       </td>

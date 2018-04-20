@@ -35,7 +35,7 @@
     <tr class="row m-0">
       <th class="d-inline-block col-3">Inventory</th>
       <th class="d-inline-block col-2">Engine</th>
-      <th class="d-inline-block col-1 text-right">Defs</th>
+      <th class="d-inline-block col-1 text-right">Resources</th>
       <th class="d-inline-block col-4">Details</th>
       <th class="d-inline-block col-2"></th>
     </tr>
@@ -48,7 +48,7 @@
         <span class="badge badge-{{ inventory.color }}">{{ inventory.status }}</span>
       </th>
       <td class="d-inline-block col-2">{{ inventory.engine }}</td>
-      <td class="d-inline-block col-1 text-right">{{ inventory.resources.count }}</td>
+      <td class="d-inline-block col-1 text-right">{{ inventory.resources.count }} items</td>
       <td class="d-inline-block col-4">{{ inventory.conn_detail }}</td>
       <td class="d-inline-block col-2 text-right">
         <a href="{% url 'inventory:inventory_detail' inventory.name %}" class="btn btn-sm btn-outline-primary">Details</a>
