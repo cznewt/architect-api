@@ -11,29 +11,31 @@ var RelationalPlot = function(RelationalPlot){
      */
     RelationalPlot.sunburst = function(dataUrl, graphSelector, refreshInterval){
 
-        var width =  $(graphSelector).innerWidth(),
-            height = $(graphSelector).innerHeight(),
-            maxRadius = Math.min(width, height) / 2 - 5;
+        var width,
+            height,
+            maxRadius,
+            formatNumber = d3.format(',d'),
+            x = d3.scaleLinear().range([0, 2 * Math.PI]).clamp(true),
+            y,
+            color = d3.scaleOrdinal(d3.schemeCategory20),
+            partition = d3.partition(),
+            arc,
+            graph = this;
 
-        var formatNumber = d3.format(',d');
-        var x = d3.scaleLinear().range([0, 2 * Math.PI]).clamp(true);
-        var y = d3.scaleSqrt().range([maxRadius * .1, maxRadius]);
-        var color = d3.scaleOrdinal(d3.schemeCategory20);
-        var partition = d3.partition();
-        var arc = d3.arc().startAngle(function (d) {return x(d.x0);})
-            .endAngle(function (d) {return x(d.x1);})
-            .innerRadius(function (d) {return Math.max(0, y(d.y0));})
-            .outerRadius(function (d) {return Math.max(0, y(d.y1));});
-
-        var graph = this;
         this._data = {};
 
         this.init = function(alreadyRunning){
-
             if(alreadyRunning && graph.svg) {
                 graph.svg.remove();
             }
-
+            width =  $(graphSelector).innerWidth();
+            height = $(graphSelector).innerHeight();
+            maxRadius = Math.min(width, height) / 2 - 5;
+            y = d3.scaleSqrt().range([maxRadius * .1, maxRadius]);
+            arc = d3.arc().startAngle(function (d) {return x(d.x0);})
+                .endAngle(function (d) {return x(d.x1);})
+                .innerRadius(function (d) {return Math.max(0, y(d.y0));})
+                .outerRadius(function (d) {return Math.max(0, y(d.y1));});
             graph.svg = d3.select(graphSelector)
                 .append('svg')
                 .style('width', width)

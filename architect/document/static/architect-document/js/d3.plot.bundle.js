@@ -6,10 +6,10 @@ var RelationalPlot = function(RelationalPlot){
      * @param refreshInterval - Refresh interval in seconds (null for disabled)
      */
     RelationalPlot.hierarchicalEdgeBundling = function(dataUrl, graphSelector, refreshInterval) {
-        var contentWidth = $(graphSelector).innerWidth(),
-            diameter = contentWidth,
-            radius = diameter / 2,
-            innerRadius = radius - 120;
+        var contentWidth,
+            diameter,
+            radius,
+            innerRadius;
 
         var line_color = function(d){
                 var color = "#C7C7C7";
@@ -39,7 +39,10 @@ var RelationalPlot = function(RelationalPlot){
         this._data = {};
 
         this.init = function(alreadyRunning) {
-
+            contentWidth = $(graphSelector).innerWidth();
+            diameter = contentWidth;
+            radius = diameter / 2;
+            innerRadius = radius - 120;
             graph.cluster = d3.cluster()
                 .size([360, innerRadius]);
 

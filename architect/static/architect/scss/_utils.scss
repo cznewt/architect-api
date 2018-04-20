@@ -72,6 +72,9 @@
     bottom: 0;
     overflow: auto;
     background-color: $body-bg!important;
+    svg{
+      height: 85vh;
+    }
   }
 
   .card-fullscreen .card-body {

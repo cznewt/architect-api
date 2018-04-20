@@ -107,23 +107,33 @@ document.addEventListener("DOMContentLoaded", function(event) {
   {% for widget_name, widget in document.widgets.items %}
 
   $("#{{ widget_name }}-fullscreen").click(function (e) {
-    e.preventDefault();  
-    var $this = $(this);
+    e.preventDefault();
+    var $this = $(this),
+        $chartContainer = $("#chart-{{ widget_name }}")
     if ($this.children('i').hasClass('fa-expand'))
     {
       $this.children('i').removeClass('fa-expand');
       $this.children('i').addClass('fa-compress');
+      // patch height as min height
+      var originalHeight = $chartContainer.css("height");
+      $chartContainer.css("height", "");
+      $chartContainer.css("min-height", originalHeight);
     }
     else if ($this.children('i').hasClass('fa-compress'))
     {
       $this.children('i').removeClass('fa-compress');
       $this.children('i').addClass('fa-expand');
+      // patch min-height as height
+      var originalHeight = $chartContainer.css("min-height");
+      $chartContainer.css("min-height", "");
+      $chartContainer.css("height", originalHeight);
     }
-    $(this).closest('.card').toggleClass('card-fullscreen');
+    $(this).closest('.card-body').toggleClass('card-fullscreen');
+    window.dispatchEvent(new Event("resize"));
   });
 
   $("#chart-{{ widget_name }}")
-    .height({{ widget.height|default:1 }} * $("#chart-{{ widget_name }}").width());
+    .css("height", {{ widget.height|default:1 }} * $("#chart-{{ widget_name }}").width());
 
   {% endfor %}
 
