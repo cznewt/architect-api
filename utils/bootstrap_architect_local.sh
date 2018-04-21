@@ -53,13 +53,13 @@ cd /opt/architect
 
 printf "Installing architect-api"
 virtualenv -p python3 venv
-source venv/bin/activate
+. venv/bin/activate
 pip install -r requirements/base.txt
 pip install psycopg2
 pip install git+https://github.com/salt-formulas/reclass.git@python3
 
 printf "Installing static"
-apt-get install npm rubygems ruby-dev
+apt-get -y install npm rubygems ruby-dev
 sudo gem install sass --no-user-install
 
 npm install
@@ -67,12 +67,9 @@ npm install
 python manage.py collectstatic --noinput
 python manage.py compress
 python manage.py migrate
-python manage.py sync_inventories
-python manage.py createsuperuser
 
-#run following 2 services
+# Now you can run following 2 services
 
 # python manage.py runserver 0.0.0.0:8181
-# celery -A architect worker -l info
 
-# in ui, login at /admin/ and in inventories sync 
+# celery -A architect worker -l info
