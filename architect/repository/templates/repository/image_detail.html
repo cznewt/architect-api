@@ -1,0 +1,69 @@
+{% extends TEMPLATE_BASE|default:"content_base.html" %}
+
+{% load static compress i18n %}
+
+{% block nav_repository_cls %} navigation__sub--active{% endblock %}
+
+{% block page_title %}
+Image "{{ image.name }}"
+{% endblock %}
+
+{% block title %}
+Image "{{ image.name }}"
+{% endblock %} 
+
+{% block actions %}
+{% if image.status == 'active' %}
+<a href="{% url 'repository:image_download' repository.name image.name %}" class="btn btn-sm btn-outline-primary">{% trans "Download" %}</a>
+{% endif %}
+<a href="{% url 'repository:repository_detail' repository.name %}" class="btn btn-sm btn-outline-primary">Repository</a>
+{% endblock %}
+
+{% block content %}
+<ul class="nav nav-tabs" role="tablist">
+    <li class="nav-item">
+        <a class="nav-link active" data-toggle="tab" href="#overview" role="tab">{% trans "Image Overview" %}</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#config" role="tab">{% trans "Build Command Config" %}</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#command" role="tab">{% trans "Build Command Output" %}</a>
+    </li>
+    {% if image.cache.block_map %}
+    <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#blockmap" role="tab">{% trans "Image Block Map" %}</a>
+    </li>
+    {% endif %}
+</ul>
+<div class="tab-content">
+    <div class="tab-pane active" id="overview" role="tabpanel">
+        <dl class="ml-4 mt-4 text-light">
+            <dt>Host Name</dt>
+            <dd>{{ image.metadata.hostname }}</dd>
+            <dt>Image Type</dt>
+            <dd>{{ image.metadata.type }}</dd>
+            <dt>Image Size</dt>
+            <dd>{{ image.cache.image_size|default:"N/A" }}</dd>
+            <dt>Build Time</dt>
+            <dd>{{ image.get_created }}</dd>
+            <dt>Build Duration</dt>
+            <dd>{{ image.cache.duration|default:"N/A" }}</dd>
+        </dl>
+    </div>
+    <div class="tab-pane" id="config" role="tabpanel">
+        <pre class="text-light"><code>{{ image.cache.config }}</code></pre>
+    </div>
+    <div class="tab-pane" id="command" role="tabpanel">
+        <pre class="text-light"><code>
+{{ image.cache.command }}</code></pre>
+    </div>
+     {% if image.cache.block_map %}
+    <div class="tab-pane" id="blockmap" role="tabpanel">
+        <pre class="text-light"><code>
+{{ image.cache.block_map }}</code></pre>
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}

@@ -5,11 +5,11 @@
 {% block nav_repository_cls %} navigation__sub--active{% endblock %}
 
 {% block page_title %}
-"{{ repository.name }}" {{ repository.engine }} repository
+{{ repository.engine }} repository "{{ repository.name }}"
 {% endblock %}
 
 {% block title %}
-"{{ repository.name }}" {{ repository.engine }} repository
+{{ repository.engine }} repository "{{ repository.name }}"
 {% endblock %}
 
 {% block actions %}
@@ -22,23 +22,28 @@
   <table class="table bordered">
     <thead>
       <tr class="row m-0">
-        <th class="d-inline-block col-6">Name</th>
+        <th class="d-inline-block col-3">Host Name</th>
+        <th class="d-inline-block col-4">Platform</th>
         <th class="d-inline-block col-2">Created</th>
-        <th class="d-inline-block col-2">Size</th>
+        <th class="d-inline-block col-1">Size</th>
         <th class="d-inline-block col-2"></th>
       </tr>
     </thead>
     <tbody>
       {% for resource in repository.images.all %}
       <tr>
-        <th class="d-inline-block col-6">
-          <a href="#">{{ resource.name }}</a>
+        <th class="d-inline-block col-3">
+          <a href="{% url 'repository:image_detail' repository.name resource.name %}">{{ resource.metadata.hostname|default:resource.name }}</a>
           <span class="badge badge-{{ resource.color }}">{{ resource.status }}</span>
         </th>
-        <td class="d-inline-block col-2">{{ resource.metadata.create_time }}</td>
-        <td class="d-inline-block col-2">{{ resource.size }}</td>
+        <td class="d-inline-block col-4">{{ resource.get_platform }}</td>
+        <td class="d-inline-block col-2">{{ resource.get_created }}</td>
+        <td class="d-inline-block col-1">{{ resource.cache.image_size|filesizeformat }}</td>
         <td class="d-inline-block col-2 text-right">
-          <a href="{% url 'repository:image_create' repository.name %}" class="open-modal btn btn-sm btn-outline-primary">{% trans "Rebuild" %}</a>
+          <a href="{% url 'repository:image_detail' repository.name resource.name %}" class="btn btn-sm btn-outline-primary">{% trans "Detail" %}</a>
+          {% if resource.status == 'active' %}
+          <a href="{% url 'repository:image_download' repository.name resource.name %}" class="btn btn-sm btn-outline-primary">{% trans "Download" %}</a>
+          {% endif %}
           <a href="{% url 'repository:image_delete' repository.name resource.name %}" class="open-modal btn btn-sm btn-outline-danger">{% trans "Delete" %}</a>
         </td>
       </tr>

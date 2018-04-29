@@ -6,4 +6,6 @@ Architect Repository
 .. toctree::
    :maxdepth: 2
 
-   monitor-time-series
+   repository-overview
+   repository-beagle
+   repository-raspberrypi

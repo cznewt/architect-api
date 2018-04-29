@@ -1,0 +1,7 @@
+repository:
+  bbb-repo:
+    engine: rpi23
+    builder_dir: /path/to/rpi23-gen-image
+    image_dir: /storage/dir
+    manager: salt-manager
+    inventory: reclass-inventory

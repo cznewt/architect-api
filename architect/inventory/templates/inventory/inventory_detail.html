@@ -8,10 +8,10 @@
 {% block title %}"{{ inventory.metadata.name|default:inventory.name }}" Inventory{% endblock %}
 
 {% block actions %}
-{% if inventory.engine == 'hier-cluster' %}
 {% for form_name, form in inventory.metadata.form.items %}
-<a href="{% url 'inventory:model_generate' inventory.name form_name %}" class="open-modal btn btn-sm btn-outline-primary">{{ form_name }}</a>
+<a href="{% url 'inventory:model_generate' inventory.name form_name %}" class="open-modal btn btn-sm btn-outline-primary">{{ form.name|default:form_name }}</a>
 {% endfor %}
+{% if inventory.engine == 'hier-cluster' %}
 {% elif inventory.engine == 'hier-deploy' %}
 <a href="{% url 'inventory:node_create' inventory.name %}" class="open-modal btn btn-sm btn-outline-primary">{% trans "Create Node" %}</a>
 <a href="{% url 'inventory:param_create' inventory.name %}" class="open-modal btn btn-sm btn-outline-primary">{% trans "Create Param" %}</a>

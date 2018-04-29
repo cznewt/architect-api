@@ -94,8 +94,6 @@ class InventoryDetailJSONView(JSONDataView):
         return inventory.inventory()
 
 
-
-
 class InventoryDeleteView(LoginRequiredMixin, FormView):
     template_name = "base_form.html"
     form_class = InventoryDeleteForm
@@ -215,6 +213,7 @@ class ClassGenerateView(LoginRequiredMixin, FormView):
         kwargs.update({
             'inventory': inventory,
             'form_name': form_name,
+            'form_meta': inventory.metadata['form'][form_name],
             'params': form_meta['fields']
         })
         return kwargs

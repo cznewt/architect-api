@@ -1,6 +1,7 @@
 
 import os
 import re
+from jinja2 import Environment
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, Div, Submit, HTML
 from django import forms
@@ -85,6 +86,11 @@ class ResourceDeleteForm(forms.Form):
         inventory = Inventory.objects.get(name=data.get('inventory_name'))
         resource = Resource.objects.get(
             inventory=inventory, name=data.get('resource_name'))
+        if resource.kind == 'reclass_node':
+            filepath = os.path.join(inventory.metadata['node_dir'], resource.metadata['__reclass__']['uri'].replace('yaml_fs://', ''))
+            print(filepath)
+            if os.path.isfile(filepath):
+                os.remove(filepath)
         resource.delete()
 
 
@@ -102,6 +108,7 @@ class ResourceCreateForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         self.inventory = kwargs.pop('inventory')
+        self.form_meta = kwargs.pop('form_meta')
         parameters = kwargs.pop('params')
         form_name = kwargs.pop('form_name')
         super(ResourceCreateForm, self).__init__(*args, **kwargs)
@@ -126,7 +133,8 @@ class ResourceCreateForm(forms.Form):
             self.fields[param['name']] = field
             layout_fields.append(param['name'])
 
-        self.label = form_name
+        self.label = self.form_meta.get('name', form_name)
+        self.modal_class = 'modal-{}'.format(self.form_meta.get('size', 'sm'))
         self.helper = FormHelper()
         self.helper.form_id = 'modal-form'
         self.helper.form_action = action_url
@@ -142,3 +150,31 @@ class ResourceCreateForm(forms.Form):
                 css_class='modal-footer',
             )
         )
+
+    def clean(self):
+        cleaned_data = super(ResourceCreateForm, self).clean()
+        templates = {}
+        for template in self.form_meta.get('templates', []):
+            filename = Environment().from_string(template['file']).render(cleaned_data)
+            content = Environment().from_string(template['content']).render(cleaned_data)
+            filepath = os.path.join(self.inventory.metadata['node_dir'], filename)
+            if os.path.isfile(filepath):
+                raise forms.ValidationError(
+                    'Generated file already exists: %(filename)s',
+                    code='invalid',
+                    params={'filename': filename},
+                )
+
+        return cleaned_data
+
+    def handle(self):
+        config_context = self.clean()
+        templates = {}
+        for template in self.form_meta.get('templates', []):
+            filename = Environment().from_string(template['file']).render(config_context)
+            content = Environment().from_string(template['content']).render(config_context)
+            templates[filename] = content
+
+        for filename, content in templates.items():
+            with open(self.get_config_file(config_context['image_name']), "w+") as file_handler:
+                file_handler.write(config_content)

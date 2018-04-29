@@ -153,6 +153,7 @@ class ImageDeleteForm(forms.Form):
         data = self.clean()
         repository = Repository.objects.get(name=self.repository_name)
         image = Resource.objects.get(name=self.image_name, repository=repository)
+        repository.client().delete_image(image.name)
         image.delete()
 
 

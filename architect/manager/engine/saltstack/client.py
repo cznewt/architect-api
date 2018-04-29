@@ -289,6 +289,7 @@ class SaltStackClient(BaseClient):
         elif resource.kind == 'salt_master':
             if action == 'generate_key':
                 fields['minion_id'] = forms.CharField(label='Minion ID')
+                fields['force'] = forms.BooleanField(label='Force create', required=False)
         return fields
 
     def process_resource_action(self, resource, action, data):
@@ -312,7 +313,7 @@ class SaltStackClient(BaseClient):
                         'tgt': '*',
                         'fun': 'key.gen_accept',
                         'id_': data['minion_id'],
-                        'force': False,
+                        'force': data['force'],
                     }
                     metadata = self.api.low([run_metadata]).get('return')[0]['data']['return']
         else:

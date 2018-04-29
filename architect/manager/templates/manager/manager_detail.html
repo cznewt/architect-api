@@ -8,6 +8,7 @@
 {% block title %}{% trans "Manager" %} {{ manager.name }}{% endblock %}
 
 {% block actions %}
+<a href="{% url 'manager:manager_sync' manager.name %}" class="btn btn-sm btn-outline-primary">Synchronise</a>
 <a href="{% url 'manager:manager_list' %}" class="btn btn-sm btn-outline-primary">{% trans "Managers" %}</a>
 {% endblock %}
 

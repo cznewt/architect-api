@@ -1,4 +1,6 @@
 
+
+from datetime import datetime
 from architect import utils
 from django.db import models
 from django.contrib.postgres.fields import JSONField
@@ -36,11 +38,22 @@ class Repository(models.Model):
         else:
             return 'warning'
 
+    def get_images(self):
+        images = {}
+        output = ''
+        for image in self.images.all():
+            if 'hostname' in image.metadata:
+                images[image.metadata['hostname']] = image.name
+        sorted_images = sorted(images.items())
+        for image_name in sorted_images:
+            output += '{}<br>'.format(image_name[0])
+        return mark_safe(output)
+
     def conn_detail(self):
         if self.metadata is None:
             return '-'
         elif self.engine in ['rpi23', 'bbb']:
-            return mark_safe('Build: {}<br>Manager/Inventory: {}/{}'.format(self.metadata.get('builder_dir', '-'),
+            return mark_safe('Manager: {}<br>Inventory: {}'.format(
             self.metadata.get('manager', '-'), self.metadata.get('inventory', '-')))
         else:
             return '-'
@@ -67,6 +80,19 @@ class Resource(models.Model):
 
     def __str__(self):
         return '{} {}'.format(self.kind, self.name)
+
+    def get_created(self):
+        if 'create_time' in self.metadata:
+            return datetime.fromtimestamp(self.metadata['create_time'])
+        else:
+            return None
+
+    def get_platform(self):
+        if 'type' in self.metadata:
+            for image_type in self.repository.client().get_image_types():
+                if image_type[0] == self.metadata['type']:
+                    return image_type[1]
+        return None
 
     def color(self):
         if self.status == 'active':

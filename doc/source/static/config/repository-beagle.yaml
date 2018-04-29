@@ -1,0 +1,7 @@
+repository:
+  bbb-repo:
+    engine: bbb
+    builder_dir: /path/to/bbb-image-build
+    image_dir: /storage/dir
+    manager: salt-manager
+    inventory: reclass-inventory

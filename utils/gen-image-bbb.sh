@@ -11,6 +11,7 @@
 IMAGENAME="${1:-rpi.domain-config-datetime}"
 HOSTNAME="${2:-rpi.domain-config}"
 PLATFORM="${3:-bbb}"
+OUTPUT="${4:-noop}"
 
 base_rootfs="$IMAGENAME" 
 wfile="$IMAGENAME"
@@ -55,11 +56,10 @@ generate_img () {
         cd ${base_rootfs}/
         sudo ./setup_sdcard.sh ${options}
         mv *.img ../
-        mv *.job.txt ../
         cd ..
 }
 
-#./RootStock-NG.sh -c $IMAGENAME
+./RootStock-NG.sh -c $IMAGENAME
 
 if [ "$PLATFORM" = "bbb" ] ; then
         platform_options="--dtb beaglebone --bbb-old-bootloader-in-emmc --emmc-flasher"
@@ -77,5 +77,13 @@ extract_base_rootfs
 generate_img
 archive_base_rootfs
 archive_img
+
+if [ -f ${wfile}.img ] ; then
+        mv ./${wfile}.img ${OUTPUT}
+fi
+
+if [ -f ${wfile}.bmap ] ; then
+        mv ./${wfile}.bmap ${OUTPUT}
+fi
 
 cd ..

@@ -1,1 +1,4 @@
-auth_url: http://{{ prometheus-api }}:8000
+monitor:
+  prometheus-inventory:
+
+    auth_url: http://{{ prometheus-api }}:8000

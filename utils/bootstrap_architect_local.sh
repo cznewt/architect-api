@@ -51,15 +51,16 @@ EOF
 git clone https://github.com/cznewt/architect-api.git /opt/architect
 cd /opt/architect
 
-printf "Installing architect-api"
+printf "Installing architect-api code"
 virtualenv -p python3 venv
 . venv/bin/activate
 pip install -r requirements/base.txt
 pip install psycopg2
 pip install git+https://github.com/salt-formulas/reclass.git@python3
 
-printf "Installing static"
+printf "Installing static files tools"
 apt-get -y install npm rubygems ruby-dev
+
 sudo gem install sass --no-user-install
 
 npm install

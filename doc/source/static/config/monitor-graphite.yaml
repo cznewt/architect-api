@@ -1,1 +1,3 @@
-auth_url: http://{{ graphite-api }}:8000
+monitor:
+  graphite-inventory:
+    auth_url: http://{{ graphite-api }}:8000

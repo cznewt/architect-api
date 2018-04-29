@@ -1,3 +1,5 @@
-auth_url: http://{{ salt-api }}:8000
-username: {{ user-name }}
-password: {{ user-password }}
+monitor:
+  salt-manager:
+    auth_url: http://{{ salt-api }}:8000
+    username: {{ user-name }}
+    password: {{ user-password }}
