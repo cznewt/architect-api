@@ -71,16 +71,21 @@ class BbbClient(BaseClient):
     def get_image_size(self, image_name):
         image_path = '{}/{}.img'.format(self.metadata['image_dir'],
                                         image_name)
-        if os.path.isfile(imagepath):
+        if os.path.isfile(image_path):
             return os.path.getsize(image_path)
         else:
             return None
 
     def delete_image(self, image_name):
-        imagepath = '{}/{}.img'.format(self.metadata['image_dir'],
+        image_path = '{}/{}.img'.format(self.metadata['image_dir'],
                                         image_name)
-        if os.path.isfile(imagepath):
-            os.remove(imagepath)
+        map_path = '{}/{}.bmap'.format(self.metadata['image_dir'],
+                                       image_name)
+        if os.path.isfile(image_path):
+            os.remove(image_path)
+        if os.path.isfile(map_path):
+            os.remove(map_path)
+
 
     def generate_image(self, config_context):
         config_context['repository'] = self.metadata
@@ -99,14 +104,14 @@ class BbbClient(BaseClient):
             duration = end - start
         except subprocess.CalledProcessError as ex:
             cmd_output = ex.output.decode('UTF-8')
-        imagepath = os.path.join(self.metadata['image_dir'], '{}.img'.format(config_context['image_name']))
+        image_path = os.path.join(self.metadata['image_dir'], '{}.img'.format(config_context['image_name']))
         image = Resource.objects.get(name=config_context['image_name'])
         cache = {
             'config': config_content,
             'command': cmd_output,
             'duration': duration
         }
-        if os.path.isfile(imagepath):
+        if os.path.isfile(image_path):
             image.status = 'active'
             cache['block_map'] = self.get_image_block_map(config_context['image_name'])
             cache['image_size'] = self.get_image_size(config_context['image_name'])

@@ -4,8 +4,8 @@
     <meta charset="utf-8">
     <title>{% block page_title %}{% endblock %} : {% trans "The Architect" %}</title>
     {% compress css %}
-    <link rel="stylesheet" type="text/scss" href="{% static 'architect/scss/architect-cyborg.scss' %}">
-    <link rel="alternate stylesheet" type="text/scss" href="{% static 'architect/scss/architect-united.scss' %}">
+    <link rel="alternate stylesheet" type="text/scss" href="{% static 'architect/scss/architect-cyborg.scss' %}">
+    <link rel="stylesheet" type="text/scss" href="{% static 'architect/scss/architect-united.scss' %}">
     <link rel="alternate stylesheet" type="text/scss" href="{% static 'architect/scss/architect-materia.scss' %}">
     {% endcompress %}
     {% block extra_css %}{% endblock %}
@@ -21,7 +21,7 @@
       </div>
       <aside class="sidebar">
         <div class="scrollbar-inner">
-          <h4 class="mb-3 mt-2 text-center">The Architect</h4>
+          <h4 class="mb-3 mt-2 text-center">{{ site_name }}</h4>
           {% comment %}
           <div class="user">
             {% if user.is_authenticated %}

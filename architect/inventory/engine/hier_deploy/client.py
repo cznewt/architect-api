@@ -11,6 +11,7 @@ from collections import OrderedDict
 from django.conf import settings
 from reclass import get_storage
 from reclass.core import Core
+from reclass.settings import Settings
 from architect import utils
 from architect.inventory.client import BaseClient
 from architect.inventory.models import Resource, Inventory
@@ -25,10 +26,12 @@ class HierDeployClient(BaseClient):
         super(HierDeployClient, self).__init__(**kwargs)
 
     def check_status(self):
+        logger.info('Checking status of hierarchy deploy "{}" ...'.format(self.name))
         try:
             self.inventory()
             status = True
-        except Exception:
+        except Exception as exception:
+            logger.error(exception)
             status = False
         return status
 
@@ -46,6 +49,7 @@ class HierDeployClient(BaseClient):
                 if res.metadata != metadata:
                     res.metadata = metadata
                     res.save()
+        self.get_overrides()
 
     def inventory(self, resource=None):
         '''
@@ -55,7 +59,11 @@ class HierDeployClient(BaseClient):
         storage = get_storage('yaml_fs',
                               self.metadata['node_dir'],
                               self.metadata['class_dir'])
-        reclass = Core(storage, None)
+        settings = Settings({'no_refs': False,
+            'pretty_print': True,
+            'output': 'yaml'
+        })
+        reclass = Core(storage, None, settings)
         if resource is None:
             return reclass.inventory()["nodes"]
         else:
@@ -112,7 +120,7 @@ class HierDeployClient(BaseClient):
     def init_overrides(self):
         if 'cluster_name' not in self.metadata:
             return
-        file_name = '{}/overrides/{}.yml'.format(self.metadata['class_dir'],
+        file_name = '{}/deployment/{}.yml'.format(self.metadata['class_dir'],
                                                  self.metadata['cluster_name'],)
         default_params = {
             'cluster_name': self.metadata['cluster_name'],
@@ -132,7 +140,7 @@ class HierDeployClient(BaseClient):
     def get_overrides(self):
         if 'cluster_name' not in self.metadata:
             return {}
-        file_name = '{}/overrides/{}.yml'.format(self.metadata['class_dir'],
+        file_name = '{}/deployment/{}.yml'.format(self.metadata['class_dir'],
                                                  self.metadata['cluster_name'],)
         if not os.path.isfile(file_name):
             self.init_overrides()
@@ -163,7 +171,7 @@ class HierDeployClient(BaseClient):
 
         if classes:
             node_metadata = {
-                'classes': classes + ['overrides.{}'.format(self.name.replace('.', '-'))],
+                'classes': classes + ['deployment.{}'.format(self.name.replace('.', '-'))],
                 'parameters': {
                     '_param': node_params,
                     'linux': {

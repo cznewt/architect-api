@@ -7,24 +7,37 @@
 
 {% block classes %}{{ form.modal_class|default:"modal-sm" }}{% endblock %}
 
+{% block extra_css %}
+html { height: 100% }
+body { height: 100%; }
+.intro { height:100% }
+.left { display: flex; justify-content: center; align-items: center; height: 100%; background-color: #FFF; color: #3d231b; }
+.right { display: flex; justify-content: center; align-items: center; height: 100%; }
+
+{% endblock %}
+
 {% block content %}
-<div class="container">
-  {% if form.errors %}
-  <div class="alert alert-danger">
-    {% trans "Please enter a correct username and password. Note that both fields are case-sensitive." %}
-  </div>
-  {% endif %}
-  <form action="{% url 'login' %}" method="post" class="form-signin" role="form">{% csrf_token %}
-    <legend><span class="col-sm-offset-1">{% trans "The Architect" %}: {% trans 'Log in' %}</span></legend>
-    {% for field in form %}
-    {% include 'registration/form_field.html' %}
-    {% endfor %}
-    <div class="form-group">
-      <div class="col-sm-offset-2 col-sm-10">
-        <button type="submit" class="btn btn-primary">{% trans 'Log in' %}</button>
-        &nbsp;<button type="reset" class="btn">{% trans 'Cancel' %}</button>
-      </div>
+<section class="intro">
+  <row>
+    <div class="col-lg-7 col-sm-12 left">
+      <h2>Architect</h2>
     </div>
-  </form>
-</div>
+    <div class="col-lg-5 col-sm-12 right">
+      {% if form.errors %}
+      <div class="alert alert-danger">
+        {% trans "Please enter a correct username and password. Note that both fields are case-sensitive." %}
+      </div>
+      {% endif %}
+      <form action="{% url 'login' %}" method="post" class="form-signin" role="form">{% csrf_token %}
+        <legend>
+          <span class="col-sm-offset-1">{% trans 'Log in to your account' %}</span>
+        </legend>
+        {% for field in form %} {% include 'registration/form_field.html' %} {% endfor %}
+        <div class="form-group">
+          <button type="submit" class="btn btn-primary">{% trans 'Log in' %}</button>
+        </div>
+      </form>
+    </div>
+  </row>
+</section>
 {% endblock %}

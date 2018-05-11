@@ -57,11 +57,13 @@ class HierClusterClient(BaseClient):
         super(HierClusterClient, self).__init__(**kwargs)
 
     def check_status(self):
-        logger.info(self.metadata)
+        logger.info('Checking status of hierarchy cluster "{}" ...'.format(self.name))
         status = True
         if not os.path.exists(self.metadata['formula_dir']):
+            logger.error('Missing formula dir {}'.format(self.metadata['formula_dir']))
             status = False
         if not os.path.exists(self.metadata['class_dir']):
+            logger.error('Missing class dir {}'.format(self.metadata['class_dir']))
             status = False
         return status
 

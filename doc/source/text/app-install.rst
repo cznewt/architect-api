@@ -154,7 +154,7 @@ Main Configuration File
 -----------------------
 
 You provide one YAML configuration file for all settings. The default
-location is ``/etc/architect/api.yaml``.
+location is ``/etc/architect/api.yml``.
 
 You can setup basic configuration of database and cache also you can provide
 defaults for your initial inventories, managers and monitors.

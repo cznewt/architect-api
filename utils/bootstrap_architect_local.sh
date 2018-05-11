@@ -55,7 +55,7 @@ printf "Installing architect-api code"
 virtualenv -p python3 venv
 . venv/bin/activate
 pip install -r requirements/base.txt
-pip install psycopg2
+pip install psycopg2-binary
 pip install git+https://github.com/salt-formulas/reclass.git@python3
 
 printf "Installing static files tools"

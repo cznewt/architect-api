@@ -6,6 +6,7 @@ import yaml
 from collections import OrderedDict
 from reclass import get_storage
 from reclass.core import Core
+from reclass.settings import Settings
 from architect.inventory.client import BaseClient
 from architect.inventory.models import Resource, Inventory
 from celery.utils.log import get_logger
@@ -19,10 +20,12 @@ class ReclassClient(BaseClient):
         super(ReclassClient, self).__init__(**kwargs)
 
     def check_status(self):
+        logger.info('Checking status of reclass inventory "{}" ...'.format(self.name))
         try:
             data = self.inventory()
             status = True
-        except Exception:
+        except Exception as exception:
+            logger.error(exception)
             status = False
         return status
 
@@ -45,7 +48,11 @@ class ReclassClient(BaseClient):
         storage = get_storage(self.metadata['storage_type'],
                               self.metadata['node_dir'],
                               self.metadata['class_dir'])
-        reclass = Core(storage, None)
+        settings = Settings({'no_refs': False,
+            'pretty_print': True,
+            'output': 'yaml'
+        })
+        reclass = Core(storage, None, settings)
         if resource is None:
             return reclass.inventory()["nodes"]
         else:

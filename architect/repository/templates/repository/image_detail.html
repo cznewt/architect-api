@@ -38,17 +38,19 @@ Image "{{ image.name }}"
 </ul>
 <div class="tab-content">
     <div class="tab-pane active" id="overview" role="tabpanel">
-        <dl class="ml-4 mt-4 text-light">
+        <dl class="ml-3 mt-3 text-light">
             <dt>Host Name</dt>
             <dd>{{ image.metadata.hostname }}</dd>
+            <dt>Image Name</dt>
+            <dd>{{ image.name }}</dd>
             <dt>Image Type</dt>
             <dd>{{ image.metadata.type }}</dd>
             <dt>Image Size</dt>
-            <dd>{{ image.cache.image_size|default:"N/A" }}</dd>
-            <dt>Build Time</dt>
-            <dd>{{ image.get_created }}</dd>
+            <dd>{{ image.cache.image_size|filesizeformat }} ({{ image.cache.image_size }} B)</dd>
+            <dt>Image built time</dt>
+            <dd>{{ image.get_created|timesince }} ({{ image.get_created }})</dd>
             <dt>Build Duration</dt>
-            <dd>{{ image.cache.duration|default:"N/A" }}</dd>
+            <dd>{{ image.cache.duration }} s</dd>
         </dl>
     </div>
     <div class="tab-pane" id="config" role="tabpanel">

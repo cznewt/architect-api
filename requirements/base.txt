@@ -7,6 +7,7 @@ jsonschema
 markdown
 rfc3339
 iso8601
+Jinja2
 petname
 
 Django
@@ -38,7 +39,7 @@ python-terraform
 pydot
 graphviz
 juju
-homeassistant
+homeassistant==0.64.3
 
 graphene-django>=2.0
 pandas

@@ -2,18 +2,16 @@
 <table class="table table-striped">
   <thead>
     <tr class="row m-0">
-      <th class="d-inline-block col-3">{% trans "Parameter" %}</th>
-      <th class="d-inline-block col-4">{% trans "Value" %}</th>
-      <th class="d-inline-block col-3">{% trans "Cluster" %}</th>
+      <th class="d-inline-block col-5">{% trans "Parameter" %}</th>
+      <th class="d-inline-block col-5">{% trans "Value" %}</th>
       <th class="d-inline-block col-2"></th>
     </tr>
   </thead>
   <tbody>
     {% for param_name, param_value in inventory.client.get_overrides.items %}
     <tr class="row m-0">
-      <th class="d-inline-block col-3"s scope="row">{{ param_name }}</th>
-      <td class="d-inline-block col-4">{{ param_value }}</td>
-      <td class="d-inline-block col-3">{{ inventory.metadata.cluster_name }}</td>
+      <th class="d-inline-block col-5"s scope="row">{{ param_name }}</th>
+      <td class="d-inline-block col-5">{{ param_value }}</td>
       <td class="d-inline-block col-2 text-right">
         <a href="{% url 'inventory:param_update' inventory.name param_name %}" class="open-modal btn btn-sm btn-outline-primary">{% trans "Update" %}</a>
         <a href="{% url 'inventory:param_delete' inventory.name param_name %}" class="open-modal btn btn-sm btn-outline-danger">{% trans "Delete" %}</a>
