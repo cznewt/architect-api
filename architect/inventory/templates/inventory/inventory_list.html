@@ -48,7 +48,7 @@
         <span class="badge badge-{{ inventory.color }}">{{ inventory.status }}</span>
       </th>
       <td class="d-inline-block col-2">{{ inventory.engine }}</td>
-      <td class="d-inline-block col-1 text-right">{{ inventory.resources.count }} items</td>
+      <td class="d-inline-block col-1 text-right">{{ inventory.resources.count }}&nbsp;items</td>
       <td class="d-inline-block col-4">{{ inventory.conn_detail }}</td>
       <td class="d-inline-block col-2 text-right">
         <a href="{% url 'inventory:inventory_detail' inventory.name %}" class="btn btn-sm btn-outline-primary">Details</a>

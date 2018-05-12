@@ -102,11 +102,16 @@ class ImageCreateForm(forms.Form):
                     data['config'] = last_image.metadata['config']
                     break
         else:
+            if key_strategy == 'force_generate':
+                force = True
+            else:
+                force = False
             salt_master = ManagerResource.objects.get(manager=manager, kind='salt_master')
             keys = process_resource_action_task.apply((manager.name,
                                                     salt_master.uid,
                                                     'generate_key',
-                                                    {'minion_id': data['hostname']}))
+                                                    {'minion_id': data['hostname'],
+                                                     'force': force}))
             data['config'] = {
                 'master': '127.0.0.1',
                 'pub_key': keys.result['pub'],

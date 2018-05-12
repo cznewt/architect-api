@@ -310,13 +310,12 @@ class SaltStackClient(BaseClient):
                 if self.auth():
                     run_metadata = {
                         'client': 'wheel',
-                        'tgt': '*',
                         'fun': 'key.gen_accept',
                         'id_': data['minion_id'],
                         'force': data['force'],
                     }
-                    metadata = self.api.low([run_metadata]).get('return')[0]['data']['return']
+                    data = self.api.low([run_metadata]).get('return')
+                    metadata = data[0]['data']['return']
         else:
             metadata = None
-        logger.info(metadata)
         return metadata
