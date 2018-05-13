@@ -15,5 +15,7 @@ specified in repository configuration.
 Build Script
 ============
 
+The ``rpi23-gen-image`` uses modified generator script
+
 .. literalinclude:: ../../../utils/gen-image-rpi23.sh
    :language: bash

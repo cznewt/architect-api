@@ -2,11 +2,10 @@
 
 # Usage:
 #
-# ./gen-image.sh node.domain.com-20180405 node.domain.com bbbc
+# ./gen-image.sh node.domain.com-20180405 node.domain.com bbb
 #
-# bbbb  - BeagleBone Black Rev B
-# bbbc  - BeagleBone Black Rev C (BeagleBone Blue)
-# bbv14 - BeagleBoard-X15
+# bbb  - BeagleBone Black Rev B/C, BeagleBone Blue
+# bbx15 - BeagleBoard-X15
 
 IMAGENAME="${1:-rpi.domain-config-datetime}"
 HOSTNAME="${2:-rpi.domain-config}"

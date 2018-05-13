@@ -1,6 +1,6 @@
 #!/bin/bash -ex
 
-mkdir -p /srv/architect/mcp/classes/overrides
+mkdir -p /srv/architect/mcp/classes/deployment
 mkdir -p /srv/architect/mcp/classes/service
 mkdir -p /srv/architect/mcp/classes/cluster/sample/infra
 mkdir -p /srv/architect/mcp/nodes/sample-deploy
@@ -58,7 +58,7 @@ parameters:
           password: password
 EOF
 
-cat << EOF > /srv/architect/mcp/classes/overrides/sample-deploy.yml
+cat << EOF > /srv/architect/mcp/classes/deployment/sample-deploy.yml
 parameters:
   _param:
     cluster_name: sample-deploy
@@ -68,7 +68,7 @@ EOF
 cat << EOF > /srv/architect/mcp/nodes/sample-deploy/cfg01.sample.deploy.yml
 classes:
 - cluster.sample.infra.config
-- overrides.sample-deploy
+- deployment.sample-deploy
 parameters:
   _param:
     linux_system_codename: xenial

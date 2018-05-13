@@ -311,3 +311,42 @@ Create configuration file ``/etc/architect/client.yml`` for client.
     port: 8181
     username: salt
     password: password
+
+
+Complete Installation Scripts
+=============================
+
+
+Architect API Dependencies
+--------------------------
+
+You can install requried services.
+
+.. literalinclude:: ../../../utils/bootstrap_architect_deps.sh
+   :language: bash
+
+Or use local ``docker-compose.yml`` to start the same services.
+
+
+Architect API Core
+------------------
+
+Install full development environment.
+
+.. literalinclude:: ../../../utils/bootstrap_architect_core.sh
+   :language: bash
+
+
+Repository Image Builders
+-------------------------
+
+.. literalinclude:: ../../../utils/bootstrap_image_builder.sh
+   :language: bash
+
+
+Sample Hierarchical Inventory
+-----------------------------
+
+.. literalinclude:: ../../../utils/bootstrap_hier_inventory.sh
+   :language: bash
+

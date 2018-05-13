@@ -11,19 +11,32 @@
 {% endblock %}
 
 {% block content %}
-<div class="row">
-  {% for manager in manager_list %}
-  <div class="col-sm-6 col-md-4 mb-3 h-75">
-    <div class="card border-{{ manager.color }}">
-      <div class="card-body">
-        <h4 class="card-title"> {{ manager.metadata.name|default:manager.name }}</h4>
-        <h6 class="card-subtitle mb-2 text-muted">{{ manager.engine }}, {{ manager.resources.count }} resources</h6>
-        <h6 class="card-subtitle mb-2">{{ manager.conn_detail }}</h6>
+<table class="table bordered">
+  <thead>
+    <tr class="row m-0">
+      <th class="d-inline-block col-3">Manager</th>
+      <th class="d-inline-block col-1">Engine</th>
+      <th class="d-inline-block col-1 text-right">Resources</th>
+      <th class="d-inline-block col-5">Details</th>
+      <th class="d-inline-block col-2"></th>
+    </tr>
+  </thead>
+  <tbody>
+   {% for manager in manager_list %}
+    <tr class="row m-0">
+      <th class="d-inline-block col-3" scope="row">
+        <a href="{% url 'manager:manager_detail' manager.name %}">{{ manager.name }}</a>
+        <span class="badge badge-{{ manager.color }}">{{ manager.status }}</span>
+      </th>
+      <td class="d-inline-block col-1">{{ manager.engine }}</td>
+      <td class="d-inline-block col-1 text-right">{{ manager.resources.count }}&nbsp;pcs</td>
+      <td class="d-inline-block col-5">{{ manager.conn_detail }}</td>
+      <td class="d-inline-block col-2 text-right">
         <a href="{% url 'manager:manager_detail' manager.name %}" class="btn btn-sm btn-outline-primary">Details</a>
-        <a href="{% url 'manager:manager_sync' manager.name %}" class="btn btn-sm btn-outline-secondary">Synchronise</a>
-      </div>
-    </div>
-  </div>
-  {% endfor %}
-</div>
+        <a href="{% url 'manager:manager_sync' manager.name %}" class="btn btn-sm btn-outline-secondary">Sync</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
 {% endblock %}

@@ -63,20 +63,20 @@ class Manager(models.Model):
         if self.metadata is None:
             return '-'
         elif self.engine == 'amazon':
-            return '{} ({})'.format(self.metadata.get('aws_access_key_id', '-'),
+            return 'Access key: {} ({} region)'.format(self.metadata.get('aws_access_key_id', '-'),
                                     self.metadata.get('region', '-'))
         elif self.engine in ['jenkins', 'saltstack', 'spinnaker']:
-            return self.metadata.get('auth_url', '-')
+            return 'URL: {}'.format(self.metadata.get('auth_url', '-'))
         elif self.engine == 'heat':
-            return self.metadata.get('cloud_endpoint', '-')
+            return 'OpenStack Cloud: {}'.format(self.metadata.get('cloud_endpoint', '-'))
         elif self.engine == 'helm':
-            return self.metadata.get('container_endpoint', '-')
+            return 'Kubernetes Cluster: {}'.format(self.metadata.get('container_endpoint', '-'))
         elif self.engine == 'homeassistant':
-            return 'http(s)://{}:{}'.format(self.metadata['host'], self.metadata.get('port', 8123))
+            return 'URL: https://{}:{}'.format(self.metadata['host'], self.metadata.get('port', 8123))
         elif self.engine == 'kubernetes':
-            return self.metadata.get('cluster', {}).get('server', '-')
+            return 'URL: {}'.format(self.metadata.get('cluster', {}).get('server', '-'))
         elif self.engine == 'openstack':
-            return '{}'.format(self.metadata.get('auth', {}).get('auth_url', '-'))
+            return 'URL: {}'.format(self.metadata.get('auth', {}).get('auth_url', '-'))
         else:
             return '-'
 

@@ -3,25 +3,35 @@
 {% block nav_document_cls %} navigation__sub--active{% endblock %}
 
 {% block page_title %}
-Available visualizations
+Available Visualizations
 {% endblock %}
 
 {% block title %}
-Available visualizations
+Available Visualizations
 {% endblock %}
 
 {% block content %}
-<div class="row">
-  {% for document in document_list %}
-  <div class="col-sm-6 col-md-4 mb-3">
-    <div class="card border-{{ document.color }}">
-      <div class="card-body">
-        <h4 class="card-title">{{ document.metadata.name|default:document.name }}</h4>
-        <h6 class="card-subtitle mb-2 text-muted">{{ document.widgets|length }} widgets</h6>
+<table class="table bordered">
+  <thead>
+    <tr class="row m-0">
+      <th class="d-inline-block col-3">Dashboard</th>
+      <th class="d-inline-block col-7">Widgets</th>
+      <th class="d-inline-block col-2"></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for document in document_list %}
+    <tr class="row m-0">
+      <th class="d-inline-block col-3" scope="row">
+        <a href="{% url 'document:document_detail' document.name %}">{{ document.name }}</a>
+        <span class="badge badge-{{ document.color }}">{{ document.status }}</span>
+      </th>
+      <td class="d-inline-block col-7">{% for widget_name, widget in document.widgets.items %}<span class="badge">{{ widget_name }} ({{ widget.chart }})</span> {% endfor %}</td>
+      <td class="d-inline-block col-2 text-right">
         <a href="{% url 'document:document_detail' document.name %}" class="btn btn-sm btn-outline-primary">Details</a>
-      </div>
-    </div>
-  </div>
-  {% endfor %}
-</div>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
 {% endblock %}

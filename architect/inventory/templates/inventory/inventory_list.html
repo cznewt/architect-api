@@ -13,30 +13,13 @@
 {% endblock %}
 
 {% block content %}
-{% comment %}
-<div class="row">
-  {% for inventory in inventory_list %}
-  <div class="col-sm-6 col-md-4 mb-3 h-75">
-    <div class="card border-{{ inventory.color }}">
-      <div class="card-body">
-        <h4 class="card-title">{{ inventory.metadata.name|default:inventory.name }}</h4>
-        <h6 class="card-subtitle mb-2 text-muted">{{ inventory.engine }}, {{ inventory.resources.count }} definitions</h6>
-        <h6 class="card-subtitle mb-2">{{ inventory.conn_detail }}</h6>
-        <a href="{% url 'inventory:inventory_detail' inventory.name %}" class="btn btn-sm btn-outline-primary">Details</a>
-        <a href="{% url 'inventory:inventory_sync' inventory.name %}" class="btn btn-sm btn-outline-secondary">Synchronise</a>
-      </div>
-    </div>
-  </div>
-  {% endfor %}
-</div>
-{% endcomment %}
 <table class="table bordered">
   <thead>
     <tr class="row m-0">
       <th class="d-inline-block col-3">Inventory</th>
-      <th class="d-inline-block col-2">Engine</th>
+      <th class="d-inline-block col-1">Engine</th>
       <th class="d-inline-block col-1 text-right">Resources</th>
-      <th class="d-inline-block col-4">Details</th>
+      <th class="d-inline-block col-5">Details</th>
       <th class="d-inline-block col-2"></th>
     </tr>
   </thead>
@@ -44,12 +27,12 @@
     {% for inventory in inventory_list %}
     <tr class="row m-0">
       <th class="d-inline-block col-3" scope="row">
-        <strong>{{ inventory.name }}</strong>
+        <a href="{% url 'inventory:inventory_detail' inventory.name %}">{{ inventory.name }}</a>
         <span class="badge badge-{{ inventory.color }}">{{ inventory.status }}</span>
       </th>
-      <td class="d-inline-block col-2">{{ inventory.engine }}</td>
-      <td class="d-inline-block col-1 text-right">{{ inventory.resources.count }}&nbsp;items</td>
-      <td class="d-inline-block col-4">{{ inventory.conn_detail }}</td>
+      <td class="d-inline-block col-1">{{ inventory.engine }}</td>
+      <td class="d-inline-block col-1 text-right">{{ inventory.resources.count }}&nbsp;pcs</td>
+      <td class="d-inline-block col-5">{{ inventory.conn_detail }}</td>
       <td class="d-inline-block col-2 text-right">
         <a href="{% url 'inventory:inventory_detail' inventory.name %}" class="btn btn-sm btn-outline-primary">Details</a>
         <a href="{% url 'inventory:inventory_sync' inventory.name %}" class="btn btn-sm btn-outline-secondary">Sync</a>        

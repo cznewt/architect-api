@@ -43,10 +43,10 @@ class Inventory(models.Model):
         if self.metadata is None:
             return '-'
         elif self.engine in ['reclass', 'hier-deploy']:
-            return mark_safe("{}<br/>{}".format(self.metadata.get('node_dir', '-'),
+            return mark_safe("Nodes:&nbsp;{}<br/>Classes:&nbsp;{}".format(self.metadata.get('node_dir', '-'),
                                                 self.metadata.get('class_dir', '-')))
         elif self.engine == 'hier-cluster':
-            return mark_safe("{}<br/>{}".format(self.metadata.get('formula_dir', '-'),
+            return mark_safe("Formulas:&nbsp;{}<br/>Classes:&nbsp;{}".format(self.metadata.get('formula_dir', '-'),
                                                 self.metadata.get('class_dir', '-')))
         else:
             return '-'
