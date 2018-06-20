@@ -3,6 +3,7 @@
     "restructuredtext.confPath": "${workspaceRoot}/doc/source",
     "restructuredtext.updateOnTextChanged": "false",
     "restructuredtext.updateDelay": 1000,
-    "restructuredtext.linter.run": "onType"
+    "restructuredtext.linter.run": "onType",
+    "python.pythonPath": "${workspaceFolder}/venv/bin/python"
 }
 

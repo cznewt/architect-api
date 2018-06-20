@@ -129,6 +129,10 @@ class ResourceCreateForm(forms.Form):
 
             if param.get('value_type', 'string') == 'string':
                 field = forms.CharField(**kwargs)
+            elif param.get('value_type', 'string') == 'boolean':
+                field = forms.BooleanField(**kwargs)
+            else:
+                field = forms.CharField(**kwargs)
 
             self.fields[param['name']] = field
             layout_fields.append(param['name'])
@@ -153,28 +157,57 @@ class ResourceCreateForm(forms.Form):
 
     def clean(self):
         cleaned_data = super(ResourceCreateForm, self).clean()
-        templates = {}
-        for template in self.form_meta.get('templates', []):
-            filename = Environment().from_string(template['file']).render(cleaned_data)
-            content = Environment().from_string(template['content']).render(cleaned_data)
-            filepath = os.path.join(self.inventory.metadata['node_dir'], filename)
-            if os.path.isfile(filepath):
-                raise forms.ValidationError(
-                    'Generated file already exists: %(filename)s',
-                    code='invalid',
-                    params={'filename': filename},
-                )
-
+        if self.inventory.engine == 'hier-deploy':
+            templates = {}
+            for template in self.form_meta.get('templates', []):
+                filename = Environment().from_string(template['file']).render(cleaned_data)
+                content = Environment().from_string(template['content']).render(cleaned_data)
+                filepath = os.path.join(self.inventory.metadata['node_dir'], filename)
+                if os.path.isfile(filepath):
+                    raise forms.ValidationError(
+                        'Generated file already exists: %(filename)s',
+                        code='invalid',
+                        params={'filename': filename},
+                    )
+        elif self.inventory.engine == 'hier-cluster':
+            templates = {}
+            for template in self.form_meta.get('templates', []):
+                filename = Environment().from_string(template['file']).render(cleaned_data)
+                content = Environment().from_string(template['content']).render(cleaned_data)
+                filepath = os.path.join(self.inventory.metadata['class_dir'], filename)
+                if os.path.isfile(filepath):
+                    raise forms.ValidationError(
+                        'Generated file already exists: %(filename)s',
+                        code='invalid',
+                        params={'filename': filename},
+                    )
         return cleaned_data
 
     def handle(self):
         config_context = self.clean()
-        templates = {}
-        for template in self.form_meta.get('templates', []):
-            filename = Environment().from_string(template['file']).render(config_context)
-            content = Environment().from_string(template['content']).render(config_context)
-            templates[filename] = content
+        if self.inventory.engine == 'hier-deploy':
+            templates = {}
 
-        for filename, content in templates.items():
-            with open(self.get_config_file(config_context['image_name']), "w+") as file_handler:
-                file_handler.write(config_content)
+            for template in self.form_meta.get('templates', []):
+                filename = Environment().from_string(template['file']).render(config_context)
+                content = Environment().from_string(template['content']).render(config_context)
+                templates[filename] = content
+
+            for filename, content in templates.items():
+                content = Environment().from_string(content).render(config_context)
+                filepath = os.path.join(self.inventory.metadata['node_dir'], filename)
+                with open(filepath, "w+") as file_handler:
+                    file_handler.write(content)
+        elif self.inventory.engine == 'hier-cluster':
+            templates = {}
+
+            for template in self.form_meta.get('templates', []):
+                filename = Environment().from_string(template['file']).render(config_context)
+                content = Environment().from_string(template['content']).render(config_context)
+                templates[filename] = content
+
+            for filename, content in templates.items():
+                content = Environment().from_string(content).render(config_context)
+                filepath = os.path.join(self.inventory.metadata['class_dir'], filename)
+                with open(filepath, "w+") as file_handler:
+                    file_handler.write(content)

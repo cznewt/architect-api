@@ -6,3 +6,32 @@ inventory:
     cluster_class_dir:
     class_dir: /srv/salt/reclass/classes
     formula_dir: /srv/salt/base
+    form:
+      test:
+        name: Generate new cluster class
+        layout: page
+        templates:
+        - file: cluster/{{ cluster_name }}.yml
+          content: |
+            parameters:
+              meta: {{ cluster_name }}
+              {%- if cluster_domain %}
+              domain: {{ cluster_name }}
+              {%- endif %}
+        steps:
+        - name: form-single
+          layout: inline
+          fields:
+          - name: cluster_name
+            label: Cluster name
+            value_type: string
+            help_text: Name of the cluster, used as cluster/CLUSTER_NAME.yml in directory structure.
+            initial: deployment_name
+            style: col-md-6
+          - name: cluster_domain
+            label: Cluster domain
+            value_type: boolean
+            help_text: Is cluster appended?
+            initial: deploy-name.local
+            width: half
+            style: col-md-6
