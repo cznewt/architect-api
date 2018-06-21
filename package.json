@@ -22,7 +22,8 @@
     "skd3": "^0.2.0",
     "techan-js": "^1.0.2",
     "timeago": "^1.6.1",
-    "webcola": "^3.3.7"
+    "webcola": "^3.3.7",
+    "particles.js": "^2.0.0"
   },
   "devDependencies": {},
   "scripts": {

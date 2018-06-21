@@ -126,6 +126,8 @@ class ResourceCreateForm(forms.Form):
                 kwargs['label'] = param['name']
             if 'help_text' in param:
                 kwargs['help_text'] = param['help_text']
+            if 'initial' in param:
+                kwargs['initial'] = param['initial']
             if 'required' in param:
                 if param['required'] in ("True", "true", "yes", True):
                     kwargs['required'] = True
@@ -136,6 +138,11 @@ class ResourceCreateForm(forms.Form):
                 field = forms.CharField(**kwargs)
             elif param.get('value_type', 'string') == 'boolean':
                 field = forms.BooleanField(**kwargs)
+            elif param.get('value_type', 'string') == 'choice':
+                kwargs['choices'] = []
+                for choice in param.get('value_choices', []):
+                    kwargs['choices'].append(tuple([choice['value'], choice['label']]))
+                field = forms.ChoiceField(**kwargs)
             else:
                 field = forms.CharField(**kwargs)
 

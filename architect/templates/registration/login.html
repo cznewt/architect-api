@@ -1,5 +1,5 @@
 {% extends "splash_base.html" %}
-{% load i18n %}
+{% load i18n static %}
 
 {% block page_title %}{{ form.label|default:"Registration" }}{% endblock %}
 
@@ -10,34 +10,150 @@
 {% block extra_css %}
 html { height: 100% }
 body { height: 100%; }
-.intro { height:100% }
-.left { display: flex; justify-content: center; align-items: center; height: 100%; background-color: #FFF; color: #3d231b; }
-.right { display: flex; justify-content: center; align-items: center; height: 100%; }
-
+canvas.particles-js-canvas-el {position: absolute; height: 90vh!important}
+.intro .container {margin-top: 38vh;}
 {% endblock %}
 
 {% block content %}
+<div id="particles-js"></div>
+<script type="text/javascript" src="/static/particles.js/particles.js"></script>
+<script type="text/javascript">
+  /* particlesJS.load(@dom-id, @path-json, @callback (optional)); */
+  particlesJS("particles-js", {
+  "particles": {
+    "number": {
+      "value": 62,
+      "density": {
+        "enable": true,
+        "value_area": 800
+      }
+    },
+    "color": {
+      "value": "#ffffff"
+    },
+    "shape": {
+      "type": "circle",
+      "stroke": {
+        "width": 0,
+        "color": "#000000"
+      },
+      "polygon": {
+        "nb_sides": 5
+      },
+      "image": {
+        "src": "img/github.svg",
+        "width": 100,
+        "height": 100
+      }
+    },
+    "opacity": {
+      "value": 0.5,
+      "random": false,
+      "anim": {
+        "enable": false,
+        "speed": 1,
+        "opacity_min": 0.1,
+        "sync": false
+      }
+    },
+    "size": {
+      "value": 3,
+      "random": true,
+      "anim": {
+        "enable": false,
+        "speed": 40,
+        "size_min": 0.1,
+        "sync": false
+      }
+    },
+    "line_linked": {
+      "enable": true,
+      "distance": 150,
+      "color": "#ffffff",
+      "opacity": 0.4,
+      "width": 1
+    },
+    "move": {
+      "enable": true,
+      "speed": 3,
+      "direction": "none",
+      "random": false,
+      "straight": false,
+      "out_mode": "out",
+      "bounce": false,
+      "attract": {
+        "enable": false,
+        "rotateX": 600,
+        "rotateY": 1200
+      }
+    }
+  },
+  "interactivity": {
+    "detect_on": "canvas",
+    "events": {
+      "onhover": {
+        "enable": false,
+        "mode": "repulse"
+      },
+      "onclick": {
+        "enable": false,
+        "mode": "push"
+      },
+      "resize": true
+    },
+    "modes": {
+      "grab": {
+        "distance": 400,
+        "line_linked": {
+          "opacity": 1
+        }
+      },
+      "bubble": {
+        "distance": 400,
+        "size": 40,
+        "duration": 2,
+        "opacity": 8,
+        "speed": 3
+      },
+      "repulse": {
+        "distance": 200,
+        "duration": 0.4
+      },
+      "push": {
+        "particles_nb": 4
+      },
+      "remove": {
+        "particles_nb": 2
+      }
+    }
+  },
+  "retina_detect": true
+}
+);
+</script>
 <section class="intro">
-  <row>
-    <div class="col-lg-7 col-sm-12 left">
-      <h2>Architect</h2>
-    </div>
-    <div class="col-lg-5 col-sm-12 right">
-      {% if form.errors %}
-      <div class="alert alert-danger">
-        {% trans "Please enter a correct username and password. Note that both fields are case-sensitive." %}
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6 col-xs-12">
+        <h2>ARCHITECT</h2>
       </div>
-      {% endif %}
-      <form action="{% url 'login' %}" method="post" class="form-signin" role="form">{% csrf_token %}
-        <legend>
-          <span class="col-sm-offset-1">{% trans 'Log in to your account' %}</span>
-        </legend>
-        {% for field in form %} {% include 'registration/form_field.html' %} {% endfor %}
-        <div class="form-group">
-          <button type="submit" class="btn btn-primary">{% trans 'Log in' %}</button>
+      <div class="col-md-6 col-xs-12">
+        {% if form.errors %}
+        <div class="alert alert-danger">
+          {% trans "Please enter a correct username and password. Note that both fields are case-sensitive." %}
         </div>
-      </form>
+        {% endif %}
+        <form action="{% url 'login' %}" method="post" class="form-signin" role="form">{% csrf_token %}
+          <legend>
+            <span class="col-sm-offset-1">{% trans 'Log in to your account' %}</span>
+          </legend>
+          {% for field in form %} {% include 'registration/form_field.html' %} {% endfor %}
+          <div class="form-group">
+            <button type="submit" class="btn btn-primary">{% trans 'Log in' %}</button>
+          </div>
+        </form>
+      </div>
     </div>
-  </row>
+  </div>
 </section>
 {% endblock %}
