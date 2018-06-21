@@ -267,7 +267,8 @@ NPM_FILE_PATTERNS = {
     'jquery': ['dist/jquery.js'],
     'jquery-form': ['src/jquery.form.js'],
     'skd3': ['scss/*', 'build/sk.d3.js'],
-    'timeago': ['jquery.timeago.js']
+    'timeago': ['jquery.timeago.js'],
+    'particles.js': ['particles.js']
 }
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
