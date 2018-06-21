@@ -126,6 +126,8 @@ class ResourceCreateForm(forms.Form):
                 kwargs['label'] = param['name']
             if 'help_text' in param:
                 kwargs['help_text'] = param['help_text']
+            if 'initial' in param:
+                kwargs['initial'] = param['initial']
             if 'required' in param:
                 if param['required'] in ("True", "true", "yes", True):
                     kwargs['required'] = True
