@@ -136,6 +136,11 @@ class ResourceCreateForm(forms.Form):
                 field = forms.CharField(**kwargs)
             elif param.get('value_type', 'string') == 'boolean':
                 field = forms.BooleanField(**kwargs)
+            elif param.get('value_type', 'string') == 'choice':
+                FIELD_CHOICES = []
+                for choice in param.get('value_choices', []):
+                    FIELD_CHOICES.append(tuple([choice['value'], choice['label']]))
+                field = forms.ChoiceField(choices=FIELD_CHOICES)
             else:
                 field = forms.CharField(**kwargs)
 
