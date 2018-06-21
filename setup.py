@@ -30,7 +30,7 @@ setup(
     tests_require=tests_requirements,
     extras_require={
         'tests': [
-            'pytest',
+            'pytest>=3.6',
             'flake8'],
         'docs': [
             'sphinx',
