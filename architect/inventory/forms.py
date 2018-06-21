@@ -126,6 +126,8 @@ class ResourceCreateForm(forms.Form):
                 kwargs['label'] = param['name']
             if 'help_text' in param:
                 kwargs['help_text'] = param['help_text']
+            if 'required' in param:
+                kwargs['required'] = param['required']
 
             if param.get('value_type', 'string') == 'string':
                 field = forms.CharField(**kwargs)
