@@ -4,7 +4,7 @@ from django.urls import reverse
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Div, Submit
 from .tasks import process_resource_action_task
-from .models import Resource
+from .models import Resource, Manager
 
 
 class ManagerActionForm(forms.Form):
@@ -14,7 +14,7 @@ class ManagerActionForm(forms.Form):
         manager_name = kwargs.pop('manager_name')
         resource_kind = kwargs.pop('resource_kind')
         resource_action = kwargs.pop('resource_action')
-        super(ResourceActionForm, self).__init__(*args, **kwargs)
+        super(ManagerActionForm, self).__init__(*args, **kwargs)
         action_url = reverse('manager:resource_action',
                              kwargs={'manager_name': manager_name,
                                      'resource_kind': resource_kind,
@@ -68,3 +68,20 @@ class ResourceActionForm(forms.Form):
                                                   self.resource.uid,
                                                   self.action,
                                                   data))
+
+
+class ImportKubeConfigForm(forms.Form):
+
+    name = forms.CharField()
+    kubeconfig = forms.CharField(widget=forms.Textarea)
+    context = forms.CharField(blank=True, null=True)
+    
+    def __init__(self, *args, **kwargs):        
+        super(ImportKubeConfigForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_id = 'modal-form'
+
+    def handle(self):
+        data = self.clean()
+        Manager.objects.create(name=data['name'], description=self.data['context'], engine="kubernetes", metadata=data['kubeconfig'])
+
