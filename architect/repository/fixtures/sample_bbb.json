@@ -1,0 +1,47 @@
+[
+    {
+        "model": "repository.repository",
+        "pk": 1,
+        "fields": {
+            "name": "bbb-images",
+            "description": "",
+            "engine": "bbb",
+            "metadata": {
+                "manager": "newt-work",
+                "inventory": "newt-work",
+                "engine": "bbb",
+                "image_dir": "/srv/os-images/build",
+                "builder_dir": "/srv/os-images/bbb-image-build"
+            },
+            "cache": null,
+            "status": "active"
+        }
+    },
+    {
+        "model": "repository.resource",
+        "pk": 1,
+        "fields": {
+            "uid": "d0f76f36-4082-4397-8a3f-aa399330a400",
+            "name": "bbb01.domain.local-20180429172244",
+            "repository": 1,
+            "kind": "image",
+            "size": 100000,
+            "metadata": {
+                "create_time": 1525022564.0,
+                "type": "bbb-armhf-debian-stretch-4.9",
+                "image_uid": "d0f76f36-4082-4397-8a3f-aa399330a400",
+                "image_name": "bbb01.domain.local-20180429172244",
+                "config": {
+                    "master": "127.0.0.1",
+                    "priv_key": "-----BEGIN RSA PRIVATE KEY-----\n-----END RSA PRIVATE KEY-----",
+                    "pub_key": "-----BEGIN PUBLIC KEY-----\n-----END PUBLIC KEY-----"
+                },
+                "hostname": "bbb01.domain.local"
+            },
+            "cache": {
+                "command": ""
+            },
+            "status": "active"
+        }
+    }
+]

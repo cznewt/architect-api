@@ -84,7 +84,7 @@ class MicrosoftAzureClient(BaseClient):
         if kind == 'az_resource_group':
             response = self.api.resource_groups.list(raw=True)
         elif kind == '__all__':
-            response =  self.api.resources.list(raw=True)
+            response = self.api.resources.list(raw=True)
         return response
 
     def process_resource_metadata(self, kind, metadata):
