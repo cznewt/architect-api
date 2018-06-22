@@ -67,15 +67,15 @@ class ImageDetailView(TemplateView):
 
 class ImageDownloadView(SingleObjectMixin, DownloadView):
     model = Resource
-    use_xsendfile = False
-    mimetype = 'application/python'
+    use_xsendfile = True
+    mimetype = 'application/octet-stream'
 
     def get_object(self):
         return self.model.objects.get(name=self.kwargs['image_name'])
 
-    def get_contents(self):
+    def get_location(self):
         image = self.get_object()
-        return image.repository.client().get_image_content(image.name)
+        return image.repository.client().get_image_location(image.name)
 
     def get_filename(self):
         return self.get_object().name + '.img'
