@@ -62,11 +62,9 @@ class BbbClient(BaseClient):
                 return file_handler.read()
         return None
 
-    def get_image_content(self, image_name):
-        image_path = '{}/{}.img'.format(self.metadata['image_dir'],
-                                        image_name)
-        with open(image_path) as file_handler:
-            return file_handler.read()
+    def get_image_location(self, image_name):
+        return '{}/{}.img'.format(self.metadata['image_dir'],
+                                  image_name)
 
     def get_image_size(self, image_name):
         image_path = '{}/{}.img'.format(self.metadata['image_dir'],
