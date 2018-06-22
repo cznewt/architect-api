@@ -12,7 +12,7 @@ from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from architect.views import JSONDataView
-from .forms import ManagerActionForm, ResourceActionForm
+from .forms import ManagerActionForm, ResourceActionForm, ImportKubeConfigForm
 from .models import Resource, Manager
 from .tasks import get_manager_status_task, \
     sync_manager_resources_task
@@ -237,3 +237,13 @@ class ResourceDetailView(LoginRequiredMixin, TemplateView):
         context['resource'] = Resource.objects.get(manager=manager,
                                                    id=resource_uid)
         return context
+
+
+class ImportKubeconfigView(LoginRequiredMixin, FormView):
+    template_name = "manager/import_kubeconfig.html"
+    form_class = ImportKubeConfigForm
+    success_url = '/success'
+
+    def form_valid(self, form):
+        form.handle()
+        return super().form_valid(form)

@@ -8,6 +8,7 @@
 
 {% block actions %}
 <a href="{% url 'manager:manager_check' %}" class="btn btn-sm btn-outline-secondary">Check status</a>
+<a href="{% url 'manager:import_kube_conf' %}" class="btn btn-sm btn-outline-secondary">Import config</a>
 {% endblock %}
 
 {% block content %}
