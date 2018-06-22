@@ -74,7 +74,7 @@ class ImportKubeConfigForm(forms.Form):
 
     name = forms.CharField()
     kubeconfig = forms.CharField(widget=forms.Textarea)
-    context = forms.CharField(blank=True, null=True)
+    context = forms.CharField(required=True)
     
     def __init__(self, *args, **kwargs):        
         super(ImportKubeConfigForm, self).__init__(*args, **kwargs)
