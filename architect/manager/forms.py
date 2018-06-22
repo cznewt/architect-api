@@ -74,14 +74,18 @@ class ImportKubeConfigForm(forms.Form):
 
     name = forms.CharField()
     kubeconfig = forms.CharField(widget=forms.Textarea)
-    context = forms.CharField(required=True)
+    context = forms.CharField(required=False)
     
     def __init__(self, *args, **kwargs):        
         super(ImportKubeConfigForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_id = 'modal-form'
 
-    def handle(self):
+    def form_valid(self):
         data = self.clean()
-        Manager.objects.create(name=data['name'], description=self.data['context'], engine="kubernetes", metadata=data['kubeconfig'])
-
+        manager = Manager.objects.create(
+            name=data['name'],
+            description=self.data['context'],
+            engine="kubernetes",
+            metadata=data['kubeconfig'])
+        manager.save()

@@ -240,7 +240,7 @@ class ResourceDetailView(LoginRequiredMixin, TemplateView):
 
 
 class ImportKubeconfigView(LoginRequiredMixin, FormView):
-    template_name = "manager/manager_kubeconfig.html"
+    template_name = "manager/import_kubeconfig.html"
     form_class = ImportKubeConfigForm
     success_url = '/success'
 
