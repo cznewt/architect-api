@@ -12,7 +12,7 @@ from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from architect.views import JSONDataView
-from .forms import ManagerActionForm, ResourceActionForm, ImportKubeConfigForm
+from .forms import ManagerActionForm, ResourceActionForm, ImportKubeconfigForm
 from .models import Resource, Manager
 from .tasks import get_manager_status_task, \
     sync_manager_resources_task
@@ -63,7 +63,7 @@ class ManagerActionView(LoginRequiredMixin, FormView):
 
     def get_form_kwargs(self):
         manager = Manager.objects.get(name=self.kwargs.get('manager_name'))
-        kwargs = super(ManagerActionView, self).get_form_kwargs()
+        kwargs = super().get_form_kwargs()
         print(self.kwargs.get('resource_kind'))
         print(self.kwargs.get('resource_action'))
         kwargs.update({
@@ -211,7 +211,7 @@ class ResourceActionView(LoginRequiredMixin, FormView):
         resource = Resource.objects.get(manager=manager,
                                         uid=self.kwargs.get('resource_uid'))
         action = self.kwargs.get('resource_action')
-        kwargs = super(ResourceActionView, self).get_form_kwargs()
+        kwargs = super().get_form_kwargs()
         kwargs.update({
             'manager': manager,
             'resource': resource,
@@ -240,8 +240,8 @@ class ResourceDetailView(LoginRequiredMixin, TemplateView):
 
 
 class ImportKubeconfigView(LoginRequiredMixin, FormView):
-    template_name = "manager/import_kubeconfig.html"
-    form_class = ImportKubeConfigForm
+    template_name = "base_form.html"
+    form_class = ImportKubeconfigForm
     success_url = '/success'
 
     def form_valid(self, form):

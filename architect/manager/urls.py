@@ -5,8 +5,8 @@ app_name = 'manager'
 urlpatterns = [
     path('v1', views.ManagerListView.as_view(),
          name='manager_list'),
-    path('v1/import', views.ImportKubeconfigView.as_view(),
-        name='import_kube_conf'),
+    path('v1/import-kube', views.ImportKubeconfigView.as_view(),
+        name='import_kubeconf'),
     path('v1/manager-check',
          views.ManagerCheckView.as_view(),
          name='manager_check'),
