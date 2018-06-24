@@ -4,7 +4,7 @@ from django import forms
 from django.urls import reverse
 from django.core.exceptions import ValidationError
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Div, Submit
+from crispy_forms.layout import Layout, Fieldset, Div, Submit, HTML
 from .tasks import process_resource_action_task
 from .models import Resource, Manager
 from django.utils.translation import ugettext as _
@@ -71,6 +71,40 @@ class ResourceActionForm(forms.Form):
                                                   self.resource.uid,
                                                   self.action,
                                                   data))
+
+
+class ManagerDeleteForm(forms.Form):
+
+    manager_name = forms.CharField(widget=forms.HiddenInput())
+
+    def __init__(self, *args, **kwargs):
+        super(ManagerDeleteForm, self).__init__(*args, **kwargs)
+        manager_name = self.initial.get('manager_name')
+        delete_url = reverse('manager:manager_delete',
+                             kwargs={'manager_name': manager_name})
+        self.label = 'Delete manager'
+        self.modal_class = 'modal-sm'
+        self.helper = FormHelper()
+        self.helper.form_id = 'modal-form'
+        self.helper.form_action = delete_url
+        self.helper.layout = Layout(
+            Div(
+                Div(
+                    Div('manager_name', css_class='col-md-12'),
+                    css_class='form-row'),
+                HTML('<h6>Are you sure to delete <span class="badge badge-warning">{}</span> ?</h6>'.format(manager_name)),
+                css_class='modal-body',
+            ),
+            Div(
+                Submit('submit', 'Submit', css_class='btn border-primary'),
+                css_class='modal-footer',
+            )
+        )
+
+    def handle(self):
+        data = self.clean()
+        manager = Manager.objects.get(name=data.get('manager_name'))
+        manager.delete()
 
 
 class ImportKubeconfigForm(forms.Form):

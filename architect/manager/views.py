@@ -12,7 +12,8 @@ from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from architect.views import JSONDataView
-from .forms import ManagerActionForm, ResourceActionForm, ImportKubeconfigForm
+from .forms import ManagerActionForm, ResourceActionForm, \
+    ImportKubeconfigForm, ManagerDeleteForm
 from .models import Resource, Manager
 from .tasks import get_manager_status_task, \
     sync_manager_resources_task
@@ -143,6 +144,25 @@ class ManagerSyncView(LoginRequiredMixin, RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         sync_manager_resources_task.apply_async((kwargs.get('manager_name'),))
         return super().get_redirect_url(*args, **kwargs)
+
+
+class ManagerDeleteView(LoginRequiredMixin, FormView):
+    template_name = "base_form.html"
+    form_class = ManagerDeleteForm
+    success_url = '/manager/v1/success'
+
+    def get_success_url(self):
+        return reverse('manager:manager_list')
+
+    def get_form_kwargs(self):
+        manager_name = self.kwargs.get('manager_name')
+        kwargs = super(ManagerDeleteView, self).get_form_kwargs()
+        kwargs.update({'initial': {'manager_name': manager_name}})
+        return kwargs
+
+    def form_valid(self, form):
+        form.handle()
+        return super().form_valid(form)
 
 
 class ManagerQueryJSONView(JSONDataView):
