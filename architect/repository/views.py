@@ -67,7 +67,7 @@ class ImageDetailView(TemplateView):
 
 class ImageDownloadView(SingleObjectMixin, DownloadView):
     model = Resource
-    use_xsendfile = True
+    use_stream = True
     mimetype = 'application/octet-stream'
 
     def get_object(self):
