@@ -31,4 +31,7 @@ urlpatterns = [
     path('v1/<manager_name>/resource/<resource_uid>/<resource_action>',
          views.ResourceActionView.as_view(),
          name='resource_action'),
+    path('v1/<manager_name>/delete',
+         views.ManagerDeleteView.as_view(),
+         name='manager_delete'),
 ]

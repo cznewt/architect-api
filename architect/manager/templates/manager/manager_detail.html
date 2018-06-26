@@ -10,6 +10,7 @@
 {% block actions %}
 <a href="{% url 'manager:manager_sync' manager.name %}" class="btn btn-sm btn-outline-primary">Synchronise</a>
 <a href="{% url 'manager:manager_list' %}" class="btn btn-sm btn-outline-primary">{% trans "Managers" %}</a>
+<a href="{% url 'manager:manager_delete' manager.name %}" class="open-modal btn btn-sm btn-outline-danger">Delete</a>
 {% endblock %}
 
 {% block content %}
