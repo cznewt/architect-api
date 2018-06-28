@@ -26,7 +26,7 @@ from django.views.generic.edit import BaseFormView
 from django.utils.encoding import force_text
 from django.db.models.base import ModelBase
 from django.db.models import ManyToManyField
-from django.http import HttpResponseNotAllowed, HttpResponse
+from django.http import FileResponse, HttpResponseNotAllowed, HttpResponse, StreamingHttpResponse
 from django.core.exceptions import ImproperlyConfigured
 from itertools import chain
 
@@ -34,6 +34,8 @@ try:
     import json
 except ImportError:
     from django.utils import simplejson as json
+
+import os
 
 from six import iteritems
 
@@ -374,8 +376,14 @@ class DownloadView(View):
     mimetype = None
     extension = None
     filename = None
-    use_xsendfile = True
-    
+    use_stream = False
+    use_xsendfile = False
+
+    def __init__(self, *args, **kwargs):
+        if self.use_stream is True and self.use_xsendfile is True:
+            raise ValueError('use_stream and use_xsendfile cannot be both enabled')
+        return super().__init__(*args, **kwargs)
+
     def get_filename(self):
         return self.filename
     
@@ -387,8 +395,8 @@ class DownloadView(View):
     
     def get_location(self):
         '''
-        Returns the path the file is currently located at. Used only if
-        use_xsendfile is True
+        Returns the path the file is currently located at. Mandatory only if
+        use_xsendfile is True or use_stream is True
         '''
         pass
     
@@ -400,12 +408,22 @@ class DownloadView(View):
         pass
     
     def get(self, request, *args, **kwargs):
-        response = HttpResponse(content_type=self.get_mimetype())
-        response['Content-Disposition'] = 'filename=' + self.get_filename()
-        
-        if self.use_xsendfile is True:
-            response['X-Sendfile'] = self.get_location()
+        location = self.get_location()
+        contents = self.get_contents()
+        mimetype = self.get_mimetype()
+
+        if self.use_stream is True:
+            contents = FileResponse(open(location, 'rb'))
+            response = StreamingHttpResponse(contents, content_type=mimetype)
+        elif self.use_xsendfile is True:
+            response = HttpResponse(content_type=mimetype)
         else:
-            response.write(self.get_contents())
+            response = HttpResponse(contents, content_type=mimetype)
+
+        response['Content-Disposition'] = 'attachment; filename=' + self.get_filename()
+        if location:
+            response['Content-Length'] = os.path.getsize(location)
+        if self.use_xsendfile is True:
+            response['X-Sendfile'] = location
 
         return response
