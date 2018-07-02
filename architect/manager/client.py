@@ -73,6 +73,18 @@ class BaseClient(object):
     def manager(self):
         return Manager.objects.get(name=self.name)
 
+    def get_resources(self, kind):
+        resources = Resource.objects.filter(manager=self.manager())
+        output = {}
+        for item in resources:
+            output[item.uid] = {
+                'uid': item.uid,
+                'name': item.name,
+                'kind': item.kind,
+                'metadata': item.metadata,
+            }
+        return output
+
     def save(self):
         manager = Manager.objects.get(name=self.name)
         for resource_type, resources in self.resources.items():

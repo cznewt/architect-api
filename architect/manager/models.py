@@ -68,15 +68,17 @@ class Manager(models.Model):
         elif self.engine in ['jenkins', 'saltstack', 'spinnaker']:
             return 'URL: {}'.format(self.metadata.get('auth_url', '-'))
         elif self.engine == 'heat':
-            return 'OpenStack Cloud: {}'.format(self.metadata.get('cloud_endpoint', '-'))
+            return 'Cloud: {}'.format(self.metadata.get('cloud_endpoint', '-'))
         elif self.engine == 'helm':
-            return 'Kubernetes Cluster: {}'.format(self.metadata.get('container_endpoint', '-'))
+            return 'Cluster: {}'.format(self.metadata.get('container_endpoint', '-'))
         elif self.engine == 'homeassistant':
             return 'URL: https://{}:{}'.format(self.metadata['host'], self.metadata.get('port', 8123))
         elif self.engine == 'kubernetes':
             return 'URL: {}'.format(self.metadata.get('cluster', {}).get('server', '-'))
         elif self.engine == 'openstack':
             return 'URL: {}'.format(self.metadata.get('auth', {}).get('auth_url', '-'))
+        elif self.engine == 'terraform':
+            return 'Path: {}'.format(self.metadata.get('template_path', '-'))
         else:
             return '-'
 

@@ -13,6 +13,28 @@
 <a href="{% url 'manager:manager_delete' manager.name %}" class="open-modal btn btn-sm btn-outline-danger">Delete</a>
 {% endblock %}
 
+{% block sidebar %}
+<ul class="list-group list-group-flush">
+  <li class="list-group-item">{% trans "Engine" %}
+    <span class="badge">{{ manager.engine }}</span>
+  </li>
+  <li class="list-group-item">{% trans "Status" %}
+    <span class="badge badge-{{ manager.color }}">{{ manager.status }}</span>
+  </li>
+  {% if manager.engine == 'terraform' %}
+  <li class="list-group-item">{% trans "Path" %}
+    <span class="badge">{{ manager.metadata.template_path }}</span>
+  </li>
+  {% endif %}
+  {% if manager.engine == 'kubernetes' %}
+  <li class="list-group-item">{% trans "Scope" %}
+    <span class="badge">{{ manager.metadata.scope }}</span>
+  </li>
+  {% endif %}
+
+</ul>
+{% endblock %}
+
 {% block content %}
 <div class="row">
   <div class="col col-sm-12">

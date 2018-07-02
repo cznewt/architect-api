@@ -52,6 +52,7 @@ class ResourceActionForm(forms.Form):
         self.helper = FormHelper()
         self.helper.form_id = 'modal-form'
         self.helper.form_action = action_url
+        self.modal_class = 'modal-md'
         self.helper.layout = Layout(
             Div(
                 Div(

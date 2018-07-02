@@ -2,6 +2,12 @@ query:
   tf_complete_graph:
     layout: graph
 relation:
+  uses_tf_template:
+    relation:
+      default: template
+  in_tf_state:
+    relation:
+      default: state
   in_tf_module:
     relation:
       default: module
@@ -27,13 +33,39 @@ relation:
     relation:
       tf_openstack_compute_floatingip_associate_v2: floating_ip
       tf_openstack_networking_floatingip_v2: router
-default_resource: tf_module
+default_resource: tf_template
 resource:
+  tf_template:
+    client: ''
+    icon: fa:map-signs
+    name: Template
+    resource: ''
+    workflow:
+      create:
+        name: Deploy template
+  tf_state:
+    client: ''
+    icon: fa:map-signs
+    name: State
+    resource: ''
+    workflow:
+      destroy:
+        name: Destroy
+    model:
+      template:
+        type: relationship_to
+        model: uses_tf_template
+        target: tf_template
   tf_module:
     client: ''
     icon: fa:map-signs
     name: Module
     resource: ''
+    model:
+      state:
+        type: relationship_to
+        model: in_tf_state
+        target: tf_state
   tf_openstack_compute_floatingip_associate_v2:
     client: ''
     icon: fa:map-signs
