@@ -42,6 +42,7 @@ USER_PASSWORD="{{ user.password }}"
 ENABLE_I2C=true
 ENABLE_SPI=true
 ENABLE_SSHD=true
+ENABLE_IFNAMES=false
 
 ENABLE_REDUCE=true
 REDUCE_APT=true
