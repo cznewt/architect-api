@@ -39,8 +39,9 @@ python-terraform
 pydot
 graphviz
 juju
-homeassistant==0.64.3
+homeassistant
 
+psycopg2-binary
 graphene-django>=2.0
 pandas
 numpy

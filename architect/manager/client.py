@@ -91,6 +91,7 @@ class BaseClient(object):
             for resource_name, resource in resources.items():
                 res, created = Resource.objects.get_or_create(uid=resource['uid'],
                                                               manager=manager)
+#                logger.info(resource)
                 if created:
                     res.name = resource['name']
                     res.kind = resource_type

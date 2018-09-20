@@ -2,12 +2,13 @@
 
 from datetime import timedelta
 from django.core.cache import cache
-from django.views.generic.base import TemplateView
+from django.views.generic.base import TemplateView, RedirectView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from architect import utils
 from architect.views import JSONDataView
-from architect.monitor.models import Monitor
-
+from architect.monitor.models import Monitor, Resource
+from .tasks import get_monitor_status_task, \
+    sync_monitor_resources_task
 
 class MonitorListView(LoginRequiredMixin, TemplateView):
     template_name = "monitor/monitor_list.html"
@@ -18,13 +19,37 @@ class MonitorListView(LoginRequiredMixin, TemplateView):
         return context
 
 
+class MonitorCheckView(LoginRequiredMixin, RedirectView):
+    permanent = False
+    query_string = True
+    pattern_name = 'monitor:monitor_list'
+
+    def get_redirect_url(self, *args, **kwargs):
+        monitors = Monitor.objects.all()
+        for monitor in monitors:
+            get_monitor_status_task.apply_async((monitor.name,))
+        return super().get_redirect_url(*args, **kwargs)
+
+
+class MonitorSyncView(LoginRequiredMixin, RedirectView):
+    permanent = False
+    pattern_name = 'monitor:monitor_detail'
+
+    def get_redirect_url(self, *args, **kwargs):
+        sync_monitor_resources_task.apply_async((kwargs.get('monitor_name'),))
+        return super().get_redirect_url(*args, **kwargs)
+
 class MonitorDetailView(LoginRequiredMixin, TemplateView):
     template_name = "monitor/monitor_detail.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         monitor = Monitor.objects.get(name=kwargs.get('monitor_name'))
+        kind = monitor.get_schema()['default_resource']
         context['monitor'] = monitor
+        context['workflow_options'] = monitor.client()._schema['resource'][kind].get('workflow')
+        context['resource_list'] = Resource.objects.filter(monitor=monitor,
+                                                           kind=kind)
         return context
 
 
@@ -83,3 +108,16 @@ class MonitorQueryJSONView(JSONDataView):
                 data = {}
         output['data'] = outputs
         return output
+
+
+class ResourceDetailView(LoginRequiredMixin, TemplateView):
+    template_name = "monitor/resource_detail.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        monitor = Monitor.objects.get(name=kwargs.get('monitor_name'))
+        resource_uid = kwargs.get('resource_uid')
+        context['monitor'] = monitor
+        context['resource'] = Resource.objects.get(monitor=monitor,
+                                                   id=resource_uid)
+        return context

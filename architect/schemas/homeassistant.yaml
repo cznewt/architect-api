@@ -1,24 +1,233 @@
 query:
-  hass_complete_graph:
+  homeassistant_complete_graph:
     layout: graph
 relation:
-  at_group:
+  in_group:
     relation:
-      default: group
-default_resource: hass_entity
+      default: ha_group
+  in_view:
+    relation:
+      default: ha_view
+default_resource: ha_view
 resource:
-  hass_entity:
+  ha_sensor:
     client: hass
     icon: fa:cube
-    name: Entity
-    resource: HomeAssistant::Entity
+    name: Sensor
+    resource: HomeAssistant::Sensor
     model:
       group:
         type: relationship_to
-        model: at_group
-        target: hass_group
-  hass_group:
+        model: in_group
+        target: ha_group
+      view:
+        type: relationship_to
+        model: in_view
+        target: ha_view
+  ha_binary_sensor:
+    client: hass
+    icon: fa:cube
+    name: Binary Sensor
+    resource: HomeAssistant::BinarySensor
+    model:
+      group:
+        type: relationship_to
+        model: in_group
+        target: ha_group
+      view:
+        type: relationship_to
+        model: in_view
+        target: ha_view
+  ha_light:
+    client: hass
+    icon: fa:cube
+    name: Light
+    resource: HomeAssistant::Light
+    workflow:
+      turn_on_light:
+        name: Turn on
+      turn_off_light:
+        name: Turn off
+    model:
+      group:
+        type: relationship_to
+        model: in_group
+        target: ha_group
+      view:
+        type: relationship_to
+        model: in_view
+        target: ha_view
+  ha_switch:
+    client: hass
+    icon: fa:cube
+    name: Switch
+    resource: HomeAssistant::Switch
+    model:
+      group:
+        type: relationship_to
+        model: in_group
+        target: ha_group
+      view:
+        type: relationship_to
+        model: in_view
+        target: ha_view
+  ha_media_player:
+    client: hass
+    icon: fa:cube
+    name: Media Player
+    resource: HomeAssistant::MediaPlayer
+    model:
+      group:
+        type: relationship_to
+        model: in_group
+        target: ha_group
+      view:
+        type: relationship_to
+        model: in_view
+        target: ha_view
+  ha_group:
     client: hass
     icon: fa:cube
     name: Group
     resource: HomeAssistant::Group
+    model:
+      view:
+        type: relationship_to
+        model: in_view
+        target: ha_view
+
+  ha_view:
+    client: hass
+    icon: fa:cube
+    name: Group
+    resource: HomeAssistant::View
+  ha_sun:
+    client: hass
+    icon: fa:cube
+    name: Sun
+    resource: HomeAssistant::Sun
+    model:
+      group:
+        type: relationship_to
+        model: in_group
+        target: ha_group
+      view:
+        type: relationship_to
+        model: in_view
+        target: ha_view
+  ha_camera:
+    client: hass
+    icon: fa:cube
+    name: Camera
+    resource: HomeAssistant::Camera
+    model:
+      group:
+        type: relationship_to
+        model: in_group
+        target: ha_group
+      view:
+        type: relationship_to
+        model: in_view
+        target: ha_view
+  ha_device_tracker:
+    client: hass
+    icon: fa:cube
+    name: Device Tracker
+    resource: HomeAssistant::DeviceTracker
+    model:
+      group:
+        type: relationship_to
+        model: in_group
+        target: ha_group
+      view:
+        type: relationship_to
+        model: in_view
+        target: ha_view
+  ha_zone:
+    client: hass
+    icon: fa:cube
+    name: Zone
+    resource: HomeAssistant::Zone
+    model:
+      group:
+        type: relationship_to
+        model: in_group
+        target: ha_group
+      view:
+        type: relationship_to
+        model: in_view
+        target: ha_view
+  ha_input_text:
+    client: hass
+    icon: fa:cube
+    name: Input Text
+    resource: HomeAssistant::InputText
+    model:
+      group:
+        type: relationship_to
+        model: in_group
+        target: ha_group
+      view:
+        type: relationship_to
+        model: in_view
+        target: ha_view
+  ha_input_boolean:
+    client: hass
+    icon: fa:cube
+    name: Input Boolean
+    resource: HomeAssistant::InputBoolean
+    model:
+      group:
+        type: relationship_to
+        model: in_group
+        target: ha_group
+      view:
+        type: relationship_to
+        model: in_view
+        target: ha_view
+
+  ha_input_number:
+    client: hass
+    icon: fa:cube
+    name: Input Number
+    resource: HomeAssistant::InputNumber
+    model:
+      group:
+        type: relationship_to
+        model: in_group
+        target: ha_group
+      view:
+        type: relationship_to
+        model: in_view
+        target: ha_view
+  ha_automation:
+    client: hass
+    icon: fa:cube
+    name: Automation
+    resource: HomeAssistant::Automation
+    model:
+      group:
+        type: relationship_to
+        model: in_group
+        target: ha_group
+      view:
+        type: relationship_to
+        model: in_view
+        target: ha_view
+  ha_script:
+    client: hass
+    icon: fa:cube
+    name: Script
+    resource: HomeAssistant::Script
+    workflow:
+      execute_script:
+        name: Execute
+    model:
+      group:
+        type: relationship_to
+        model: in_group
+        target: ha_group
+      view:
+        type: relationship_to
+        model: in_view
+        target: ha_view

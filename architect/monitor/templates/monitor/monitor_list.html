@@ -7,6 +7,10 @@
 
 {% block title %}{% trans "Available monitors" %}{% endblock %}
 
+{% block actions %}
+<a href="{% url 'monitor:monitor_check' %}" class="btn btn-sm btn-outline-secondary">Check status</a>
+{% endblock %}
+
 {% block content %}
 <table class="table bordered">
   <thead>

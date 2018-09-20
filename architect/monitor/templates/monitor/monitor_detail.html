@@ -1,6 +1,6 @@
 {% extends TEMPLATE_BASE|default:"content_base.html" %}
 
-{% load static compress %}
+{% load static compress i18n %}
 
 {% block nav_monitor_cls %} navigation__sub--active{% endblock %}
 
@@ -13,32 +13,44 @@
 {% endblock %}
 
 {% block actions %}
+<a href="{% url 'monitor:monitor_sync' monitor.name %}" class="btn btn-sm btn-outline-secondary">Synchronise</a>
 <a href="{% url 'monitor:monitor_list' %}" class="btn btn-sm btn-outline-primary">Monitors</a>
 {% endblock %}
 
 {% block content %}
 <div class="row">
-  <table class="table bordered">
-    <thead>
-      <tr class="row m-0">
-        <th class="d-inline-block col-6">Series</th>
-        <th class="d-inline-block col-6">Properties</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for series in resources %}
-      <tr class="row m-0">
-        <th class="d-inline-block col-6" scope="row">
-          <a href="#">{{ series_name }}</a>
-        </th>
-        <td class="d-inline-block col-6">
-          {{ series }}
-        </td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-  
+  <div class="col col-sm-12">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>{% trans "Name" %}</th>
+          <th>{% trans "Kind" %}</th>
+          <th style="text-align:right;">{% trans "Relations" %}</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for resource in resource_list %}
+        <tr>
+          <th scope="row">
+            <a href="{% url 'monitor:resource_detail' monitor.name resource.id %}">{{ resource.name }}</a>
+            <span class="badge badge-{{ resource.color }}">{{ resource.status }}</span>
+          </th>
+          <td>{{ resource.kind }}</td>
+          <td style="text-align:right;">{{ resource.relations.count }}</td>
+
+          <td align="right">
+            <a href="{% url 'monitor:resource_detail' monitor.name resource.id %}" class="btn btn-sm btn-outline-primary">{% trans "Detail" %}</a>
+            {% for action, workflow in workflow_options.items %}
+            <a href="{% url 'monitor:resource_action' monitor.name resource.uid action %}" class="open-modal btn btn-sm btn-outline-primary">{{
+              workflow.name }}</a>
+            {% endfor %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
 </div>
 {% endblock %}
 

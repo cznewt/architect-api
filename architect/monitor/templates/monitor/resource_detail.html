@@ -1,0 +1,88 @@
+{% extends TEMPLATE_BASE|default:"content_base.html" %}
+{% load architect i18n %}
+
+{% block nav_monitor_cls %} navigation__sub--active{% endblock %}
+
+{% block page_title %}Resource {{ resource.name }}{% endblock %}
+
+{% block title %}Resource {{ resource.name }}{% endblock %}
+
+{% block actions %}
+<a href="{% url 'monitor:monitor_detail' monitor.name %}" class="btn btn-sm btn-outline-primary">monitor {{
+    monitor.name }}</a>
+{% endblock %}
+
+{% block sidebar %}
+<ul class="list-group list-group-flush">
+    <li class="list-group-item">{% trans "Name" %}
+        <span class="badge">{{ resource.name }}</span>
+    </li>
+    <li class="list-group-item">{% trans "Kind" %}
+        <span class="badge">{{ resource.kind }}</span>
+    </li>
+    <li class="list-group-item">{% trans "Status" %}
+        <span class="badge badge-{{ resource.color }}">{{ resource.status }}</span>
+    </li>
+</ul>
+{% endblock %}
+
+{% block content %}
+<ul class="nav nav-tabs" role="tablist">
+    <li class="nav-item">
+        <a class="nav-link active" data-toggle="tab" href="#properties" role="tab">{% trans "Relations" %}</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#metadata" role="tab">{% trans "Raw metadata" %}</a>
+    </li>
+</ul>
+<div class="tab-content">
+    <div class="tab-pane active" id="properties" role="tabpanel">
+        <table class="table table-striped">
+            <thead>
+                <th>{% trans "Name" %}</th>
+                <th>{% trans "Kind" %}</th>
+                <th>{% trans "Relation" %}</th>
+                <th>{% trans "Options" %}</th>
+            </thead>
+            <tbody>
+                {% for source in resource.sources.all %}
+                <tr>
+                    <th scope="row">
+                        <a href="{% url 'monitor:resource_detail' monitor.name source.id %}">{{ source.name }}</a>
+                        <span class="badge badge-{{ source.color }}">{{ source.status }}</span>
+                        </td>
+                    <td>{{ source.kind }}</td>
+                    <td>{% trans "Target" %}</td>
+                    <td>
+                        {% for action, workflow in source.workflow_options.items %}
+                        <a href="{% url 'monitor:resource_action' monitor.name source.uid action %}" class="open-modal btn btn-sm btn-outline-primary">{{
+                            workflow.name }}</a>
+                        {% endfor %}
+                    </td>
+                </tr>
+                {% endfor %}
+                {% for target in resource.targets.all %}
+                <tr>
+                    <th scope="row">
+                        <a href="{% url 'monitor:resource_detail' monitor.name target.id %}">{{ target.name }}</a>
+                        <span class="badge badge-{{ target.color }}">{{ target.status }}</span>
+                        </td>
+                    <td>{{ target.kind }}</td>
+                    <td>{% trans "Source" %}</td>
+                    <td>
+                        {% for action, workflow in target.workflow_options.items %}
+                        <a href="{% url 'monitor:resource_action' monitor.name target.uid action %}" class="open-modal btn btn-sm btn-outline-primary">{{
+                            workflow.name }}</a>
+                        {% endfor %}
+                    </td>
+                </tr>
+                {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+    <div class="tab-pane" id="metadata" role="tabpanel">
+        <pre class="text-light mt-2 mb-2 mr-3 ml-3"><code>{{ resource.metadata|to_yaml }}</code></pre>
+    </div>
+</div>
+{% endblock %}

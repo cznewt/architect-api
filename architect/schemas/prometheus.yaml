@@ -1,18 +1,48 @@
 query:
   prometheus_test_range_query_long:
-    metric: hdd_errors
+    query: hdd_errors
     step: 30m
     start: "2018-01-25T12:00:00Z"
     end: "2018-01-30T12:00:00Z"
   prometheus_test_range_query:
-    metric: hdd_errors
+    query: hdd_errors
     step: 4h
     start: "2018-01-25T12:00:00Z"
     end: "2018-01-30T12:00:00Z"
   prometheus_test_instant_query:
-    metric: hdd_errors
+    query: hdd_errors
     moment: "2018-01-28T12:00:00Z"
-metric:
-  hdd_errors:
-    job: telegraf
-    name: HDD errors
+default_resource: prom_metric
+relation:
+  by_job:
+    relation:
+      default: prom_job
+  metric_value:
+    relation:
+      default: prom_target
+resource:
+  prom_metric:
+    client: prometheus/series
+    icon: fa:cube
+    name: Metric
+    resource: Prometheus::Series
+    model:
+      target:
+        type: relationship_to
+        model: metric_value
+        target: prom_target
+  prom_target:
+    client: prometheus/targets
+    icon: fa:cube
+    name: Target
+    resource: Prometheus::Target
+    model:
+      job:
+        type: relationship_to
+        model: by_job
+        target: prom_job
+  prom_job:
+    client: prometheus/job
+    icon: fa:cube
+    name: Job
+    resource: Prometheus::Job

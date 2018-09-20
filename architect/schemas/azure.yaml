@@ -2,13 +2,100 @@ query:
   az_complete_graph:
     layout: graph
 relation:
-  in_az_resource_group:
+  at_location:
     relation:
-      default: resource_group
+      default: az_location
+  in_network:
+    relation:
+      default: az_network
+  in_subscription:
+    relation:
+      default: az_subscription
+  in_resource_group:
+    relation:
+      default: az_resource_group
+  has_size:
+    relation:
+      default: az_virtual_machine_size
 default_resource: az_resource_group
 resource:
+  az_subscription:
+    resource: Subscription
+    client: subscription
+    name: Subscription
+    icon: fa:server
+  az_location:
+    resource: Location
+    client: subscription
+    name: Location
+    icon: fa:server
+    model:
+      subscription:
+        type: relationship_to
+        model: in_subscription
+        target: az_subscription
+
   az_resource_group:
-    client: az
+    client: resource
     icon: fa:cube
     name: Resource Group
     resource: ResourceGroup
+    model:
+      location:
+        type: relationship_to
+        model: at_location
+        target: az_location
+  az_virtual_machine_size:
+    resource: VMsize
+    client: compute
+    name: Virtual Machine Size
+    icon: fa:server
+    model:
+      locations:
+        type: relationship_to
+        model: at_location
+        target: az_location
+
+  az_virtual_machine:
+    resource: Microsoft.Compute/virtualMachines
+    client: compute
+    name: Virtual Machine
+    icon: fa:server
+    model:
+      resource_group:
+        type: relationship_to
+        model: in_resource_group
+        target: az_resource_group
+      size:
+        type: relationship_to
+        model: has_size
+        target: az_virtual_machine_size
+  az_network:
+    resource: Microsoft.Network/virtualNetworks
+    client: network
+    name: Network
+    icon: fa:server
+    model:
+      resource_group:
+        type: relationship_to
+        model: in_resource_group
+        target: az_resource_group
+  az_subnet:
+    resource: Microsoft.Network/subnets
+    client: network
+    name: Subnet
+    icon: fa:server
+    model:
+      resource_group:
+        type: relationship_to
+        model: in_resource_group
+        target: az_resource_group
+      network:
+        type: relationship_to
+        model: in_network
+        target: az_network
+  az_managed_cluster:
+    resource: Microsoft.ContainerService/managedClusters
+    client: contaner_service
+    name: Managed Cluster
+    icon: fa:server
