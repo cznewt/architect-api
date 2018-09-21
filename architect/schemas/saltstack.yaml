@@ -1,13 +1,16 @@
 query:
   salt_complete_graph:
+    name: All Resources
     layout: graph
   salt_minion_service_graph:
+    name: Salt Minion Services
     layout: graph
     filter_node_types:
     - salt_master
     - salt_minion
     - salt_service
   salt_minions_tree:
+    name: Simple Minions
     layout: hierarchy
     hierarchy_layers:
       0:
@@ -16,6 +19,7 @@ query:
       1:
         kind: salt_minion
   salt_minion_services_tree:
+    name: Minion Services
     layout: hierarchy
     hierarchy_layers:
       0:
@@ -27,6 +31,7 @@ query:
         target: runs_on_minion
         kind: salt_service
   salt_minion_lowstates_tree:
+    name: Minion States
     layout: hierarchy
     hierarchy_layers:
       0:

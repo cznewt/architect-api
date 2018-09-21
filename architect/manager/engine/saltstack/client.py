@@ -17,7 +17,6 @@ DEFAULT_RESOURCES = [
     # 'salt_job',
 ]
 
-
 class SaltStackClient(BaseClient):
 
     def __init__(self, **kwargs):

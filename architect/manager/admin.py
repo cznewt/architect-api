@@ -26,6 +26,7 @@ sync_manager_resources.short_description = "Synchronise resources of selected ma
 def clear_manager_resources(modeladmin, request, queryset):
     for manager in queryset:
         Resource.objects.filter(manager=manager).delete()
+        Relationship.objects.filter(manager=manager).delete()
 
 
 clear_manager_resources.short_description = "Clear resources of selected managers"
@@ -81,14 +82,14 @@ class SourceRelationshipInline(admin.TabularInline):
     model = Relationship
     form = SourceRelationshipForm
     fk_name = 'source'
-    extra = 1
+    extra = 0
 
 
 class TargetRelationshipInline(admin.TabularInline):
     model = Relationship
     form = TargetRelationshipForm
     fk_name = 'target'
-    extra = 1
+    extra = 0
 
 
 @admin.register(Resource)

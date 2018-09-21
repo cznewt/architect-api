@@ -1,11 +1,9 @@
 query:
   k8s_complete_graph:
+    name: Complete Cluster
     layout: graph
-  k8s_clear_namespaces_graph:
-    layout: graph
-    filter_lone_nodes:
-    - k8s_namespace
   k8s_pods_in_namespaces_tree:
+    name: Pods by Namespace
     layout: hierarchy
     hierarchy_layers:
       0:
@@ -20,6 +18,7 @@ query:
         kind: k8s_service
         target: in_k8s_pod
   k8s_pods_on_nodes_tree:
+    name: Pods by Node
     layout: hierarchy
     hierarchy_layers:
       0:
@@ -51,6 +50,13 @@ relation:
   on_k8s_node:
     relation:
       default: node
+
+  contains_k8s_node:
+    relation:
+      default: node
+  contains_k8s_namespace:
+    relation:
+      default: namespace
 default_resource: k8s_pod
 resource:
   k8s_config_map:
@@ -226,3 +232,17 @@ resource:
         type: relationship_to
         model: use_k8s_secret
         target: k8s_secret
+  k8s_cluster:
+    client: ''
+    icon: fa:user
+    name: Cluster
+    resource: Cluster
+    model:
+      namespaces:
+        type: relationship_to
+        model: contains_k8s_namespace
+        target: k8s_namespace
+      nodes:
+        type: relationship_to
+        model: contains_k8s_node
+        target: k8s_node

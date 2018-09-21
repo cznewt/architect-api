@@ -1,7 +1,9 @@
 query:
   helm_complete_graph:
+    name: All Resources
     layout: graph
   helm_chart_releases_tree:
+    name: Chart Releases
     layout: hierarchy
     hierarchy_layers:
       0:

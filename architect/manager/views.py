@@ -21,6 +21,19 @@ from .transform import transform_data, filter_node_types, \
     filter_lone_nodes, clean_relations
 from architect.document.models import Document
 
+VIZ_OPTIONS = {
+    'graph': {
+        'matrix': 'Adjacency Matrix',
+        'arc': 'Arc Diagram',
+        'force': 'Force-directed Graph',
+        'hive': 'Hive Plot',
+    },
+    'hierarchy': {
+        'tree': 'Node-Link Tree',
+        'sunburst': 'Sunburst Diagram',
+#        'treemap': 'TreeMap'
+    },
+}
 
 class ManagerListView(LoginRequiredMixin, TemplateView):
     template_name = "manager/manager_list.html"
@@ -39,9 +52,27 @@ class ManagerDetailView(LoginRequiredMixin, TemplateView):
         manager = Manager.objects.get(name=kwargs.get('manager_name'))
         kind = manager.get_schema()['default_resource']
         context['manager'] = manager
+        context['query_list'] = manager.client()._schema['query']
+        context['viz_list'] = VIZ_OPTIONS
         context['workflow_options'] = manager.client()._schema['resource'][kind].get('workflow')
         context['resource_list'] = Resource.objects.filter(manager=manager,
                                                            kind=kind)
+        return context
+
+
+class ManagerGraphView(LoginRequiredMixin, TemplateView):
+    template_name = "manager/manager_graph.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        manager = Manager.objects.get(name=kwargs.get('manager_name'))
+        context['manager'] = manager
+        context['query_name'] = kwargs.get('query_name')
+        context['viz_name'] = kwargs.get('viz_name')
+        context['query_list'] = manager.client()._schema['query']
+        context['query'] = manager.client()._schema['query'][kwargs.get('query_name')]
+        context['viz_list'] = VIZ_OPTIONS
+        context['viz_label'] = VIZ_OPTIONS[context['query']['layout']][context['viz_name']]
         return context
 
 
@@ -229,7 +260,7 @@ class ResourceActionView(LoginRequiredMixin, FormView):
     def get_form_kwargs(self):
         manager = Manager.objects.get(name=self.kwargs.get('manager_name'))
         resource = Resource.objects.get(manager=manager,
-                                        uid=self.kwargs.get('resource_uid'))
+                                        id=self.kwargs.get('resource_uid'))
         action = self.kwargs.get('resource_action')
         kwargs = super().get_form_kwargs()
         kwargs.update({

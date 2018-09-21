@@ -1,5 +1,6 @@
 query:
-  homeassistant_complete_graph:
+  ha_complete_graph:
+    name: All Resources
     layout: graph
 relation:
   in_group:

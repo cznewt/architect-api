@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 
+import yaml
+from django import forms
+
 import msrest
 from azure.common.credentials import ServicePrincipalCredentials
 from azure.mgmt.resource import ResourceManagementClient
@@ -9,6 +12,7 @@ from azure.mgmt.subscription import SubscriptionClient
 from azure.mgmt.containerservice import ContainerServiceClient
 
 from architect.manager.client import BaseClient
+from architect.manager.models import Manager
 from celery.utils.log import get_logger
 import json
 
@@ -98,7 +102,7 @@ class MicrosoftAzureClient(BaseClient):
                 return 'active'
         elif kind in ['az_virtual_machine_size', 'az_location']:
             return 'active'
-        elif kind == 'az_virtual_machine':
+        elif kind in ['az_virtual_machine', 'az_managed_cluster', 'az_network', 'az_subnet']:
             state = metadata.get('provisioning_state', '')
             if state == 'Succeeded':
                 return 'active'
@@ -385,4 +389,46 @@ class MicrosoftAzureClient(BaseClient):
 
     def get_group_id_from_resource_id(self, id):
         parts = id.split('/')
-        return '/'.join(parts[:5])
+        return '/'.join(parts[:5]).replace('/resourcegroups/', '/resourceGroups/')
+
+    def get_group_name_from_resource_id(self, id):
+        parts = id.split('/')
+        return parts[4]
+
+    def get_resource_action_fields(self, resource, action):
+        fields = {}
+        if resource.kind == 'az_managed_cluster':
+            if action == 'create_manager':
+                initial_name = resource.metadata['node_resource_group'].replace('MC_', '')
+                fields['name'] = forms.CharField(label='New name',
+                                                 help_text='Importing managed cluster <strong>{}</strong> from resource group <strong>{}</strong>.'.format(
+                                                     resource.name, self.get_group_name_from_resource_id(resource.uid)),
+                                                 initial=initial_name)
+        return fields
+
+    def process_resource_action(self, resource, action, data):
+        if resource.kind == 'az_managed_cluster':
+            if action == 'create_manager':
+                if self.auth():
+                    raw_data = self.container_service_api.managed_clusters.list_cluster_admin_credentials(self.get_group_name_from_resource_id(resource.uid),
+                                                                                                          resource.metadata['name'])
+                    for raw_kubeconfig in raw_data.kubeconfigs:
+                        kubeconfig_yaml = raw_kubeconfig.value.decode()
+                        kubeconfig = yaml.load(kubeconfig_yaml)
+                        cluster = kubeconfig['clusters'][0]['cluster']
+                        user = kubeconfig['users'][0]['user']
+                        manager = Manager.objects.create(
+                            name=data['name'],
+                            engine="kubernetes",
+                            metadata={
+                                'user': user,
+                                'cluster': cluster,
+                                'engine': "kubernetes",
+                                'scope': "global"
+                            })
+                        manager.save()
+                        if manager.client().check_status():
+                            manager.status = 'active'
+                        else:
+                            manager.status = 'error'
+                        manager.save()

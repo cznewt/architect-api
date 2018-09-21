@@ -36,8 +36,16 @@
 {% endblock %}
 
 {% block content %}
-<div class="row">
-  <div class="col col-sm-12">
+<ul class="nav nav-tabs" role="tablist">
+  <li class="nav-item">
+    <a class="nav-link active" data-toggle="tab" href="#properties" role="tab">{% trans "Resources" %}</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" data-toggle="tab" href="#metadata" role="tab">{% trans "Visualizations" %}</a>
+  </li>
+</ul>
+<div class="tab-content">
+  <div class="tab-pane active" id="properties" role="tabpanel">
     <table class="table table-striped">
       <thead>
         <tr>
@@ -61,6 +69,39 @@
             {% for action, workflow in workflow_options.items %}
             <a href="{% url 'manager:resource_action' manager.name resource.uid action %}" class="open-modal btn btn-sm btn-outline-primary">{{ workflow.name }}</a>
             {% endfor %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="tab-pane" id="metadata" role="tabpanel">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>{% trans "Dataset" %}</th>
+          <th>{% trans "Layout" %}</th>
+          <th style="text-align:right;">{% trans "Visualization" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for query_name, query in query_list.items %}
+        <tr>
+          <th scope="row">
+            <strong>{{ query.name }}</strong>
+          </th>
+          <td>{{ query.layout }}</td>
+          <td align="right">
+            {% if query.layout == "graph" %}
+            {% for viz_name, viz in viz_list.graph.items %}
+            <a href="{% url 'manager:manager_graph' manager.name viz_name query_name %}" class="btn btn-sm btn-outline-primary">{{ viz }}</a>
+            {% endfor %}
+            {% endif %}
+            {% if query.layout == "hierarchy" %}
+            {% for viz_name, viz in viz_list.hierarchy.items %}
+            <a href="{% url 'manager:manager_graph' manager.name viz_name query_name %}" class="btn btn-sm btn-outline-primary">{{ viz }}</a>
+            {% endfor %}
+            {% endif %}
           </td>
         </tr>
         {% endfor %}

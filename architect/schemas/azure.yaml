@@ -1,5 +1,6 @@
 query:
   az_complete_graph:
+    name: Complete Subscription
     layout: graph
 relation:
   at_location:
@@ -12,6 +13,9 @@ relation:
     relation:
       default: az_subscription
   in_resource_group:
+    relation:
+      default: az_resource_group
+  uses_resource_group:
     relation:
       default: az_resource_group
   has_size:
@@ -99,3 +103,16 @@ resource:
     client: contaner_service
     name: Managed Cluster
     icon: fa:server
+    model:
+      resource_group:
+        type: relationship_to
+        model: in_resource_group
+        target: az_resource_group
+      resources:
+        type: relationship_to
+        model: uses_resource_group
+        target: az_resource_group
+
+    workflow:
+      create_manager:
+        name: Create manager

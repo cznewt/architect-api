@@ -79,6 +79,8 @@ class Manager(models.Model):
             return 'URL: {}'.format(self.metadata.get('auth', {}).get('auth_url', '-'))
         elif self.engine == 'terraform':
             return 'Path: {}'.format(self.metadata.get('template_path', '-'))
+        elif self.engine == 'azure':
+            return 'Subscription: {}'.format(self.metadata.get('subscription_id', '-'))
         else:
             return '-'
 

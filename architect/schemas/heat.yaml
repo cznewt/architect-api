@@ -1,7 +1,9 @@
 query:
   heat_complete_graph:
+    name: Complete Stack
     layout: graph
   heat_template_stacks_tree:
+    name: Template Stacks
     layout: hierarchy
     hierarchy_layers:
       0:

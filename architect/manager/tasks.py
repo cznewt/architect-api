@@ -41,7 +41,7 @@ def sync_manager_resources_task(manager_name):
 def process_resource_action_task(manager_name, resource_uid, action, data={}):
     manager = Manager.objects.get(name=manager_name)
     resource = Resource.objects.get(manager=manager,
-                                    uid=resource_uid)
+                                    id=resource_uid)
     logger.info('Commiting action {} on {} resource {}'.format(action,
                                                                resource.kind,
                                                                resource.name))

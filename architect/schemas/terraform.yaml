@@ -1,5 +1,6 @@
 query:
   tf_complete_graph:
+    name: Complete Template
     layout: graph
 relation:
   uses_tf_template:

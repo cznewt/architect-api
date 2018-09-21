@@ -8,8 +8,7 @@
 {% block title %}Resource {{ resource.name }}{% endblock %}
 
 {% block actions %}
-<a href="{% url 'monitor:monitor_detail' monitor.name %}" class="btn btn-sm btn-outline-primary">monitor {{
-    monitor.name }}</a>
+<a href="{% url 'monitor:monitor_detail' monitor.name %}" class="btn btn-sm btn-outline-primary">Monitor {{ monitor.name }}</a>
 {% endblock %}
 
 {% block sidebar %}

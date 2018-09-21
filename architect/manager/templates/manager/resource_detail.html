@@ -8,6 +8,9 @@
 {% block title %}Resource {{ resource.name }}{% endblock %}
 
 {% block actions %}
+{% for action, workflow in resource.workflow_options.items %}
+<a href="{% url 'manager:resource_action' manager.name resource.id action %}" class="open-modal btn btn-sm btn-outline-primary">{{ workflow.name }}</a>
+{% endfor %}
 <a href="{% url 'manager:manager_detail' manager.name %}" class="btn btn-sm btn-outline-primary">Manager {{ manager.name }}</a>
 {% endblock %}
 
@@ -54,7 +57,7 @@
           <td>{% trans "Target" %}</td>
           <td>
             {% for action, workflow in source.workflow_options.items %}
-            <a href="{% url 'manager:resource_action' manager.name source.uid action %}" class="open-modal btn btn-sm btn-outline-primary">{{ workflow.name }}</a>
+            <a href="{% url 'manager:resource_action' manager.name source.id action %}" class="open-modal btn btn-sm btn-outline-primary">{{ workflow.name }}</a>
             {% endfor %}
           </td>
         </tr>
@@ -69,7 +72,7 @@
           <td>{% trans "Source" %}</td>
           <td>
             {% for action, workflow in target.workflow_options.items %}
-            <a href="{% url 'manager:resource_action' manager.name target.uid action %}" class="open-modal btn btn-sm btn-outline-primary">{{ workflow.name }}</a>
+            <a href="{% url 'manager:resource_action' manager.name target.id action %}" class="open-modal btn btn-sm btn-outline-primary">{{ workflow.name }}</a>
             {% endfor %}
           </td>
         </tr>

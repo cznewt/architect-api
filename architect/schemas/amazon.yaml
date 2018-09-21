@@ -1,5 +1,6 @@
 query:
   aws_complete_graph:
+    name: Complete Account
     layout: graph
 relation:
   in_ec2_vpc:

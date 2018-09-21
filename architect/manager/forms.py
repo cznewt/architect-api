@@ -40,7 +40,7 @@ class ResourceActionForm(forms.Form):
 
         action_url = reverse('manager:resource_action',
                              kwargs={'manager_name': self.manager.name,
-                                     'resource_uid': self.resource.uid,
+                                     'resource_uid': self.resource.id,
                                      'resource_action': self.action})
         layout_fields = []
 
@@ -69,7 +69,7 @@ class ResourceActionForm(forms.Form):
     def handle(self):
         data = self.clean()
         process_resource_action_task.apply_async((self.manager.name,
-                                                  self.resource.uid,
+                                                  self.resource.id,
                                                   self.action,
                                                   data))
 

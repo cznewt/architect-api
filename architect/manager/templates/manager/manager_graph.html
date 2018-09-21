@@ -1,0 +1,116 @@
+{% extends TEMPLATE_BASE|default:"content_base.html" %}
+{% load architect i18n static compress %}
+
+{% block nav_manager_cls %} navigation__sub--active{% endblock %}
+
+{% block page_title %}{{ viz_label }} of {{ query.name }}{% endblock %}
+
+{% block title %}{{ viz_label }} of {{ query.name }}{% endblock %}
+
+{% block actions %}
+<a href="{% url 'manager:manager_detail' manager.name %}" class="btn btn-sm btn-outline-primary">Manager {{ manager.name }}</a>
+{% endblock %}
+
+{% block sidebar %}
+<ul class="list-group list-group-flush">
+    <li class="list-group-item">{% trans "Dataset" %}
+        <span class="badge">{{ query_name }}</span>
+    </li>
+    <li class="list-group-item">{% trans "Visualization Layout" %}
+        {% if query.layout == "graph" %}
+        {% for name, label in viz_list.graph.items %}
+        <span class="badge">
+            {% if viz_name == name %}
+            {{ label }}
+            {% else %}
+            <a href="{% url 'manager:manager_graph' manager.name name query_name %}">{{ label }}</a>
+            {% endif %}
+        </span>
+        {% endfor %}
+        {% endif %}
+        {% if query.layout == "hierarchy" %}
+        {% for name, label in viz_list.hierarchy.items %}
+        <span class="badge">
+            {% if viz_name == name %}
+            {{ label }}
+            {% else %}
+            <a href="{% url 'manager:manager_graph' manager.name name query_name %}">{{ label }}</a>
+            {% endif %}
+        </span>
+        {% endfor %}
+        {% endif %}
+    </li>
+</ul>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div style="width: 100%;">
+        <div class="card card-widget border-primary h-100">
+            <div class="card-body">
+                <div style="height: 580px;" class="{{ viz_name }} plot-container text-center" id="chart"></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'billboard.js/dist/billboard.js' %}"></script>
+<script src="{% static 'd3-horizon-chart/build/d3-horizon-chart.js' %}"></script>
+<script src="{% static 'architect-document/js/d3-gauge.js' %}"></script>
+<script src="{% static 'skd3/build/sk.d3.js' %}"></script>
+<script src="{% static 'architect-document/js/d3.layout.hive.js' %}"></script>
+<script src="{% static 'architect-document/js/d3.layout.matrix.js' %}"></script>
+<script src="{% static 'architect-document/js/d3.utils.js' %}"></script>
+<script src="{% static 'architect-document/js/d3.plot.arc.js' %}"></script>
+<script src="{% static 'architect-document/js/d3.plot.area.js' %}"></script>
+<script src="{% static 'architect-document/js/d3.plot.bar.js' %}"></script>
+<script src="{% static 'architect-document/js/d3.plot.bundle.js' %}"></script>
+<script src="{% static 'architect-document/js/d3.plot.composite.js' %}"></script>
+<script src="{% static 'architect-document/js/d3.plot.force.js' %}"></script>
+<script src="{% static 'architect-document/js/d3.plot.gauge.js' %}"></script>
+<script src="{% static 'architect-document/js/d3.plot.hive.js' %}"></script>
+<script src="{% static 'architect-document/js/d3.plot.horizon.js' %}"></script>
+<script src="{% static 'architect-document/js/d3.plot.line.js' %}"></script>
+<script src="{% static 'architect-document/js/d3.plot.matrix.js' %}"></script>
+<script src="{% static 'architect-document/js/d3.plot.pack.js' %}"></script>
+<script src="{% static 'architect-document/js/d3.plot.pie.js' %}"></script>
+<script src="{% static 'architect-document/js/d3.plot.sankey.js' %}"></script>
+<script src="{% static 'architect-document/js/d3.plot.sunburst.js' %}"></script>
+<script src="{% static 'architect-document/js/d3.plot.tree.js' %}"></script>
+<script src="{% static 'architect-document/js/d3.plot.treemap.js' %}"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function (event) {
+
+    var src = "/manager/v1/{{ manager }}/query/{{ query_name }}";
+    var sel = "#chart";
+    var upd = 600;
+
+    {% if viz_name == 'hive' %}
+    d3.json(src, function (data) {
+        HivePlot.init(sel, data, { selector: sel });
+    });
+    {% elif viz_name == 'arc' %}
+    new RelationalPlot.arc(src, sel, upd).init();
+    {% elif viz_name == 'force' %}
+    new RelationalPlot.forceDirected(src, sel, upd).init();
+    {% elif viz_name == 'matrix' %}
+    new RelationalPlot.adjacencyMatrix(src, sel, upd).init();
+    {% elif viz_name == 'circle-pack' %}
+    new RelationalPlot.circlePack(src, sel, upd).init();
+    {% elif viz_name == 'edge-bundle' %}
+    new RelationalPlot.hierarchicalEdgeBundling(src, sel, upd).init();
+    {% elif viz_name == 'sunburst' %}
+    new RelationalPlot.sunburst(src, sel, upd).init();
+    {% elif viz_name == 'treemap' %}
+    new RelationalPlot.treeMap(src, sel, upd).init();
+    {% elif viz_name == 'tree' %}
+    new RelationalPlot.tree(src, sel, upd).init();
+    {% elif viz_name == 'sankey' %}
+    new RelationalPlot.sankeyDiagram(src, sel, upd).init();
+   {% endif %}
+});
+
+</script>
+{% endblock %}

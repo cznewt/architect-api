@@ -1,11 +1,14 @@
 query:
   jenkins_complete_graph:
+    name: All Resoures
     layout: graph
   jenkins_clean_graph:
+    name: Cleaned Pipelines
     layout: graph
     filter_lone_nodes:
     - jenkins_pipeline
   jenkins_pipeline_stages_tree:
+    name: Pipeline Stages
     layout: hierarchy
     hierarchy_layers:
       0:

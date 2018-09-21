@@ -126,15 +126,11 @@ class BaseClient(object):
             for relation in relations:
                 if relation['source'] not in res_list:
                     logger.error('No resource with'
-                                 ' uid {} found'.format(relation['source']))
-                    print('No resource with'
-                                 ' uid {} found'.format(relation['source']))
+                                 ' uid {} found, relation {}.'.format(relation['source'], relation_type))
                     continue
                 if relation['target'] not in res_list:
                     logger.error('No resource with'
-                                 ' uid {} found'.format(relation['target']))
-                    print('No resource with'
-                                 ' uid {} found'.format(relation['target']))
+                                 ' uid {} found, relation {}.'.format(relation['target'], relation_type))
                     continue
                 rel_key = '{}-{}-{}'.format(relation['source'],
                                             relation['kind'],
