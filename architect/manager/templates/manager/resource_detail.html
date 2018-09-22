@@ -3,15 +3,15 @@
 
 {% block nav_manager_cls %} navigation__sub--active{% endblock %}
 
-{% block page_title %}Resource {{ resource.name }}{% endblock %}
+{% block page_title %}Resource {{ resource.kind }} {{ resource.name }}{% endblock %}
 
-{% block title %}Resource {{ resource.name }}{% endblock %}
+{% block title %}Resource {{ resource.kind }} {{ resource.name }}{% endblock %}
 
 {% block actions %}
 {% for action, workflow in resource.workflow_options.items %}
 <a href="{% url 'manager:resource_action' manager.name resource.id action %}" class="open-modal btn btn-sm btn-outline-primary">{{ workflow.name }}</a>
 {% endfor %}
-<a href="{% url 'manager:manager_detail' manager.name %}" class="btn btn-sm btn-outline-primary">Manager {{ manager.name }}</a>
+<a href="{% url 'manager:manager_detail' manager.name %}" class="btn btn-sm btn-outline-secondary">Manager detail</a>
 {% endblock %}
 
 {% block sidebar %}
@@ -44,7 +44,7 @@
         <th>{% trans "Name" %}</th>
         <th>{% trans "Kind" %}</th>
         <th>{% trans "Relation" %}</th>
-        <th>{% trans "Options" %}</th>
+        <th class="text-right">{% trans "Options" %}</th>
       </thead>
       <tbody>
         {% for source in resource.sources.all %}

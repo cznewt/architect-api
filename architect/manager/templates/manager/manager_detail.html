@@ -3,13 +3,13 @@
 
 {% block nav_manager_cls %} navigation__sub--active{% endblock %}
 
-{% block page_title %}{% trans "Manager" %} {{ manager.name }}{% endblock %}
+{% block page_title %}{% trans "Manager" %} "{{ manager.name }}"{% endblock %}
 
-{% block title %}{% trans "Manager" %} {{ manager.name }}{% endblock %}
+{% block title %}{% trans "Manager" %} "{{ manager.name }}"{% endblock %}
 
 {% block actions %}
-<a href="{% url 'manager:manager_sync' manager.name %}" class="btn btn-sm btn-outline-primary">Synchronise</a>
-<a href="{% url 'manager:manager_list' %}" class="btn btn-sm btn-outline-primary">{% trans "Managers" %}</a>
+<a href="{% url 'manager:manager_sync' manager.name %}" class="open-modal btn btn-sm btn-outline-primary">Synchronise</a>
+<a href="{% url 'manager:manager_list' %}" class="btn btn-sm btn-outline-secondary">{% trans "Manager list" %}</a>
 <a href="{% url 'manager:manager_delete' manager.name %}" class="open-modal btn btn-sm btn-outline-danger">Delete</a>
 {% endblock %}
 
@@ -51,8 +51,8 @@
         <tr>
           <th>{% trans "Name" %}</th>
           <th>{% trans "Kind" %}</th>
-          <th style="text-align:right;">{% trans "Relations" %}</th>
-          <th></th>
+          <th class="text-right">{% trans "Relations" %}</th>
+          <th class="text-right">Options</th>
         </tr>
       </thead>
       <tbody>
@@ -65,7 +65,7 @@
           <td>{{ resource.kind }}</td>
           <td style="text-align:right;">{{ resource.relations.count }}</td>
           <td align="right">
-            <a href="{% url 'manager:resource_detail' manager.name resource.id %}" class="btn btn-sm btn-outline-primary">{% trans "Detail" %}</a>
+            <a href="{% url 'manager:resource_detail' manager.name resource.id %}" class="btn btn-sm btn-outline-primary">{% trans "Details" %}</a>
             {% for action, workflow in workflow_options.items %}
             <a href="{% url 'manager:resource_action' manager.name resource.uid action %}" class="open-modal btn btn-sm btn-outline-primary">{{ workflow.name }}</a>
             {% endfor %}

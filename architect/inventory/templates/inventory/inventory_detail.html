@@ -3,9 +3,9 @@
 
 {% block nav_inventory_cls %} navigation__sub--active{% endblock %}
 
-{% block page_title %}"{{ inventory.metadata.name|default:inventory.name }}" Inventory{% endblock %}
+{% block page_title %}Inventory "{{ inventory.metadata.name|default:inventory.name }}"{% endblock %}
 
-{% block title %}"{{ inventory.metadata.name|default:inventory.name }}" Inventory{% endblock %}
+{% block title %}Inventory "{{ inventory.metadata.name|default:inventory.name }}"{% endblock %}
 
 {% block actions %}
 {% for form_name, form in inventory.metadata.form.items %}
@@ -17,8 +17,8 @@
 <a href="{% url 'inventory:param_create' inventory.name %}" class="open-modal btn btn-sm btn-outline-primary">{% trans "Create Param" %}</a>
 {% endif %}
 <a href="{% url 'inventory:inventory_sync' inventory.name %}" class="btn btn-sm btn-outline-primary">{% trans "Synchronise" %}</a>
-<a href="{% url 'inventory:inventory_list' %}" class="btn btn-sm btn-outline-primary">Inventories</a>
-<a href="{% url 'inventory:inventory_delete' inventory.name %}" class="open-modal btn btn-sm btn-outline-danger">Delete</a>
+<a href="{% url 'inventory:inventory_list' %}" class="btn btn-sm btn-outline-secondary">{% trans "Inventory list" %}</a>
+<a href="{% url 'inventory:inventory_delete' inventory.name %}" class="open-modal btn btn-sm btn-outline-danger">{% trans "Delete" %}</a>
 {% endblock %}
 
 {% block sidebar %}

@@ -12,6 +12,7 @@ from azure.mgmt.subscription import SubscriptionClient
 from azure.mgmt.containerservice import ContainerServiceClient
 
 from architect.manager.client import BaseClient
+from architect.manager.validators import validate_manager_name
 from architect.manager.models import Manager
 from celery.utils.log import get_logger
 import json
@@ -187,7 +188,6 @@ class MicrosoftAzureClient(BaseClient):
             for subscription in self.subscription_api.subscriptions.list(raw=True):
                 for virtual_network in self.network_api.virtual_networks.list_all(raw=True):
                     response.append(virtual_network)
-                    logger.info(virtual_network.id.split('/')[4])
                     self.network.append((virtual_network.id.split('/')[4], virtual_network.name,))
         elif kind == 'az_virtual_machine':
             for subscription in self.subscription_api.subscriptions.list(raw=True):
@@ -400,8 +400,9 @@ class MicrosoftAzureClient(BaseClient):
         if resource.kind == 'az_managed_cluster':
             if action == 'create_manager':
                 initial_name = resource.metadata['node_resource_group'].replace('MC_', '')
-                fields['name'] = forms.CharField(label='New name',
-                                                 help_text='Importing managed cluster <strong>{}</strong> from resource group <strong>{}</strong>.'.format(
+                fields['name'] = forms.CharField(label='New manager name',
+                                                 validators=[validate_manager_name],
+                                                 help_text='Managed cluster <strong>{}</strong> from resource group <strong>{}</strong> will be imported.'.format(
                                                      resource.name, self.get_group_name_from_resource_id(resource.uid)),
                                                  initial=initial_name)
         return fields

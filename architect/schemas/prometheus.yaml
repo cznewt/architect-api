@@ -12,7 +12,7 @@ query:
   prometheus_test_instant_query:
     query: hdd_errors
     moment: "2018-01-28T12:00:00Z"
-default_resource: prom_metric
+default_resource: prom_target
 relation:
   by_job:
     relation:

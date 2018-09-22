@@ -1,5 +1,7 @@
 {% extends TEMPLATE_BASE|default:"content_base.html" %}
 
+{% load i18n %}
+
 {% block nav_manager_cls %} navigation__sub--active{% endblock %}
 
 {% block page_title %}Available managers{% endblock %}
@@ -7,8 +9,8 @@
 {% block title %}Available managers{% endblock %}
 
 {% block actions %}
-<a href="{% url 'manager:manager_check' %}" class="btn btn-sm btn-outline-secondary">Check status</a>
-<a href="{% url 'manager:import_kubeconf' %}" class="open-modal btn btn-sm btn-outline-secondary">Import kubeconfig</a>
+<a href="{% url 'manager:import_kubeconf' %}" class="open-modal btn btn-sm btn-outline-primary">{% trans "Import kubeconfig" %}</a>
+<a href="{% url 'manager:manager_check' %}" class="btn btn-sm btn-outline-secondary">{% trans "Check all managers" %}</a>
 {% endblock %}
 
 {% block content %}
@@ -19,7 +21,7 @@
       <th class="d-inline-block col-1">Engine</th>
       <th class="d-inline-block col-1 text-right">Resources</th>
       <th class="d-inline-block col-5">Details</th>
-      <th class="d-inline-block col-2"></th>
+      <th class="d-inline-block col-2 text-right">Options</th>
     </tr>
   </thead>
   <tbody>
@@ -34,7 +36,7 @@
       <td class="d-inline-block col-5">{{ manager.conn_detail }}</td>
       <td class="d-inline-block col-2 text-right">
         <a href="{% url 'manager:manager_detail' manager.name %}" class="btn btn-sm btn-outline-primary">Details</a>
-        <a href="{% url 'manager:manager_sync' manager.name %}" class="btn btn-sm btn-outline-secondary">Sync</a>
+        <a href="{% url 'manager:manager_sync' manager.name %}" class="open-modal btn btn-sm btn-outline-secondary">Sync</a>
       </td>
     </tr>
     {% endfor %}

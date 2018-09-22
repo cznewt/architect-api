@@ -1,4 +1,5 @@
 {% extends TEMPLATE_BASE|default:"content_base.html" %}
+
 {% load i18n %}
 
 {% block nav_monitor_cls %} navigation__sub--active{% endblock %}
@@ -8,7 +9,7 @@
 {% block title %}{% trans "Available monitors" %}{% endblock %}
 
 {% block actions %}
-<a href="{% url 'monitor:monitor_check' %}" class="btn btn-sm btn-outline-secondary">Check status</a>
+<a href="{% url 'monitor:monitor_check' %}" class="btn btn-sm btn-outline-secondary">{% trans "Check all monitors" %}</a>
 {% endblock %}
 
 {% block content %}
@@ -19,7 +20,7 @@
       <th class="d-inline-block col-1">Engine</th>
       <th class="d-inline-block col-1 text-right">Metrics</th>
       <th class="d-inline-block col-5">Details</th>
-      <th class="d-inline-block col-2"></th>
+      <th class="d-inline-block col-2 text-right">Options</th>
     </tr>
   </thead>
   <tbody>
@@ -31,7 +32,7 @@
       </th>
       <td class="d-inline-block col-1">{{ monitor.engine }}</td>
       <td class="d-inline-block col-1 text-right">{{ monitor.resources.count }}&nbsp;pcs</td>
-      <td class="d-inline-block col-5">{{ monitor.conn_detail }}</td>
+      <td class="d-inline-block col-5">{{ monitor.conn_detail|truncatechars:64 }}</td>
       <td class="d-inline-block col-2 text-right">
         <a href="{% url 'monitor:monitor_detail' monitor.name %}" class="btn btn-sm btn-outline-primary">Details</a>
       </td>

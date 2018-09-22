@@ -8,8 +8,8 @@
 {% block title %}{% trans "Available inventories" %}{% endblock %}
 
 {% block actions %}
-<a href="{% url 'inventory:inventory_create' %}" class="open-modal btn btn-sm btn-outline-primary">Create new</a>
-<a href="{% url 'inventory:inventory_check' %}" class="btn btn-sm btn-outline-secondary">Check status</a>
+<a href="{% url 'inventory:inventory_create' %}" class="open-modal btn btn-sm btn-outline-primary">{% trans "Create new" %}</a>
+<a href="{% url 'inventory:inventory_check' %}" class="btn btn-sm btn-outline-secondary">{% trans "Check all inventories" %}</a>
 {% endblock %}
 
 {% block content %}
@@ -20,7 +20,7 @@
       <th class="d-inline-block col-1">Engine</th>
       <th class="d-inline-block col-1 text-right">Resources</th>
       <th class="d-inline-block col-5">Details</th>
-      <th class="d-inline-block col-2"></th>
+      <th class="d-inline-block col-2 text-right">Options</th>
     </tr>
   </thead>
   <tbody>

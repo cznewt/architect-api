@@ -6,7 +6,10 @@ from django.core.exceptions import ValidationError
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, Div, Submit, HTML
 from .tasks import process_resource_action_task
-from .models import Resource, Manager
+from .models import Resource, Manager, Relationship
+from .validators import validate_manager_name
+from .tasks import sync_manager_resources_task
+
 from django.utils.translation import ugettext as _
 
 
@@ -110,7 +113,7 @@ class ManagerDeleteForm(forms.Form):
 
 class ImportKubeconfigForm(forms.Form):
 
-    name = forms.CharField()
+    name = forms.CharField(validators=[validate_manager_name])
     kubeconfig = forms.CharField(widget=forms.Textarea)
     context = forms.CharField(required=False)
     
@@ -121,12 +124,16 @@ class ImportKubeconfigForm(forms.Form):
         self.helper.form_id = 'modal-form'
         self.helper.form_action = reverse('manager:import_kubeconf')
         self.label = 'Import Kubeconfig'
-        self.modal_class = 'modal-md'
+        self.modal_class = 'modal-lg'
 
         self.helper.layout = Layout(
             Div(
                 Div(
-                    Div('name', 'kubeconfig', 'context', css_class='col-md-12'),
+                    Div('name', css_class='col-md-6'),
+                    Div('context', css_class='col-md-6'),
+                    css_class='form-row'),
+                Div(
+                    Div('kubeconfig', css_class='col-md-12'),
                     css_class='form-row'),
                 css_class='modal-body',
             ),
@@ -159,12 +166,6 @@ class ImportKubeconfigForm(forms.Form):
                     self.add_error('context', 'No current-context found in kubeconfig, please select one.')
             data['context'] = data['kubeconfig'].get('current-context', 'default')
         return data
-
-    def clean_name(self):
-        managers = Manager.objects.filter(name=self.cleaned_data['name'])
-        if managers.count() > 0:
-            raise ValidationError(_('Name is already taken.'), code='invalid')
-        return self.cleaned_data['name']
 
     def handle(self):
         data = self.cleaned_data
@@ -201,3 +202,40 @@ class ImportKubeconfigForm(forms.Form):
         else:
             manager.status = 'error'
         manager.save()
+
+
+class ManagerSyncForm(forms.Form):
+
+    clean_resources = forms.BooleanField(label="Clean existing resources", initial=False, required=False, help_text='Will erase all resources and relationships for the given manager before resource synchronisation.')
+
+    def __init__(self, *args, **kwargs):
+        self.manager_name = kwargs.pop('manager_name')
+        super().__init__(*args, **kwargs)
+        detail_url = reverse('manager:manager_sync',
+                             kwargs={'manager_name': self.manager_name})
+        self.label = 'Sync {}'.format(self.manager_name)
+        self.modal_class = 'modal-md'
+        self.helper = FormHelper()
+        self.helper.form_id = 'modal-form'
+        self.helper.form_action = detail_url
+
+        self.helper.layout = Layout(
+            Div(
+                Div(
+                    Div('clean_resources', css_class='col-md-12'),
+                    css_class='form-row'),
+                css_class='modal-body',
+            ),
+            Div(
+                Submit('submit', 'Synchronize', css_class='btn border-primary'),
+                css_class='modal-footer',
+            )
+        )
+
+    def handle(self):
+        data = self.cleaned_data
+        if data['clean_resources']:
+            manager = Manager.objects.get(name=self.manager_name)
+            Resource.objects.filter(manager=manager).delete()
+            Relationship.objects.filter(manager=manager).delete()
+        sync_manager_resources_task.apply_async((self.manager_name,))

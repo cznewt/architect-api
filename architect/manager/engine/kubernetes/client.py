@@ -1,12 +1,16 @@
 # -*- coding: utf-8 -*-
 
 import os
+import base64
 import pyaml
 import tempfile
 import pykube
+from django import forms
+
 from urllib.error import URLError
 from requests.exceptions import HTTPError, ConnectionError
 from architect.manager.client import BaseClient
+from architect.monitor.models import Monitor
 from celery.utils.log import get_logger
 
 logger = get_logger(__name__)
@@ -320,3 +324,51 @@ class KubernetesClient(BaseClient):
 #                self._create_relation('in_k8s_pod',
 #                                      container_id,
 #                                      resource_id)
+
+    def get_resource_action_fields(self, resource, action):
+        fields = {}
+        if resource.kind == 'k8s_service':
+            if action == 'discover_service':
+                initial_name = '{}-{}-{}'.format(resource.manager.name,
+                                                 resource.metadata['metadata']['namespace'],
+                                                 resource.metadata['metadata']['name'])
+                fields['name'] = forms.CharField(label='Service name',
+                                                 help_text='Name of a new resource.',
+                                                 initial=initial_name)
+                fields['kind'] = forms.ChoiceField(label='Resource type',
+                                                   help_text='Kind of resource to be created.',
+                                                   choices=(
+                                                       ('prometheus', 'Prometheus (monitor)'),
+                                                       ('graphite', 'Graphite (monitor)')
+                                                   ))
+        return fields
+
+
+    def process_resource_action(self, resource, action, data):
+        if resource.kind == 'k8s_service':
+            if action == 'discover_service':
+                if data['kind'] == 'prometheus':
+                    auth_url = '{}/api/v1/namespaces/{}/services/{}:{}/proxy'.format(resource.manager.metadata['cluster']['server'],
+                                                                                     resource.metadata['metadata']['namespace'],
+                                                                                     resource.metadata['metadata']['name'],
+                                                                                     resource.metadata['spec']['ports'][0]['port'])
+                    logger.info(auth_url)
+                    ca_cert = base64.b64decode(resource.manager.metadata['cluster']['certificate-authority-data']).decode('utf-8')
+                    client_cert = base64.b64decode(resource.manager.metadata['user']['client-certificate-data']).decode('utf-8')
+                    client_key = base64.b64decode(resource.manager.metadata['user']['client-key-data']).decode('utf-8')
+                    monitor_kwargs = {
+                        'name': data['name'],
+                        'engine': data['kind'],
+                        'metadata': {
+                            "auth_url": auth_url,
+                            "ca_cert": ca_cert,
+                            "client_cert": client_cert,
+                            "client_key": client_key,
+                        }
+                    }
+                    monitor = Monitor(**monitor_kwargs)
+                    if monitor.client().check_status():
+                        monitor.status = 'active'
+                    else:
+                        monitor.status = 'error'
+                    monitor.save()

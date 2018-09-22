@@ -13,8 +13,8 @@
 {% endblock %}
 
 {% block actions %}
-<a href="{% url 'repository:image_create' repository.name %}" class="open-modal btn btn-sm btn-outline-primary">{% trans "Build Image" %}</a>
-<a href="{% url 'repository:repository_list' %}" class="btn btn-sm btn-outline-primary">Repositories</a>
+<a href="{% url 'repository:image_create' repository.name %}" class="open-modal btn btn-sm btn-outline-primary">{% trans "Build new image" %}</a>
+<a href="{% url 'repository:repository_list' %}" class="btn btn-sm btn-outline-secondary">Repository list</a>
 {% endblock %}
 
 {% block content %}
@@ -26,7 +26,7 @@
         <th class="d-inline-block col-4">Platform</th>
         <th class="d-inline-block col-2">Created</th>
         <th class="d-inline-block col-1">Size</th>
-        <th class="d-inline-block col-2"></th>
+        <th class="d-inline-block col-2 text-right">Options</th>
       </tr>
     </thead>
     <tbody>
@@ -40,7 +40,6 @@
         <td class="d-inline-block col-2">{{ resource.get_created }}</td>
         <td class="d-inline-block col-1">{{ resource.cache.image_size|filesizeformat }}</td>
         <td class="d-inline-block col-2 text-right">
-          <a href="{% url 'repository:image_detail' repository.name resource.name %}" class="btn btn-sm btn-outline-primary">{% trans "Detail" %}</a>
           {% if resource.status == 'active' %}
           <a href="{% url 'repository:image_download' repository.name resource.name %}" class="btn btn-sm btn-outline-primary">{% trans "Download" %}</a>
           {% endif %}

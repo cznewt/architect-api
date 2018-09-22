@@ -8,7 +8,7 @@
 {% block title %}{{ viz_label }} of {{ query.name }}{% endblock %}
 
 {% block actions %}
-<a href="{% url 'manager:manager_detail' manager.name %}" class="btn btn-sm btn-outline-primary">Manager {{ manager.name }}</a>
+<a href="{% url 'manager:manager_detail' manager.name %}" class="btn btn-sm btn-outline-secondary">Manager detail</a>
 {% endblock %}
 
 {% block sidebar %}

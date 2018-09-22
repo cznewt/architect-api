@@ -3,12 +3,12 @@
 
 {% block nav_monitor_cls %} navigation__sub--active{% endblock %}
 
-{% block page_title %}Resource {{ resource.name }}{% endblock %}
+{% block page_title %}Resource {{ resource.name|truncatechars:64 }}{% endblock %}
 
-{% block title %}Resource {{ resource.name }}{% endblock %}
+{% block title %}Resource {{ resource.name|truncatechars:64 }}{% endblock %}
 
 {% block actions %}
-<a href="{% url 'monitor:monitor_detail' monitor.name %}" class="btn btn-sm btn-outline-primary">Monitor {{ monitor.name }}</a>
+<a href="{% url 'monitor:monitor_detail' monitor.name %}" class="btn btn-sm btn-outline-secondary">Monitor Detail</a>
 {% endblock %}
 
 {% block sidebar %}
@@ -41,7 +41,7 @@
                 <th>{% trans "Name" %}</th>
                 <th>{% trans "Kind" %}</th>
                 <th>{% trans "Relation" %}</th>
-                <th>{% trans "Options" %}</th>
+                <th class="text-right">{% trans "Options" %}</th>
             </thead>
             <tbody>
                 {% for source in resource.sources.all %}

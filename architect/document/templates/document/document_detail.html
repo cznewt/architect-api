@@ -4,16 +4,12 @@
 
 {% block nav_document_cls %} navigation__sub--active{% endblock %}
 
-{% block page_title %}
-"{{ document.metadata.name|default:document.name }}" visualization
-{% endblock %}
+{% block page_title %}Visualization "{{ document.metadata.name|default:document.name }}"{% endblock %}
 
-{% block title %}
-"{{ document.metadata.name|default:document.name }}" visualization
-{% endblock %}
+{% block title %}Visualization "{{ document.metadata.name|default:document.name }}"{% endblock %}
 
 {% block actions %}
-<a href="{% url 'document:document_list' %}" class="btn btn-sm btn-outline-primary">Visualizations</a>
+<a href="{% url 'document:document_list' %}" class="btn btn-sm btn-outline-secondary">Visualization list</a>
 {% endblock %}
 
 {% block content %}

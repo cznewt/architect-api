@@ -16,7 +16,7 @@ Image "{{ image.name }}"
 {% if image.status == 'active' %}
 <a href="{% url 'repository:image_download' repository.name image.name %}" class="btn btn-sm btn-outline-primary">{% trans "Download" %}</a>
 {% endif %}
-<a href="{% url 'repository:repository_detail' repository.name %}" class="btn btn-sm btn-outline-primary">Repository</a>
+<a href="{% url 'repository:repository_detail' repository.name %}" class="btn btn-sm btn-outline-secondary">Repository detail</a>
 {% endblock %}
 
 {% block content %}

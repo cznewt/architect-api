@@ -22,7 +22,24 @@ class BaseClient(object):
         self.start = kwargs.get('start', None)
         self.end = kwargs.get('end', None)
         self.step = kwargs.get('step', None)
-        self.verify = False
+        if 'ca_cert' in self.metadata:
+            with open('/tmp/{}-ca-cert.pem'.format(self.name), 'w') as ca_cert_file:
+                ca_cert_file.write(self.metadata['ca_cert'])
+            self.verify = '/tmp/{}-ca-cert.pem'.format(self.name)
+        else:
+            self.verify = False
+        if 'client_cert' in self.metadata and 'client_key' in self.metadata:
+            with open('/tmp/{}-client-cert.pem'.format(self.name), 'w') as client_cert_file:
+                client_cert_file.write(self.metadata['client_cert'])
+            with open('/tmp/{}-client-key.pem'.format(self.name), 'w') as client_key_file:
+                client_key_file.write(self.metadata['client_key'])
+            self.cert = (
+                '/tmp/{}-client-cert.pem'.format(self.name),
+                '/tmp/{}-client-key.pem'.format(self.name),
+            )
+        else:
+            self.cert = None
+
         self._schema = utils.get_resource_schema(self.kind)
         self.resources = {}
         self.resource_types = {}
@@ -127,14 +144,22 @@ class BaseClient(object):
     def check_status(self):
         raise NotImplementedError
 
+    def get_series_url(self):
+        raise NotImplementedError
+
+    def get_series_params(self):
+        raise NotImplementedError
+
     def get_http_series_params(self):
         return json.loads(requests.get(self.get_series_url(),
                                        params=self.get_series_params(),
+                                       cert=self.cert,
                                        verify=self.verify).text)
 
     def get_http_series_data(self):
         return json.loads(requests.get(self.get_series_url(),
                                        data=json.dumps(self.get_series_params()),
+                                       cert=self.cert,
                                        verify=self.verify).text)
 
     def process_instant(self, data):

@@ -1,7 +1,23 @@
 query:
   ha_complete_graph:
-    name: All Resources
+    name: All Entities
     layout: graph
+  ha_vie_group_entity_tree:
+    name: Visual Hierarchy
+    layout: hierarchy
+    hierarchy_layers:
+      0:
+        name: Home Assistant
+        kind:
+      1:
+        kind: ha_view
+      2:
+        kind: ha_group
+        target: in_view
+      3:
+        kind: ha_sensor
+        target: in_group
+
 relation:
   in_group:
     relation:

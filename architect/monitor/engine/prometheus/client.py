@@ -126,8 +126,13 @@ class PrometheusClient(BaseClient):
 
     def get_series_metadata(self):
         status = True
+        logger.info(requests.get(self.get_series_metadata_url(),
+                                 params=self.get_series_metadata_params(),
+                                 cert=self.cert,
+                                 verify=self.verify).text)
         data = json.loads(requests.get(self.get_series_metadata_url(),
                                        params=self.get_series_metadata_params(),
+                                       cert=self.cert,
                                        verify=self.verify).text)
         if data.get('status', 'failure') != 'success':
             status = False
@@ -146,6 +151,7 @@ class PrometheusClient(BaseClient):
     def delete_series_by_name(self, name):
         data = json.loads(requests.get(self.delete_series_url(),
                                        params=self.delete_series_params(),
+                                       cert=self.cert,
                                        verify=self.verify).text)
         if data.get('status', 'failure') != 'success':
             status = False
@@ -167,6 +173,7 @@ class PrometheusClient(BaseClient):
     def get_targets_metadata(self):
         status = True
         data = json.loads(requests.get(self.get_targets_metadata_url(),
+                                       cert=self.cert,
                                        verify=self.verify).text)
         if data.get('status', 'failure') != 'success':
             status = False

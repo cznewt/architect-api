@@ -5,16 +5,16 @@
 {% block nav_monitor_cls %} navigation__sub--active{% endblock %}
 
 {% block page_title %}
-"{{ monitor.metadata.name|default:monitor.name }}" {{ monitor.engine }} monitor
+{{ monitor.engine }} {{ monitor.metadata.name|default:monitor.name|truncatechars:64 }}
 {% endblock %}
 
 {% block title %}
-"{{ monitor.metadata.name|default:monitor.name }}" {{ monitor.engine }} monitor
+{{ monitor.engine }} {{ monitor.metadata.name|default:monitor.name|truncatechars:64 }}
 {% endblock %}
 
 {% block actions %}
-<a href="{% url 'monitor:monitor_sync' monitor.name %}" class="btn btn-sm btn-outline-secondary">Synchronise</a>
-<a href="{% url 'monitor:monitor_list' %}" class="btn btn-sm btn-outline-primary">Monitors</a>
+<a href="{% url 'monitor:monitor_sync' monitor.name %}" class="btn btn-sm btn-outline-primary">Synchronise</a>
+<a href="{% url 'monitor:monitor_list' %}" class="btn btn-sm btn-outline-secondary">Monitor list</a>
 {% endblock %}
 
 {% block content %}
@@ -25,8 +25,8 @@
         <tr>
           <th>{% trans "Name" %}</th>
           <th>{% trans "Kind" %}</th>
-          <th style="text-align:right;">{% trans "Relations" %}</th>
-          <th></th>
+          <th class="text-right">{% trans "Relations" %}</th>
+          <th class="text-right">{% trans "Options" %}</th>
         </tr>
       </thead>
       <tbody>
@@ -40,11 +40,7 @@
           <td style="text-align:right;">{{ resource.relations.count }}</td>
 
           <td align="right">
-            <a href="{% url 'monitor:resource_detail' monitor.name resource.id %}" class="btn btn-sm btn-outline-primary">{% trans "Detail" %}</a>
-            {% for action, workflow in workflow_options.items %}
-            <a href="{% url 'monitor:resource_action' monitor.name resource.uid action %}" class="open-modal btn btn-sm btn-outline-primary">{{
-              workflow.name }}</a>
-            {% endfor %}
+            <a href="{% url 'monitor:resource_detail' monitor.name resource.id %}" class="btn btn-sm btn-outline-primary">{% trans "Details" %}</a>
           </td>
         </tr>
         {% endfor %}

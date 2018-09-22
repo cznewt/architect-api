@@ -209,6 +209,9 @@ resource:
     icon: fa:podcast
     name: Service
     resource: Service
+    workflow:
+      discover_service:
+        name: Discover service
     model:
       namespace:
         type: relationship_to

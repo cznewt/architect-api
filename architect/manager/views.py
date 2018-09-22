@@ -13,7 +13,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from architect.views import JSONDataView
 from .forms import ManagerActionForm, ResourceActionForm, \
-    ImportKubeconfigForm, ManagerDeleteForm
+    ImportKubeconfigForm, ManagerDeleteForm, ManagerSyncForm
 from .models import Resource, Manager
 from .tasks import get_manager_status_task, \
     sync_manager_resources_task
@@ -96,8 +96,6 @@ class ManagerActionView(LoginRequiredMixin, FormView):
     def get_form_kwargs(self):
         manager = Manager.objects.get(name=self.kwargs.get('manager_name'))
         kwargs = super().get_form_kwargs()
-        print(self.kwargs.get('resource_kind'))
-        print(self.kwargs.get('resource_action'))
         kwargs.update({
             'resource_kind': self.kwargs.get('resource_kind'),
             'resource_action': self.kwargs.get('resource_action'),
@@ -168,13 +166,23 @@ class ManagerCreateJSONView(View):
         return JsonResponse(status)
 
 
-class ManagerSyncView(LoginRequiredMixin, RedirectView):
-    permanent = False
-    pattern_name = 'manager:manager_detail'
+class ManagerSyncView(LoginRequiredMixin, FormView):
+    template_name = "base_form.html"
+    form_class = ManagerSyncForm
+    success_url = '/success'
 
-    def get_redirect_url(self, *args, **kwargs):
-        sync_manager_resources_task.apply_async((kwargs.get('manager_name'),))
-        return super().get_redirect_url(*args, **kwargs)
+    def get_form_kwargs(self):
+        manager = Manager.objects.get(name=self.kwargs.get('manager_name'))
+        kwargs = super().get_form_kwargs()
+        kwargs.update({
+            'manager_name': manager.name,
+        })
+        return kwargs
+
+
+    def form_valid(self, form):
+        form.handle()
+        return super().form_valid(form)
 
 
 class ManagerDeleteView(LoginRequiredMixin, FormView):
