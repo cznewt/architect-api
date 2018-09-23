@@ -14,9 +14,6 @@ query:
       2:
         kind: k8s_pod
         target: in_k8s_namespace
-      3:
-        kind: k8s_service
-        target: in_k8s_pod
   k8s_pods_on_nodes_tree:
     name: Pods by Node
     layout: hierarchy

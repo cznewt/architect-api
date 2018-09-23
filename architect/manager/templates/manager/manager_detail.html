@@ -41,7 +41,10 @@
     <a class="nav-link active" data-toggle="tab" href="#properties" role="tab">{% trans "Resources" %}</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link" data-toggle="tab" href="#metadata" role="tab">{% trans "Visualizations" %}</a>
+    <a class="nav-link" data-toggle="tab" href="#visualization" role="tab">{% trans "Visualizations" %}</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" data-toggle="tab" href="#schema" role="tab">{% trans "Schema" %}</a>
   </li>
 </ul>
 <div class="tab-content">
@@ -75,7 +78,7 @@
       </tbody>
     </table>
   </div>
-  <div class="tab-pane" id="metadata" role="tabpanel">
+  <div class="tab-pane" id="visualization" role="tabpanel">
     <table class="table table-striped">
       <thead>
         <tr>
@@ -85,7 +88,7 @@
         </tr>
       </thead>
       <tbody>
-        {% for query_name, query in query_list.items %}
+        {% for query_name, query in schema.query.items %}
         <tr>
           <th scope="row">
             <strong>{{ query.name }}</strong>
@@ -102,6 +105,34 @@
             <a href="{% url 'manager:manager_graph' manager.name viz_name query_name %}" class="btn btn-sm btn-outline-primary">{{ viz }}</a>
             {% endfor %}
             {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="tab-pane" id="schema" role="tabpanel">
+        <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>{% trans "Resource" %}</th>
+          <th>{% trans "Name" %}</th>
+          <th>{% trans "Icon" %}</th>
+          <th>{% trans "Relations" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for resource_name, resource in schema.resource.items %}
+        <tr>
+          <th scope="row">
+            <strong>{{ resource_name }}</strong>
+          </th>
+          <td>{{ resource.name }}</td>
+          <td>{{ resource.icon }}</td>
+          <td>
+            {% for relation_name, relation in resource.model.items %}
+            {{ relation.type }} <strong>{{ relation.target }}</strong><br />
+            {% endfor %}
           </td>
         </tr>
         {% endfor %}

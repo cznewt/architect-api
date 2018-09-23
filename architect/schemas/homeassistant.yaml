@@ -248,3 +248,18 @@ resource:
         type: relationship_to
         model: in_view
         target: ha_view
+  ha_scene:
+    client: hass
+    name: Scene
+    icon: fa:cube
+    doc: https://www.home-assistant.io/components/scene/
+    resource: HomeAssistant::Scene
+    model:
+      group:
+        type: relationship_to
+        model: in_group
+        target: ha_group
+      view:
+        type: relationship_to
+        model: in_view
+        target: ha_view

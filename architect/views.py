@@ -1,5 +1,5 @@
 # json_views.views
-# Generic View classes for JSON in  Django
+# Generic View classes for JSON in Django
 #
 # Author:   Benjamin Bengfort <benjamin@bengfort.com>
 # Created:  Tue Jun 4 12:16:51 2013 -0400
@@ -10,7 +10,7 @@
 # ID: views.py [] benjamin@bengfort.com $
 
 """
-Generic View classes for JSON in  Django
+Generic View classes for JSON in Django
 """
 
 ##########################################################################

@@ -31,7 +31,8 @@ VIZ_OPTIONS = {
     'hierarchy': {
         'tree': 'Node-Link Tree',
         'sunburst': 'Sunburst Diagram',
-#        'treemap': 'TreeMap'
+        'circle-pack': 'Circle Packing',
+        'treemap': 'Tree Map'
     },
 }
 
@@ -52,7 +53,7 @@ class ManagerDetailView(LoginRequiredMixin, TemplateView):
         manager = Manager.objects.get(name=kwargs.get('manager_name'))
         kind = manager.get_schema()['default_resource']
         context['manager'] = manager
-        context['query_list'] = manager.client()._schema['query']
+        context['schema'] = manager.client()._schema
         context['viz_list'] = VIZ_OPTIONS
         context['workflow_options'] = manager.client()._schema['resource'][kind].get('workflow')
         context['resource_list'] = Resource.objects.filter(manager=manager,
