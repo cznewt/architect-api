@@ -29,6 +29,8 @@ class BaseClient(object):
         raise NotImplementedError
 
     def check_status(self):
+        if self.kind in ['kubernetes']:
+            logger.info('Checking status of manager {} at {}'.format(self.name, self.auth_url))
         return self.auth()
 
     def update_resources(self, resources=None):

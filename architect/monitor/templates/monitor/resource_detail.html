@@ -3,11 +3,14 @@
 
 {% block nav_monitor_cls %} navigation__sub--active{% endblock %}
 
-{% block page_title %}Resource {{ resource.name|truncatechars:64 }}{% endblock %}
+{% block page_title %}{{ resource.kind }} {{ resource.name|truncatechars:64 }}{% endblock %}
 
-{% block title %}Resource {{ resource.name|truncatechars:64 }}{% endblock %}
+{% block title %}{{ resource.kind }} {{ resource.name|truncatechars:64 }}{% endblock %}
 
 {% block actions %}
+{% for action, workflow in resource.workflow_options.items %}
+<a href="{% url 'monitor:resource_action' monitor.name resource.id action %}" class="open-modal btn btn-sm btn-outline-primary">{{ workflow.name }}</a>
+{% endfor %}
 <a href="{% url 'monitor:monitor_detail' monitor.name %}" class="btn btn-sm btn-outline-secondary">Monitor Detail</a>
 {% endblock %}
 
@@ -54,8 +57,7 @@
                     <td>{% trans "Target" %}</td>
                     <td>
                         {% for action, workflow in source.workflow_options.items %}
-                        <a href="{% url 'monitor:resource_action' monitor.name source.uid action %}" class="open-modal btn btn-sm btn-outline-primary">{{
-                            workflow.name }}</a>
+                        <a href="{% url 'monitor:monitor_graph' monitor.name source.uid 'line' %}" class="btn btn-sm btn-outline-primary">{{ workflow.name }}</a>
                         {% endfor %}
                     </td>
                 </tr>
@@ -70,8 +72,7 @@
                     <td>{% trans "Source" %}</td>
                     <td>
                         {% for action, workflow in target.workflow_options.items %}
-                        <a href="{% url 'monitor:resource_action' monitor.name target.uid action %}" class="open-modal btn btn-sm btn-outline-primary">{{
-                            workflow.name }}</a>
+                        <a href="{% url 'monitor:monitor_graph' monitor.name target.uid 'line' %}" class="btn btn-sm btn-outline-primary">{{ workflow.name }}</a>
                         {% endfor %}
                     </td>
                 </tr>

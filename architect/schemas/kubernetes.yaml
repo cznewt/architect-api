@@ -237,6 +237,9 @@ resource:
     icon: fa:user
     name: Cluster
     resource: Cluster
+    workflow:
+      download_config:
+        name: Download Config
     model:
       namespaces:
         type: relationship_to

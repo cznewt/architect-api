@@ -2,6 +2,7 @@
 
 import pandas as pd
 import numpy as np
+import requests
 from architect.monitor.client import BaseClient
 from celery.utils.log import get_logger
 
@@ -14,7 +15,16 @@ class GraphiteClient(BaseClient):
         super(GraphiteClient, self).__init__(**kwargs)
 
     def check_status(self):
-        return False
+        status = True
+        logger.info('Checking status of monitor {} at {}'.format(self.name, self.base_url))
+        try:
+            requests.get(self.base_url,
+                         cert=self.cert,
+                         verify=self.verify)
+        except requests.exceptions.ConnectionError as err:
+            logger.error(err)
+            status = False
+        return status
 
     def get_series(self):
         data = self.get_http_series_params()

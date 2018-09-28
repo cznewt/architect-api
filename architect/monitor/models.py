@@ -123,6 +123,8 @@ class Resource(models.Model):
             output_list.append(output[key])
         return output_list
 
+    def workflow_options(self):
+        return self.monitor.client()._schema['resource'][self.kind].get('workflow')
 
     class Meta:
         ordering = ['name']

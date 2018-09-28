@@ -1,11 +1,11 @@
 var QuantitativePlot = function (QuantitativePlot) {
     /**
-     * Line chart rendering method
+     * Radar chart rendering method
      * @param dataUrl - Data endpoint URL
      * @param graphSelector - Graph parent <div> CSS selector
      * @param refreshInterval - Refresh interval in seconds (null for disabled)
      */
-    QuantitativePlot.lineChart = function (dataUrl, graphSelector, refreshInterval) {
+    QuantitativePlot.radarChart = function (dataUrl, graphSelector, refreshInterval) {
 
         var graph = this;
         this._data = {};
@@ -36,22 +36,24 @@ var QuantitativePlot = function (QuantitativePlot) {
         };
 
         this.render = function () {
+            console.log(graph._data);
             graph.chart = bb.generate({
                 data: {
                     x: "x",
                     xFormat: '%Y-%m-%d %H:%M:%S',
-                    columns: graph._data
+                    columns: graph._data,
+                    type: "radar",
+                    labels: false
                 },
-                point: {
-                    show: false
-                },
-                axis: {
-                    x: {
-                        type: "timeseries",
-                        tick: {
-                            count: 4,
-                            format: '%Y-%m-%d %H:%M'
-                        }
+                radar: {
+                    axis: {
+                        max: 40
+                    },
+                    level: {
+                        depth: 4
+                    },
+                    direction: {
+                        clockwise: true
                     }
                 },
                 bindto: graphSelector

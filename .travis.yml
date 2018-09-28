@@ -23,7 +23,6 @@ before_install:
 install:
 - pip install -r requirements/base.txt
 - pip install -r requirements/test.txt
-- pip install psycopg2 --quiet
 - npm install
 - gem install sass
 

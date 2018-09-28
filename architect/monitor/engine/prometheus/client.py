@@ -14,6 +14,8 @@ DEFAULT_RESOURCES = [
     'prom_job',
     'prom_target',
     'prom_metric',
+#    'prom_record',
+#    'prom_alarm',
 ]
 
 class PrometheusClient(BaseClient):
@@ -22,8 +24,12 @@ class PrometheusClient(BaseClient):
         super(PrometheusClient, self).__init__(**kwargs)
 
     def check_status(self):
+        status = True
+        logger.info('Checking status of monitor {} at {}'.format(self.name, self.base_url))
         try:
-            status = True
+            requests.get(self.base_url,
+                     cert=self.cert,
+                     verify=self.verify)
         except requests.exceptions.ConnectionError as err:
             logger.error(err)
             status = False
@@ -70,20 +76,20 @@ class PrometheusClient(BaseClient):
                 'by_job',
                 json.dumps(target['labels']),
                 target['labels']['job'])
+        for target_name, target in targets.items():
+            logger.info(target)
 
 #        for metric_name, metric in metrics.items():
 #            logger.info(metric)
-
-        err_count = 1
         for series_name, series_item in series.items():
 #            logger.info(series_item)
             if series_name in metrics:
                 series_item['meta'] = metrics[series_name]
-                logger.info(series_item)
+#                logger.info(series_item)
                 self._create_resource(series_name,
-                                    series_name,
-                                    'prom_metric',
-                                    metadata=series_item)
+                                      series_name,
+                                      'prom_metric',
+                                      metadata=series_item)
                 for target in series_item['targets']:
                     real_target = {
                         'instance': target['instance'],
@@ -97,11 +103,25 @@ class PrometheusClient(BaseClient):
                             series_name,
                             json.dumps(real_target),
                             {'labels': target})
-                    else:
-                        logger.error('Target {} not found'.format(target))
             else:
-                logger.error('Metric {} not found ({})'.format(series_name, err_count))
-                err_count += 1
+                self._create_resource(series_name,
+                                    series_name,
+                                    'prom_metric',
+                                    metadata=series_item)
+                for target in series_item['targets']:
+                    real_target = target.copy()
+                    for key in target:
+                        if key not in ['instance', 'job', 'domain']:
+                            real_target.pop(key)
+                    if json.dumps(real_target) in targets:
+                        self._create_relation(
+                            'metric_value',
+                            series_name,
+                            json.dumps(real_target),
+                            {'labels': target})
+                    else:
+                        logger.error('Target {} not found.'.format(real_target))
+#                logger.error('Metric {} not found ({})'.format(series_name, err_count))
         if resources is None:
             resources = DEFAULT_RESOURCES
         for resource in resources:
@@ -126,10 +146,6 @@ class PrometheusClient(BaseClient):
 
     def get_series_metadata(self):
         status = True
-        logger.info(requests.get(self.get_series_metadata_url(),
-                                 params=self.get_series_metadata_params(),
-                                 cert=self.cert,
-                                 verify=self.verify).text)
         data = json.loads(requests.get(self.get_series_metadata_url(),
                                        params=self.get_series_metadata_params(),
                                        cert=self.cert,
@@ -150,7 +166,7 @@ class PrometheusClient(BaseClient):
 
     def delete_series_by_name(self, name):
         data = json.loads(requests.get(self.delete_series_url(),
-                                       params=self.delete_series_params(),
+                                       params=self.delete_series_params(name),
                                        cert=self.cert,
                                        verify=self.verify).text)
         if data.get('status', 'failure') != 'success':

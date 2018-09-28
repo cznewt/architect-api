@@ -43,6 +43,7 @@ class KubernetesClient(BaseClient):
 
     def __init__(self, **kwargs):
         self.scope = kwargs.get('metadata', {}).get('scope', 'local')
+        self.auth_url = kwargs.get('metadata', {}).get('cluster', {}).get('server', 'N/A')
         super(KubernetesClient, self).__init__(**kwargs)
 
     def auth(self):
@@ -75,10 +76,42 @@ class KubernetesClient(BaseClient):
             self.config_wrapper = pykube.KubeConfig.from_file(filename)
             os.remove(filename)
             self.api = pykube.HTTPClient(self.config_wrapper)
+            pods = pykube.Pod.objects(self.api).filter(namespace="kube-system")
+            for pod in pods:
+                pass
+
         except URLError as exception:
             logger.error(exception)
             status = False
+        except ConnectionError as exception:
+            logger.error(exception)
+            status = False
+
         return status
+
+    def get_kubeconfig(self):
+            config_content = {
+                'apiVersion': 'v1',
+                'clusters': [{
+                    'cluster': self.metadata['cluster'],
+                    'name': self.name,
+                }],
+                'contexts': [{
+                    'context': {
+                        'cluster': self.name,
+                        'user': self.name,
+                    },
+                    'name': self.name,
+                }],
+                'current-context': self.name,
+                'kind': 'Config',
+                'preferences': {},
+                'users': [{
+                    'name': self.name,
+                    'user': self.metadata['user']
+                }]
+            }
+            return pyaml.dump(config_content)
 
     def update_resources(self, resources=None):
         if self.auth():
@@ -341,6 +374,15 @@ class KubernetesClient(BaseClient):
                                                        ('prometheus', 'Prometheus (monitor)'),
                                                        ('graphite', 'Graphite (monitor)')
                                                    ))
+        if resource.kind == 'k8s_cluster':
+            if action == 'download_config':
+                kubeconfig = self.get_kubeconfig()
+                fields['config'] = forms.CharField(label='Config content',
+                                                   initial=kubeconfig,
+                                                   help_text='The actual KubeConfig to be downloaded',
+                                                   widget=forms.Textarea(attrs={'style': 'font-family: monospace;'}))
+
+
         return fields
 
 

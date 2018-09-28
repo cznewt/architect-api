@@ -10,6 +10,23 @@ from architect.monitor.models import Monitor, Resource
 from .tasks import get_monitor_status_task, \
     sync_monitor_resources_task
 
+
+VIZ_OPTIONS = {
+    'range': {
+        'bar': 'Bar Chart',
+        'barStacked': 'Stacked Bar Chart',
+        'line': 'Line Chart',
+        'areaStacked': 'Stacked Area Chart',
+        'horizon': 'Horizon Chart',
+        'radar': 'Radar Chart',
+    },
+    'instant': {
+        'pie': 'Pie Chart',
+        'donut': 'Donut Chart',
+    }
+}
+
+
 class MonitorListView(LoginRequiredMixin, TemplateView):
     template_name = "monitor/monitor_list.html"
 
@@ -53,6 +70,25 @@ class MonitorDetailView(LoginRequiredMixin, TemplateView):
         return context
 
 
+class MonitorGraphView(LoginRequiredMixin, TemplateView):
+    template_name = "monitor/monitor_graph.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        monitor = Monitor.objects.get(name=kwargs.get('monitor_name'))
+        context['monitor'] = monitor
+        context['query_name'] = kwargs.get('query_name')
+        context['viz_name'] = kwargs.get('viz_name')
+        context['viz_list'] = VIZ_OPTIONS
+        try:
+            context['viz_label'] = VIZ_OPTIONS['range'][context['viz_name']]
+            context['query_type'] = 'range'
+        except:
+            context['viz_label'] = VIZ_OPTIONS['instant'][context['viz_name']]
+            context['query_type'] = 'instant'
+        return context
+
+
 class MonitorQueryJSONView(JSONDataView):
 
     def get_context_data(self, **kwargs):
@@ -62,7 +98,21 @@ class MonitorQueryJSONView(JSONDataView):
         query = client_monitor._schema['query'].get(kwargs.get('query_name'))
         query_cache_key = '{}-{}'.format(monitor.name,
                                          kwargs.get('query_name'))
-        client_monitor.queries = query['metric']
+        if query is None:
+            if kwargs.get('query_type', 'range') == 'range':
+                query = {
+                    'start': "2018-09-18T12:00:00Z",
+                    'end': "2018-09-25T12:00:00Z",
+                    'step': '1d',
+                    'query': kwargs.get('query_name')
+                }
+            else:
+                query = {
+                    'moment': "2018-09-25T12:00:00Z",
+                    'step': '1h',
+                    'query': kwargs.get('query_name')
+                }
+        client_monitor.queries = query['query']
         output['query_cache_key'] = query_cache_key
         output['name'] = monitor.name
         outputs = []

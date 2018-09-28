@@ -5,10 +5,11 @@ var QuantitativePlot = function(QuantitativePlot){
      * @param graphSelector - Graph parent <div> CSS selector
      * @param refreshInterval - Refresh interval in seconds (null for disabled)
      */
-    QuantitativePlot.stackedAreaChart = function(dataUrl, graphSelector, refreshInterval) {
+    QuantitativePlot.areaStackedChart = function(dataUrl, graphSelector, refreshInterval) {
 
         var graph = this;
         this._data = {};
+        this._data_group = [];
 
         this.init = function(alreadyRunning) {
 
@@ -36,14 +37,18 @@ var QuantitativePlot = function(QuantitativePlot){
         };
 
         this.render = function() {
-            console.log(graphSelector);
-
             graph.chart = bb.generate({
               data: {
                 x: "x",
                 xFormat: '%Y-%m-%d %H:%M:%S',
                 columns: graph._data,
-                type: "area-spline"
+                type: "area-spline",
+                groups: [
+                  graph._data_group
+                ]
+              },
+              point: {
+                show: false
               },
               axis: {
                 x: {
@@ -61,6 +66,12 @@ var QuantitativePlot = function(QuantitativePlot){
         this.requestData = function(dataUrl, callback){
             d3.json(dataUrl, function(res){
                 graph._data = res.data;
+                graph._data_group = [];
+                for (var i = 0; i < graph._data.length; i++) {
+                    if (graph._data[i][0] !== 'x') {
+                        graph._data_group.push(graph._data[i][0]);
+                    }
+                }
                 if(typeof callback === 'function'){
                     callback();
                 }

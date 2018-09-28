@@ -177,7 +177,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
   {% elif widget.chart == 'line-chart' %}
   new QuantitativePlot.lineChart(src['{{ widget_name }}'], sel['{{ widget_name }}'], upd['{{ widget_name }}']).init();
   {% elif widget.chart == 'stacked-chart' %}
-  new QuantitativePlot.stackedAreaChart(src['{{ widget_name }}'], sel['{{ widget_name }}'], upd['{{ widget_name }}']).init();
+  new QuantitativePlot.areaStackedChart(src['{{ widget_name }}'], sel['{{ widget_name }}'], upd['{{ widget_name }}']).init();
   {% elif widget.chart == 'pie' %}
   new QuantitativePlot.pieChart(src['{{ widget_name }}'], sel['{{ widget_name }}'], upd['{{ widget_name }}']).init();
   {% elif widget.chart == 'donut' %}

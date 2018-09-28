@@ -1,0 +1,73 @@
+{% extends TEMPLATE_BASE|default:"content_base.html" %}
+
+{% load static compress i18n %}
+
+{% block nav_monitor_cls %} navigation__sub--active{% endblock %}
+
+{% block page_title %}
+{{ monitor.engine }} {{ monitor.metadata.name|default:monitor.name|truncatechars:64 }} Visualization
+{% endblock %}
+
+{% block title %}
+{{ monitor.engine }} {{ monitor.metadata.name|default:monitor.name|truncatechars:64 }} Visualization
+{% endblock %}
+
+{% block actions %}
+<a href="{% url 'monitor:monitor_detail' monitor.name %}" class="btn btn-sm btn-outline-secondary">Monitor detail</a>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="card card-widget border-primary h-100 col-12">
+        <div class="card-body">
+            <div style="height: 580px;" class="{{ viz_name }} plot-container text-center" id="chart"></div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'billboard.js/dist/billboard.js' %}"></script>
+<script src="{% static 'd3-horizon-chart/build/d3-horizon-chart.js' %}"></script>
+<script src="{% static 'architect-document/js/d3-gauge.js' %}"></script>
+<script src="{% static 'architect-document/js/d3.utils.js' %}"></script>
+<script src="{% static 'architect-document/js/d3.plot.area.js' %}"></script>
+<script src="{% static 'architect-document/js/d3.plot.bar.js' %}"></script>
+<script src="{% static 'architect-document/js/d3.plot.bundle.js' %}"></script>
+<script src="{% static 'architect-document/js/d3.plot.composite.js' %}"></script>
+<script src="{% static 'architect-document/js/d3.plot.gauge.js' %}"></script>
+<script src="{% static 'architect-document/js/d3.plot.horizon.js' %}"></script>
+<script src="{% static 'architect-document/js/d3.plot.line.js' %}"></script>
+<script src="{% static 'architect-document/js/d3.plot.pie.js' %}"></script>
+<script src="{% static 'architect-document/js/d3.plot.radar.js' %}"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function (event) {
+    var src = "/monitor/v1/{{ monitor.name }}/query/{{ query_name }}/{{ query_type }}";
+    var sel = "#chart";
+    var upd = 600;
+    new QuantitativePlot.{{ viz_name }}Chart(src, sel, upd).init();
+});
+</script>
+{% endblock %}
+
+{% block sidebar %}
+<ul class="list-group list-group-flush">
+    <li class="list-group-item">{% trans "Dataset Query" %}
+        <span class="badge">{{ query_name }}</span>
+    </li>
+    {% for group, labels in viz_list.items %}
+    <li class="list-group-item">{{ group|capfirst }} {% trans "Layouts" %}
+        <h4></h4>
+        {% for name, label in labels.items %}
+        <span class="badge">
+            {% if viz_name == name %}
+            {{ label }}
+            {% else %}
+            <a href="{% url 'monitor:monitor_graph' monitor.name query_name name %}">{{ label }}</a>
+            {% endif %}
+        </span>
+        {% endfor %}
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}

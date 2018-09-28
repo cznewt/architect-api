@@ -1,11 +1,11 @@
-var RelationalPlot = function(RelationalPlot){
+var RelationalPlot = function (RelationalPlot) {
     /**
      * Adjacency matrix rendering method
      * @param dataUrl - Data endpoint URL
      * @param graphSelector - Graph parent <div> CSS selector
      * @param refreshInterval - Refresh interval in seconds (null for disabled)
      */
-    RelationalPlot.adjacencyMatrix = function(dataUrl, graphSelector, refreshInterval) {
+    RelationalPlot.adjacencyMatrix = function (dataUrl, graphSelector, refreshInterval) {
 
         var adjacencyMatrix = d3.adjacencyMatrixLayout(),
             colorMapping = d3.scaleOrdinal()
@@ -16,29 +16,29 @@ var RelationalPlot = function(RelationalPlot){
 
         this._data = {};
 
-        this.init = function(alreadyRunning) {
+        this.init = function (alreadyRunning) {
             width = Math.min(
                 $(graphSelector).innerWidth(),
                 $(graphSelector).innerHeight()
             ),
-            graphWidth = width - 10;
-            if(alreadyRunning && graph.svg) {
+                graphWidth = width - 10;
+            if (alreadyRunning && graph.svg) {
                 graph.svg.remove();
             }
 
             graph.svg = d3.select(graphSelector).append("svg")
                 .attr("width", width)
                 .attr("height", width);
-            if(!alreadyRunning){
+            if (!alreadyRunning) {
                 graph.requestData(dataUrl, graph.render);
-                $(window).on('resize', function(ev){
+                $(window).on('resize', function (ev) {
                     graph.init(true);
                     graph.render();
                 });
 
-                if(refreshInterval){
-                    setInterval(function(){
-                        graph.requestData(dataUrl, function(){
+                if (refreshInterval) {
+                    setInterval(function () {
+                        graph.requestData(dataUrl, function () {
                             graph.init(true);
                             graph.render();
                         });
@@ -47,7 +47,7 @@ var RelationalPlot = function(RelationalPlot){
             }
         };
 
-        this.createNodes = function(items) {
+        this.createNodes = function (items) {
             var output = [];
             for (var key in items) {
                 item = items[key];
@@ -57,31 +57,31 @@ var RelationalPlot = function(RelationalPlot){
             return output;
         };
 
-        this.createLinks = function(nodes, relations) {
-          return relations.map(function(link) {
-            var retLink = {};
-            nodes.forEach(function(node) {
-              if (link.source == node.id) {
-                retLink.source = node;
-              } else if (link.target == node.id) {
-                retLink.target = node;
-              }
-              retLink.value = 2;
+        this.createLinks = function (nodes, relations) {
+            return relations.map(function (link) {
+                var retLink = {};
+                nodes.forEach(function (node) {
+                    if (link.source == node.id) {
+                        retLink.source = node;
+                    } else if (link.target == node.id) {
+                        retLink.target = node;
+                    }
+                    retLink.value = 2;
+                });
+                if (!retLink.hasOwnProperty("source") || !retLink.hasOwnProperty("target")) {
+                    console.log("Can not find relation node for link " + link);
+                    retLink = link;
+                }
+                return retLink;
             });
-            if (!retLink.hasOwnProperty("source") || !retLink.hasOwnProperty("target")) {
-              console.log("Can not find relation node for link " + link);
-              retLink = link;
-            }
-            return retLink;
-          });
         }
-        this.render = function() {
+        this.render = function () {
 
             nodes = graph.createNodes(graph._data.resources);
             links = graph.createLinks(nodes, graph._data.relations);
 
             adjacencyMatrix
-                .size([width-81, width-81])
+                .size([width - 81, width - 81])
                 .nodes(nodes)
                 .links(links)
                 .directed(false)
@@ -96,12 +96,12 @@ var RelationalPlot = function(RelationalPlot){
                 .data(matrixData)
                 .enter()
                 .append('rect')
-                    .attr('width', d => d.width)
-                    .attr('height', d => d.height)
-                    .attr('x', d => d.x)
-                    .attr('y', d => d.y)
-                    .style('fill', d => colorMapping(d.source.group))
-                    .style('fill-opacity', d => d.weight * 0.8);
+                .attr('width', d => d.width)
+                .attr('height', d => d.height)
+                .attr('x', d => d.x)
+                .attr('y', d => d.y)
+                .style('fill', d => colorMapping(d.source.group))
+                .style('fill-opacity', d => d.weight * 0.8);
 
             d3.select('#adjacencyMatrix')
                 .call(adjacencyMatrix.xAxis);
@@ -109,10 +109,10 @@ var RelationalPlot = function(RelationalPlot){
             d3.select('#adjacencyMatrix')
                 .call(adjacencyMatrix.yAxis);
         };
-        this.requestData = function(dataUrl, callback){
-            d3.json(dataUrl, function(res){
+        this.requestData = function (dataUrl, callback) {
+            d3.json(dataUrl, function (res) {
                 graph._data = res;
-                if(typeof callback === 'function'){
+                if (typeof callback === 'function') {
                     callback();
                 }
             });

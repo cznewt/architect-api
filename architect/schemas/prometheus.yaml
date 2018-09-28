@@ -26,6 +26,9 @@ resource:
     icon: fa:cube
     name: Metric
     resource: Prometheus::Series
+    workflow:
+      display_metric:
+        name: Display chart
     model:
       target:
         type: relationship_to

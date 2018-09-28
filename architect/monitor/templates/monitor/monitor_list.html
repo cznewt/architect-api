@@ -34,7 +34,10 @@
       <td class="d-inline-block col-1 text-right">{{ monitor.resources.count }}&nbsp;pcs</td>
       <td class="d-inline-block col-5">{{ monitor.conn_detail|truncatechars:64 }}</td>
       <td class="d-inline-block col-2 text-right">
+        {% if monitor.status == 'active' %}
         <a href="{% url 'monitor:monitor_detail' monitor.name %}" class="btn btn-sm btn-outline-primary">Details</a>
+        <a href="{{ monitor.client.base_url }}" class="btn btn-sm btn-outline-secondary">Board</a>
+        {% endif %}
       </td>
     </tr>
     {% endfor %}
