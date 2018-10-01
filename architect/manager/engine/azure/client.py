@@ -58,6 +58,7 @@ RESOURCE_MAP = {
 class MicrosoftAzureClient(BaseClient):
 
     credentials = None
+    resource_group = {}
     size_location = {}
     network = []
 
@@ -107,6 +108,8 @@ class MicrosoftAzureClient(BaseClient):
             state = metadata.get('provisioning_state', '')
             if state == 'Succeeded':
                 return 'active'
+            elif state == 'Creating':
+                return 'build'
         elif kind == 'az_subscription':
             if metadata.get('state', '') == 'Enabled':
                 return 'active'
@@ -119,6 +122,10 @@ class MicrosoftAzureClient(BaseClient):
                 'in_resource_group',
                 resource_id,
                 self.get_group_id_from_resource_id(resource_id))
+            self._create_relation(
+                'at_location',
+                resource_id,
+                resource['metadata']['location'])
         for resource_id, resource in self.resources.get('az_subnet', {}).items():
             self._create_relation(
                 'in_resource_group',
@@ -138,7 +145,7 @@ class MicrosoftAzureClient(BaseClient):
             self._create_relation(
                 'in_resource_group',
                 resource_id,
-                self.get_group_id_from_resource_id(resource_id))
+                self.resource_group[self.get_group_name_from_resource_id(resource_id).lower()])
             self._create_relation(
                 'has_size',
                 resource_id,
@@ -158,6 +165,10 @@ class MicrosoftAzureClient(BaseClient):
                 'at_location',
                 resource_id,
                 resource['metadata']['location'])
+            self._create_relation(
+                'in_subscription',
+                resource_id,
+                self.get_subscription_id_from_resource_id(resource_id))
 
     def get_resource_metadata(self, kind):
         logger.info("Getting {} resources".format(kind))
@@ -220,6 +231,7 @@ class MicrosoftAzureClient(BaseClient):
                                       resource['name'],
                                       kind,
                                       metadata=resource)
+                self.resource_group[resource['name'].lower()] = resource['id']
         elif kind == 'az_virtual_machine_size':
             for item in metadata:
                 resource = item.__dict__

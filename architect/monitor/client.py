@@ -174,26 +174,41 @@ class BaseClient(object):
     def get_range_url(self):
         raise NotImplementedError
 
+    def _url(self):
+        raise NotImplementedError
+
     def get_range(self):
-        data = json.loads(requests.get(self._url(), verify=False).text)
+        data = json.loads(requests.get(self._url(),
+                          cert=self.cert,
+                          verify=self.verify).text)
         return self.process_range(data)
+
+    def get_instant_params(self):
+        raise NotImplementedError
 
     def get_http_instant_params(self):
         return json.loads(requests.get(self.get_instant_url(),
                                        params=self.get_instant_params(),
+                                       cert=self.cert,
                                        verify=self.verify).text)
 
     def get_http_instant_data(self):
         return json.loads(requests.get(self.get_instant_url(),
                                        data=json.dumps(self.get_instant_params()),
+                                       cert=self.cert,
                                        verify=self.verify).text)
+
+    def get_range_params(self):
+        raise NotImplementedError
 
     def get_http_range_params(self):
         return json.loads(requests.get(self.get_range_url(),
                                        params=self.get_range_params(),
+                                       cert=self.cert,
                                        verify=self.verify).text)
 
     def get_http_range_data(self):
         return json.loads(requests.get(self.get_range_url(),
                                        data=json.dumps(self.get_range_params()),
+                                       cert=self.cert,
                                        verify=self.verify).text)

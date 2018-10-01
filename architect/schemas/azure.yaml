@@ -1,7 +1,17 @@
 query:
-  az_complete_graph:
-    name: Complete Subscription
+  az_supergraph:
+    name: Resource type graph
     layout: graph
+    type: class
+  az_complete_graph:
+    name: All resources in subscription
+    layout: graph
+  az_location_vm_size:
+    name: Location/machine sizes
+    layout: graph
+    filter_node_types:
+    - az_location
+    - az_virtual_machine_size
 relation:
   at_location:
     relation:

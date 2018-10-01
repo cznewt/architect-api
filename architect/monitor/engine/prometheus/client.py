@@ -50,7 +50,7 @@ class PrometheusClient(BaseClient):
         metrics = {}
         if targets_status:
             for targets_metadatum in targets_metadata:
-                targets[json.dumps(targets_metadatum['labels'])] = targets_metadatum
+                targets[targets_metadatum['scrapeUrl']] = targets_metadatum
                 if targets_metadatum['labels']['job'] not in jobs:
                     jobs[targets_metadatum['labels']['job']] = {}
         if series_status:
@@ -67,61 +67,65 @@ class PrometheusClient(BaseClient):
                                   'prom_job',
                                   metadata=job)
 
+        metric_label_map = {}
+
+        target_label_map = {}
+
         for target_name, target in targets.items():
-            self._create_resource(json.dumps(target['labels']),
+            self._create_resource(target['scrapeUrl'],
                                   target['scrapeUrl'],
                                   'prom_target',
                                   metadata=target)
             self._create_relation(
                 'by_job',
-                json.dumps(target['labels']),
+                target['scrapeUrl'],
                 target['labels']['job'])
-        for target_name, target in targets.items():
+
+            for label_name, label_value in target.get('labels', {}).items():
+                selector = '{}: {}'.format(label_name, label_value)
+                if selector not in target_label_map:
+                    target_label_map[selector] = []
+                target_label_map[selector].append(target['scrapeUrl'])
+
+        for target_name, target in target_label_map.items():
+            logger.info(target_name)
             logger.info(target)
 
-#        for metric_name, metric in metrics.items():
-#            logger.info(metric)
+        i = 0
+
         for series_name, series_item in series.items():
 #            logger.info(series_item)
             if series_name in metrics:
                 series_item['meta'] = metrics[series_name]
-#                logger.info(series_item)
-                self._create_resource(series_name,
-                                      series_name,
-                                      'prom_metric',
-                                      metadata=series_item)
-                for target in series_item['targets']:
-                    real_target = {
-                        'instance': target['instance'],
-                        'job': target['job'],
-                    }
-                    if 'domain' in target:
-                        real_target['domain'] = target['domain']
-                    if json.dumps(real_target) in targets:
+            self._create_resource(series_name,
+                                series_name,
+                                'prom_metric',
+                                metadata=series_item)
+            for target in series_item['targets']:
+                first_list = True
+                uid_list = []
+                for label_name, label_value in target.items():
+                    #if label_name in ['instance', 'job', 'domain']:
+                    label = '{}: {}'.format(label_name, label_value)
+                    if label in target_label_map:
+                        if first_list:
+                            uid_list = target_label_map[label]
+                            first_list = False
+                        else:
+                            uid_list = list(set(uid_list) & set(target_label_map[label]))
+                if len(uid_list) == 0:
+                    i += 1
+                    logger.error('[{}] No targets found for labels {}, metric {}'.format(i, target, series_name))
+                elif len(uid_list) > 1:
+                    i += 1
+                    logger.error('[{}] Multiple targets {} found for labels {}, metric {}'.format(i, uid_list, target, series_name))
+                else:
+                    for uid in uid_list:
+#                        logger.info('Target {} found for labels {}, metric {}'.format(uid_list[0], target, series_name))
                         self._create_relation(
                             'metric_value',
                             series_name,
-                            json.dumps(real_target),
-                            {'labels': target})
-            else:
-                self._create_resource(series_name,
-                                    series_name,
-                                    'prom_metric',
-                                    metadata=series_item)
-                for target in series_item['targets']:
-                    real_target = target.copy()
-                    for key in target:
-                        if key not in ['instance', 'job', 'domain']:
-                            real_target.pop(key)
-                    if json.dumps(real_target) in targets:
-                        self._create_relation(
-                            'metric_value',
-                            series_name,
-                            json.dumps(real_target),
-                            {'labels': target})
-                    else:
-                        logger.error('Target {} not found.'.format(real_target))
-#                logger.error('Metric {} not found ({})'.format(series_name, err_count))
+                            uid)
         if resources is None:
             resources = DEFAULT_RESOURCES
         for resource in resources:
@@ -129,7 +133,6 @@ class PrometheusClient(BaseClient):
             logger.info("Processed {} {} resources".format(count,
                                                             resource))
  #           self.process_relation_metadata()
-
 
     def get_series(self):
         data = self.get_http_series_params()
@@ -268,6 +271,7 @@ class PrometheusClient(BaseClient):
     def process_range(self, response):
         if response['status'] == 'error':
             self.log_error(response['errorType'], response['error'])
+        print(response)
         data = response['data']['result']
         for series in data:
             for values in series['values']:

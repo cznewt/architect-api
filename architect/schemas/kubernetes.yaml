@@ -14,6 +14,9 @@ query:
       2:
         kind: k8s_pod
         target: in_k8s_namespace
+      3:
+        kind: k8s_container
+        source: in_k8s_pod
   k8s_pods_on_nodes_tree:
     name: Pods by Node
     layout: hierarchy
@@ -33,6 +36,10 @@ relation:
   in_k8s_deployment:
     relation:
       default: deployment
+  expose_k8s_pod:
+    relation:
+      default: pod
+
   in_k8s_pod:
     relation:
       default: pod
@@ -51,10 +58,13 @@ relation:
   contains_k8s_node:
     relation:
       default: node
+  uses_k8s_config_map:
+    relation:
+      default: config_map
   contains_k8s_namespace:
     relation:
       default: namespace
-default_resource: k8s_pod
+default_resource: k8s_namespace
 resource:
   k8s_config_map:
     client: ''
@@ -216,7 +226,7 @@ resource:
         target: k8s_namespace
       pod:
         type: relationship_to
-        model: in_k8s_pod
+        model: expose_k8s_pod
         target: k8s_pod
   k8s_service_account:
     client: ''
@@ -232,6 +242,26 @@ resource:
         type: relationship_to
         model: use_k8s_secret
         target: k8s_secret
+  k8s_ingress:
+    client: ''
+    icon: fa:user
+    name: Ingress
+    resource: Ingress
+    model:
+      namespace:
+        type: relationship_to
+        model: in_k8s_namespace
+        target: k8s_namespace
+  k8s_daemon_set:
+    client: ''
+    icon: fa:user
+    name: Daemon Set
+    resource: DaemonSet
+    model:
+      namespace:
+        type: relationship_to
+        model: in_k8s_namespace
+        target: k8s_namespace
   k8s_cluster:
     client: ''
     icon: fa:user

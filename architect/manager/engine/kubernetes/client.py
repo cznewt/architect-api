@@ -3,6 +3,7 @@
 import os
 import base64
 import pyaml
+import json
 import tempfile
 import pykube
 from django import forms
@@ -29,6 +30,7 @@ DEFAULT_RESOURCES = [
     'k8s_persistent_volume',
     'k8s_persistent_volume_claim',
     'k8s_pod',
+    'k8s_container',
     'k8s_replica_set',
     'k8s_replication_controller',
     'k8s_role',
@@ -136,6 +138,41 @@ class KubernetesClient(BaseClient):
         elif kind == 'k8s_namespace':
             if phase == 'Active':
                 return 'active'
+        elif kind in ['k8s_deployment', 'k8s_node']:
+            if len(metadata.get('status', {}).get('conditions', [])) > 0:
+                if metadata.get('status', {}).get('conditions', [])[-1]['status']:
+                    return 'active'
+                else:
+                    return 'error'
+        elif kind == 'k8s_endpoint':
+            if len(metadata.get('subsets', [])) > 0:
+                return 'active'
+            else:
+                return 'error'
+        elif kind == 'k8s_service_account':
+            if len(metadata.get('secrets', [])) > 0:
+                return 'active'
+            else:
+                return 'error'
+        elif kind == 'k8s_secret':
+            if metadata.get('type', '') == 'kubernetes.io/service-account-token':
+                if 'token' in metadata.get('data', {}):
+                    return 'active'
+                else:
+                    return 'error'
+        elif kind == 'k8s_replica_set':
+            if metadata.get('status', {}).get('replicas', 0) > 0:
+                return 'active'
+            else:
+                return 'error'
+        elif kind == 'k8s_daemon_set':
+            if metadata.get('status', {}).get('numberReady', 0) > 0:
+                return 'active'
+        elif kind == 'k8s_service':
+            if 'clusterIP' in metadata.get('spec', {}):
+                return 'active'
+        elif kind in ['k8s_cluster', 'k8s_config_map']:
+            return 'active'
         return 'unknown'
 
     def process_resource_metadata(self, kind, metadata):
@@ -173,7 +210,11 @@ class KubernetesClient(BaseClient):
                 'uid': 'cluster'
             })
         elif kind == 'k8s_config_map':
-            response = pykube.ConfigMap.objects(self.api)
+            namespaces = pykube.Namespace.objects(self.api)
+            for namespace in namespaces:
+                resources = pykube.ConfigMap.objects(self.api, namespace.obj['metadata']['name'])
+                for resource in resources:
+                    response.append(resource)
         elif kind == 'k8s_container':
             response = {}
             for pod_id, pod in self.resources.get('k8s_pod', {}).items():
@@ -185,23 +226,39 @@ class KubernetesClient(BaseClient):
         elif kind == 'k8s_cron_job':
             response = pykube.CronJob.objects(self.api)
         elif kind == 'k8s_daemon_set':
-            response = pykube.DaemonSet.objects(self.api)
+            namespaces = pykube.Namespace.objects(self.api)
+            for namespace in namespaces:
+                resources = pykube.DaemonSet.objects(self.api, namespace.obj['metadata']['name'])
+                for resource in resources:
+                    response.append(resource)
         elif kind == 'k8s_deployment':
             namespaces = pykube.Namespace.objects(self.api)
             for namespace in namespaces:
-                deploys = pykube.Deployment.objects(self.api, namespace.obj['metadata']['name'])
-                for deploy in deploys:
-                    response.append(deploy)
+                resources = pykube.Deployment.objects(self.api, namespace.obj['metadata']['name'])
+                for resource in resources:
+                    response.append(resource)
         elif kind == 'k8s_endpoint':
-            response = pykube.Endpoint.objects(self.api)
+            namespaces = pykube.Namespace.objects(self.api)
+            for namespace in namespaces:
+                resources = pykube.Endpoint.objects(self.api, namespace.obj['metadata']['name'])
+                for resource in resources:
+                    response.append(resource)
         elif kind == 'k8s_event':
             response = pykube.Event.objects(self.api)
         elif kind == 'k8s_horizontal_pod_autoscaler':
             response = pykube.HorizontalPodAutoscaler.objects(self.api)
         elif kind == 'k8s_ingress':
-            response = pykube.Ingress.objects(self.api)
+            namespaces = pykube.Namespace.objects(self.api)
+            for namespace in namespaces:
+                resources = pykube.Ingress.objects(self.api, namespace.obj['metadata']['name'])
+                for resource in resources:
+                    response.append(resource)
         elif kind == 'k8s_job':
-            response = pykube.Job.objects(self.api)
+            namespaces = pykube.Job.objects(self.api)
+            for namespace in namespaces:
+                resources = pykube.PersistentVolumeClaim.objects(self.api, namespace.obj['metadata']['name'])
+                for resource in resources:
+                    response.append(resource)
         elif kind == 'k8s_namespace':
             response = pykube.Namespace.objects(self.api)
         elif kind == 'k8s_node':
@@ -209,7 +266,11 @@ class KubernetesClient(BaseClient):
         elif kind == 'k8s_persistent_volume':
             response = pykube.PersistentVolume.objects(self.api)
         elif kind == 'k8s_persistent_volume_claim':
-            response = pykube.PersistentVolumeClaim.objects(self.api)
+            namespaces = pykube.Namespace.objects(self.api)
+            for namespace in namespaces:
+                resources = pykube.PersistentVolumeClaim.objects(self.api, namespace.obj['metadata']['name'])
+                for resource in resources:
+                    response.append(resource)
         elif kind == 'k8s_pod':
             namespaces = pykube.Namespace.objects(self.api)
             for namespace in namespaces:
@@ -241,6 +302,7 @@ class KubernetesClient(BaseClient):
         return response
 
     def process_relation_metadata(self):
+
         namespace_2_uid = {}
         for resource_id, resource in self.resources.get('k8s_namespace',
                                                         {}).items():
@@ -273,19 +335,26 @@ class KubernetesClient(BaseClient):
             resource_mapping = resource['metadata']['metadata']['name']
             volume_2_uid[resource_mapping] = resource_id
 
-        service_run_2_uid = {}
-        service_app_2_uid = {}
-        for resource_id, resource in self.resources.get('k8s_service',
+        config_map_2_uid = {}
+        for resource_id, resource in self.resources.get('k8s_config_map',
                                                         {}).items():
-            if resource['metadata']['spec'].get('selector', {}) is not None:
-                if resource['metadata']['spec'].get('selector',
-                                                    {}).get('run', False):
-                    selector = resource['metadata']['spec']['selector']['run']
-                    service_run_2_uid[selector] = resource_id
-                if resource['metadata']['spec'].get('selector',
-                                                    {}).get('app', False):
-                    selector = resource['metadata']['spec']['selector']['app']
-                    service_app_2_uid[selector] = resource_id
+            resource_mapping = '{}-{}'.format(
+                resource['metadata']['metadata']['namespace'],
+                resource['metadata']['metadata']['name'],
+            )
+            config_map_2_uid[resource_mapping] = resource_id
+
+        pod_label_map = {}
+        for resource_id, resource in self.resources.get('k8s_pod',
+                                                        {}).items():
+            namespace = resource['metadata']['metadata']['namespace']
+            if namespace not in pod_label_map:
+                pod_label_map[namespace] = {}
+            for label_name, label_value in resource['metadata']['metadata'].get('labels', {}).items():
+                selector = '{}: {}'.format(label_name, label_value)
+                if selector not in pod_label_map[namespace]:
+                    pod_label_map[namespace][selector] = []
+                pod_label_map[namespace][selector].append(resource['metadata']['metadata']['uid'])
 
         # Define relationships between namespace and all namespaced resources.
         for resource_type, resource_dict in self.resources.items():
@@ -326,6 +395,17 @@ class KubernetesClient(BaseClient):
                 self._create_relation('on_k8s_node',
                                       resource_id,
                                       node_2_uid[node])
+            if resource['metadata']['spec']['volumes'] is not None:
+                volumes = resource['metadata']['spec']['volumes']
+                namespace = resource['metadata']['metadata']['namespace']
+                for volume in volumes:
+                    if 'configMap' in volume:
+                        if '{}-{}'.format(namespace, volume['configMap']['name']) in config_map_2_uid:
+                            self._create_relation('uses_k8s_config_map',
+                                                resource_id,
+                                                config_map_2_uid['{}-{}'.format(namespace, volume['configMap']['name'])])
+                        else:
+                            logger.error('Error creating rel {}-{}'.format(namespace, volume['configMap']['name']))
 
             # Define relationships between pods and replication sets and
             # replication controllers.
@@ -337,26 +417,38 @@ class KubernetesClient(BaseClient):
                         rep_set_id,
                         resource_id)
 
-            # Define relationships between pods and services.
-            if resource['metadata']['metadata'].get('labels', {}).get('run', False):
-                selector = resource['metadata']['metadata']['labels']['run']
-                if selector in service_run_2_uid:
+        for resource_id, resource in self.resources.get('k8s_service',
+                                                        {}).items():
+
+            # Define relationships between services and pods.
+            namespace = resource['metadata']['metadata']['namespace']
+            first_list = True
+            uid_list = []
+            for selector_name, selector_value in resource['metadata']['spec'].get('selector', {}).items():
+                selector = '{}: {}'.format(selector_name, selector_value)
+                if selector in pod_label_map.get(namespace, {}):
+                    if first_list:
+                        uid_list = pod_label_map[namespace][selector]
+                        first_list = False
+                    else:
+                        uid_list = list(set(uid_list) & set(pod_label_map[namespace][selector]))
+            if len(uid_list) == 0:
+                logger.error('No pods found for selectors {}, service {} {}'.format(resource['metadata']['spec'].get(
+                    'selectors', {}), namespace, resource['metadata']['metadata']['name']))
+            else:
+                logger.info('{} pods found for selectors {}, service {} {}'.format(len(uid_list), resource['metadata']['spec'].get('selector', {}), namespace, resource['metadata']['metadata']['name']))
+
+                for uid in uid_list:
                     self._create_relation(
-                        'in_k8s_pod',
-                        service_run_2_uid[selector],
-                        resource_id)
-            if resource['metadata']['metadata'].get('labels', {}).get('app', False):
-                try:
-                    selector = resource['metadata']['metadata']['labels']['app']
-                    self._create_relation(
-                        'in_k8s_pod',
-                        service_app_2_uid[selector],
-                        resource_id)
-                except Exception:
-                    pass
-#                self._create_relation('in_k8s_pod',
-#                                      container_id,
-#                                      resource_id)
+                        'expose_k8s_pod',
+                        resource_id,
+                        uid)
+
+        for resource_id, resource in self.resources.get('k8s_container',
+                                                        {}).items():
+            self._create_relation('in_k8s_pod',
+                                    resource['metadata']['pod'],
+                                    resource_id)
 
     def get_resource_action_fields(self, resource, action):
         fields = {}

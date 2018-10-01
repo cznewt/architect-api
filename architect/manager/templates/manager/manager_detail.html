@@ -66,8 +66,8 @@
             <span class="badge badge-{{ resource.color }}">{{ resource.status }}</span>
           </th>
           <td>{{ resource.kind }}</td>
-          <td style="text-align:right;">{{ resource.relations.count }}</td>
-          <td align="right">
+          <td class="text-right">{{ resource.relations.count }}</td>
+          <td class="text-right">
             <a href="{% url 'manager:resource_detail' manager.name resource.id %}" class="btn btn-sm btn-outline-primary">{% trans "Details" %}</a>
             {% for action, workflow in workflow_options.items %}
             <a href="{% url 'manager:resource_action' manager.name resource.uid action %}" class="open-modal btn btn-sm btn-outline-primary">{{ workflow.name }}</a>

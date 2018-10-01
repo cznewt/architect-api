@@ -55,7 +55,7 @@
           </td>
           <td>{{ source.kind }}</td>
           <td>{% trans "Target" %}</td>
-          <td>
+          <td class="text-right">
             {% for action, workflow in source.workflow_options.items %}
             <a href="{% url 'manager:resource_action' manager.name source.id action %}" class="open-modal btn btn-sm btn-outline-primary">{{ workflow.name }}</a>
             {% endfor %}
@@ -70,7 +70,7 @@
           </td>
           <td>{{ target.kind }}</td>
           <td>{% trans "Source" %}</td>
-          <td>
+          <td class="text-right">
             {% for action, workflow in target.workflow_options.items %}
             <a href="{% url 'manager:resource_action' manager.name target.id action %}" class="open-modal btn btn-sm btn-outline-primary">{{ workflow.name }}</a>
             {% endfor %}
