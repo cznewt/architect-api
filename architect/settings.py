@@ -4,9 +4,26 @@ Django settings for Architect service.
 import os
 from .utils import load_yaml_json_file
 
-DEBUG = True
+CONFIG_FILE = os.environ.get('ARCHITECT_CONFIG_FILE',
+                             '/etc/architect/api.yml')
 
-SECRET_KEY = '^0r*t3%t@h-auaqh+gq(bxueqc-7)8jryh#)_l4yd315))$*@z'
+CONFIG = load_yaml_json_file(CONFIG_FILE)
+
+# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+BASE_TEMPLATES = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                              'templates')
+
+if 'debug' in CONFIG:
+    DEBUG = CONFIG['debug']
+else:
+    DEBUG = True
+
+if 'secret_key' in CONFIG:
+    SECRET_KEY = CONFIG['secret_key']
+else:
+    SECRET_KEY = '^0r*t3%t@h-auaqh+gq(bxueqc-7)8jryh#)_l4yd315))$*@z'
 
 ALLOWED_HOSTS = ['*']
 
@@ -50,23 +67,12 @@ GRAPHENE = {
     'SCHEMA': 'architect.schema.schema'
 }
 
-CONFIG_FILE = os.environ.get('ARCHITECT_CONFIG_FILE',
-                             '/etc/architect/api.yml')
-
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-CONFIG = load_yaml_json_file(CONFIG_FILE)
-
 WEBROOT = '/'
 LOGIN_URL = None
 LOGOUT_URL = None
 LOGIN_REDIRECT_URL = None
 STATIC_ROOT = None
 STATIC_URL = None
-
-BASE_TEMPLATES = os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                              'templates')
 
 TEMPLATES = [
     {
@@ -230,8 +236,12 @@ RECLASS_ROLE_BLACKLIST = [
     'common'
 ]
 
-BROKER_URL = 'redis://localhost:6379'
-CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+if 'broker' in CONFIG:
+    BROKER_URL =  'redis://' + CONFIG['broker']['host'] + ':' + str(CONFIG['broker']['port']) + '/' + str(CONFIG['broker']['number'])
+else:
+    BROKER_URL = 'redis://localhost:6379'
+
+CELERY_RESULT_BACKEND = BROKER_URL
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'

@@ -23,7 +23,7 @@ DEFAULT_RESOURCES = [
     'k8s_daemon_set',
     'k8s_deployment',
     'k8s_endpoint',
-    'k8s_event',
+#    'k8s_event',
     'k8s_horizontal_pod_autoscaler',
     'k8s_ingress',
     'k8s_job',

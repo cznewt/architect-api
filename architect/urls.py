@@ -2,11 +2,13 @@
 Architect service URL configuration
 """
 from django.contrib import admin
-from django.urls import path
+from django.contrib.staticfiles import views
+from django.urls import path, re_path
 from django.views import generic
 from django.conf.urls import include
 from graphene_django.views import GraphQLView
 from architect.views import FormSuccessView
+
 
 urlpatterns = [
     path('',
@@ -42,4 +44,5 @@ urlpatterns = [
     path('success',
          FormSuccessView.as_view(),
          name='form_success'),
+    re_path(r'^static/(?P<path>.*)$', views.serve),
 ]

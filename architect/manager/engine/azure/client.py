@@ -22,6 +22,7 @@ logger = get_logger(__name__)
 
 DEFAULT_RESOURCES = [
     'az_subscription',
+#    'az_load_balancer',
     'az_location',
     'az_resource_group',
     'az_managed_cluster',
@@ -191,6 +192,10 @@ class MicrosoftAzureClient(BaseClient):
             for network in self.network:
                 for subnet in self.network_api.subnets.list(resource_group_name=network[0], virtual_network_name=network[1], raw=True):
                     response.append(subnet)
+        elif kind == 'az_load_balancer':
+            for subscription in self.subscription_api.subscriptions.list(raw=True):
+                for load_balancer in self.network_api.load_balancers.list_all(raw=True):
+                    response.append(load_balancer)
         elif kind == 'az_network_interface':
             for network_interface in self.network_api.network_interfaces.list(raw=True):
                 response.append(network_interface)
@@ -236,6 +241,71 @@ class MicrosoftAzureClient(BaseClient):
             for item in metadata:
                 resource = item.__dict__
                 self._create_resource(resource['name'],
+                                      resource['name'],
+                                      kind,
+                                      metadata=resource)
+        elif kind == 'az_load_balancer':
+            for item in metadata:
+                resource = item.__dict__
+                resource['sku'] = resource['sku'].__dict__
+                if resource['inbound_nat_pools'] is not None:
+                    inbound_nat_pools = []
+                    for res in resource.pop('inbound_nat_pools'):
+                        if not isinstance(res, str):
+                            res = res.__dict__
+                        inbound_nat_pools.append(res)
+                    resource['inbound_nat_pools'] = inbound_nat_pools
+                if resource['outbound_rules'] is not None:
+                    outbound_rules = []
+                    for res in resource.pop('outbound_rules'):
+                        if not isinstance(res, str):
+                            res = res.__dict__
+                        outbound_rules.append(res)
+                    resource['outbound_rules'] = outbound_rules
+                if resource['inbound_nat_rules'] is not None:
+                    inbound_nat_rules = []
+                    for res in resource.pop('inbound_nat_rules'):
+                        if not isinstance(res, str):
+                            res = res.__dict__
+                        inbound_nat_rules.append(res)
+                    resource['inbound_nat_rules'] = inbound_nat_rules
+                if resource['probes'] is not None:
+                    probes = []
+                    for res in resource.pop('probes'):
+                        if not isinstance(res, str):
+                            res = res.__dict__
+                        if res['load_balancing_rules'] is not None:
+                            load_balancing_rules = []
+                            for subres in resource.pop('load_balancing_rules'):
+                                if not isinstance(subres, str):
+                                    subres = subres.__dict__
+                                load_balancing_rules.append(subres)
+                            res['load_balancing_rules'].append(load_balancing_rules)
+                        probes.append(res)
+                    resource['probes'] = probes
+                if resource['frontend_ip_configurations'] is not None:
+                    frontend_ip_configurations = []
+                    for res in resource.pop('frontend_ip_configurations'):
+                        if not isinstance(res, str):
+                            res = res.__dict__
+                        frontend_ip_configurations.append(res)
+                    resource['frontend_ip_configurations'] = frontend_ip_configurations
+                if resource['backend_address_pools'] is not None:
+                    backend_address_pools = []
+                    for res in resource.pop('backend_address_pools'):
+                        if not isinstance(res, str):
+                            res = res.__dict__
+                        backend_address_pools.append(res)
+                    resource['backend_address_pools'] = backend_address_pools
+                if resource['load_balancing_rules'] is not None:
+                    load_balancing_rules = []
+                    for res in resource.pop('load_balancing_rules'):
+                        if not isinstance(res, str):
+                            res = res.__dict__
+                        load_balancing_rules.append(res)
+                    resource['load_balancing_rules'] = load_balancing_rules
+                logger.info(resource)
+                self._create_resource(resource['id'],
                                       resource['name'],
                                       kind,
                                       metadata=resource)
@@ -344,6 +414,14 @@ class MicrosoftAzureClient(BaseClient):
                     resource['network_security_group'] = resource.pop('network_security_group').__dict__
                 if resource['dhcp_options'] is not None:
                     resource['dhcp_options'] = resource.pop('dhcp_options').__dict__
+                if len(resource['virtual_network_peerings']) > 0:
+                    virtual_network_peerings = []
+                    for res in resource.pop('virtual_network_peerings'):
+                        res = res.__dict__
+                        res['remote_virtual_network'] = res.pop('remote_virtual_network').__dict__
+                        res['remote_address_space'] = res.pop('remote_address_space').__dict__
+                        virtual_network_peerings.append(res)
+                    resource['virtual_network_peerings'] = virtual_network_peerings
                 if resource['subnets'] is not None:
                     subnets = []
                     for res in resource.pop('subnets'):

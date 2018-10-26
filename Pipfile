@@ -1,0 +1,78 @@
+[[source]]
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[requires]
+python_version = "3.6"
+
+[packages]
+
+python-memcached = "*"
+psycopg2-binary = "*"
+redis = "*"
+
+uwsgi = {version = ">=2.0.0", platform_system = "!= 'Windows'"}
+celery = {version = "*", extras = ["redis"]}
+pyaml = "*"
+pyyaml = "*"
+jsonschema = "*"
+rfc3339 = "*"
+iso8601 = "*"
+Jinja2 = "*"
+petname = "*"
+
+reclass = {git = "https://github.com/salt-formulas/reclass.git", ref = "master"}
+python-jenkins = "*"
+elasticsearch-dsl = "*"
+os_client_config = "*"
+python-cinderclient = "*"
+python-glanceclient = "*"
+python-heatclient = "*"
+python-keystoneclient = "*"
+python-novaclient = "*"
+python-neutronclient = "*"
+pykube = "*"
+boto3 = "*"
+azure = "*"
+tosca-parser = "*"
+salt-pepper = "*"
+python-terraform = "*"
+pydot = "*"
+graphviz = "*"
+juju = "*"
+homeassistant = "*"
+pandas = "*"
+numpy = "*"
+Django = "*"
+django-formtools = "*"
+django-compressor = "*"
+django-jsonview = "*"
+django-extensions = "*"
+django-npm = "*"
+django_select2 = "*"
+django-filter = "*"
+django-crispy-forms = "*"
+graphene-django = ">=2.0"
+djangorestframework = "*"
+
+[dev-packages]
+
+pytest = "*"
+pytest-django = "*"
+pytest-vcr = "*"
+pytest-mock = "*"
+pytest-xdist = "*"
+coverage = "*"
+pytest-cov = "*"
+codecov = "*"
+tox = "*"
+pycodestyle = "*"
+pydocstyle = "*"
+pylint = "*"
+pylint_celery = "*"
+pylint_django = "*"
+isort = "*"
+yapf = "*"
+django-extensions = "*"
+pylint-plugin-utils = "*"

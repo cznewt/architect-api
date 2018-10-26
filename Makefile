@@ -2,17 +2,17 @@ CWD=$(shell pwd)
 
 help:
 	@echo "Available actions:"
-	@echo "  build_container_api         Build and publish architect-api docker container"
-	@echo "  build_container_worker      Build and publish architect-worker docker container"
-	@echo "  documentation               Build project documentation"
+	@echo "  build         Build architect-api docker container"
+	@echo "  publish       Publish architect-api docker container"
+	@echo "  doc           Build project documentation"
 
-all: build_container_api
+all: build
 
-build_container_api:
-	docker build -t cznewt/architect-api:latest -f ./api.Dockerfile .
+build:
+	docker build -t cznewt/architect-api:latest -f ./Dockerfile .
 
-build_container_worker:
-	docker build -t cznewt/architect-api:latest -f ./worker.Dockerfile .
+publish:
+	docker push cznewt/architect-api:latest
 
-documentation:
+doc:
 	cd doc && make html && cd ..; done
