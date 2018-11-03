@@ -29,10 +29,12 @@ ENV STATIC_URL ${STATIC_URL:-/static/}
 
 RUN \
     apt-get update && \
-    apt-get install -y libyaml-dev libssl1.1 python3-dev python3-pip libxml2-dev libxslt1-dev libffi-dev graphviz libpq-dev libssl-dev libffi-dev shared-mime-info mime-support rubygems ruby-dev && \
+    apt-get install -y libyaml-dev libssl1.1 git python3-dev python3-pip libxml2-dev libxslt1-dev libffi-dev graphviz libpq-dev libssl-dev libffi-dev shared-mime-info mime-support rubygems ruby-dev debootstrap debian-archive-keyring qemu-user-static binfmt-support dosfstools bmap-tools whois bc crossbuild-essential-armhf m4 bmap-tools dosfstools rsync git-core kpartx wget parted pv && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
-    gem install sass --no-user-install
+    gem install sass --no-user-install && \
+    git clone https://github.com/salt-formulas/beagleboard-image-builder.git /srv/beagle-builder && \
+    git clone https://github.com/salt-formulas/rpi23-gen-image /srv/rpi-builder
 
 ADD architect/ /app/architect/
 ADD manage.py entrypoint.sh /app/

@@ -188,7 +188,6 @@ class SaltStackClient(BaseClient):
                         logger.error('Salt lowtate {} parsing problem on '
                                      '{}'.format(low_state, minion_id))
                         continue
-
                     low_state['minion'] = minion_id
                     self._create_resource('{}|{}'.format(minion_id,
                                                          low_state['__id__']),
@@ -211,19 +210,15 @@ class SaltStackClient(BaseClient):
                 if not isinstance(minion_data, dict):
                     continue
                 for service_name, service in minion_data.items():
-                    if service_name not in settings.RECLASS_SERVICE_BLACKLIST:
+                    if service_name not in settings.SALT_SERVICE_BLACKLIST:
                         if not isinstance(service, dict):
                             logger.error('Salt service {} parsing problem: '
                                          '{} on {}'.format(service_name, service, minion_id))
                             continue
-                        for role_name, role in service.items():
-                            if role_name not in settings.RECLASS_ROLE_BLACKLIST:
-                                service_key = '{}-{}'.format(service_name,
-                                                             role_name)
-                                self._create_resource('{}|{}'.format(minion_id, service_key),
-                                                      service_key,
-                                                      'salt_service',
-                                                      metadata={'pillar': {service_name: {role_name: role}}})
+                            self._create_resource('{}|{}'.format(minion_id, service_name),
+                                                    service_key,
+                                                    'salt_service',
+                                                    metadata={'pillar': {service_name: {role_name: role}}})
 
     def process_relation_metadata(self):
         # Define relationships between minions and master
@@ -249,8 +244,8 @@ class SaltStackClient(BaseClient):
             self._create_relation(
                 'state_of_service',
                 resource_id,
-                '{}|{}-{}'.format(resource['metadata']['minion'],
-                                  split_service[0], split_service[1]))
+                '{}|{}'.format(resource['metadata']['minion'],
+                                  split_service[0]))
 
         for resource_id, resource in self.resources.get('salt_job',
                                                         {}).items():

@@ -222,18 +222,10 @@ if 'public_endpoint' in CONFIG:
 else:
     PUBLIC_ENDPOINT = ''
 
-RECLASS_SERVICE_BLACKLIST = [
-    '_param',
-    '_jenkins',
-    'private_keys',
-    'public_keys',
-    'known_hosts'
-]
-
-RECLASS_ROLE_BLACKLIST = [
-    '_support',
-    '_orchestrate',
-    'common'
+SALT_SERVICE_BLACKLIST = [
+    '_param_',
+    '_reclass_',
+    'saltstack'
 ]
 
 if 'broker' in CONFIG:

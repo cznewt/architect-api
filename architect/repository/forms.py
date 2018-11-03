@@ -36,20 +36,20 @@ class ImageCreateForm(forms.Form):
         create_url = reverse('repository:image_create',
                              kwargs={'repository_name': repository_name})
         repository = Repository.objects.get(name=repository_name)
-        inventory = Inventory.objects.get(name=repository.metadata['inventory'])
-        nodes = InventoryResource.objects.filter(inventory=inventory).order_by('name')
+        inventories = Inventory.objects.filter(name__in=repository.metadata['inventories'])
         hostname_choices = []
-        for node in nodes:
-            hostname_choices.append((node.name, node.name))
+        for inventory in inventories:
+            nodes = InventoryResource.objects.filter(inventory=inventory).order_by('name')
+            for node in nodes:
+                hostname_choices.append((node.name, node.name))
         self.fields['type'] = forms.ChoiceField(label='Image Type',
                                                 choices=repository.client().get_image_types(),
                                                 help_text="Select hardware definion for the new image.")
         self.fields['hostname'] = forms.ChoiceField(label='Node',
                                                     choices=hostname_choices,
-                                                    help_text="Select node from {} inventory.".format(inventory.name))
+                                                    help_text="Select node from supported inventories.")
         self.label = 'Create New Image in {} Repository'.format(repository_name)
         self.modal_class = 'modal-lg'
-
         self.helper = FormHelper()
         self.helper.form_id = 'modal-form'
         self.helper.form_action = create_url
@@ -112,13 +112,19 @@ class ImageCreateForm(forms.Form):
                                                     'generate_key',
                                                     {'minion_id': data['hostname'],
                                                      'force': force}))
-            data['config'] = {
-                'master': '127.0.0.1',
-                'pub_key': keys.result['pub'],
-                'priv_key': keys.result['priv']
-            }
+            try:
+                data['config'] = {
+                    'master': '127.0.0.1',
+                    'pub_key': keys.result['pub'],
+                    'priv_key': keys.result['priv']
+                }
+                resource.metadata['config'] = data['config']
+            except TypeError as e:
+                print(e)
+                resource.status = 'error'
+                resource.save()
+                return
 
-        resource.metadata['config'] = data['config']
         resource.save()
 
         generate_image_task.apply_async((repository_name,
