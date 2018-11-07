@@ -1,0 +1,25 @@
+query:
+  kapitan_complete_graph:
+    name: All Resources
+    layout: graph
+relation:
+  using_provider:
+    relation:
+      default: provider
+default_resource: kapitan_targen
+resource:
+  kapitan_target:
+    client: kapitan
+    icon: fa:server
+    name: Target
+    resource: Kapitan::Targer
+    model:
+      provider:
+        type: relationship_to
+        model: using_provider
+        target: kapitan_provider
+  kapitan_provider:
+    client: kapitan
+    icon: fa:cube
+    name: Provider
+    resource: Kapitan::Provider

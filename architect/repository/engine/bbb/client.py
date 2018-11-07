@@ -19,10 +19,6 @@ class BbbClient(BaseClient):
     def check_status(self):
         return True
 
-    def get_script_file(self):
-        script_file = '{}/script.sh'.format(self.metadata)
-        return script_file
-
     def get_image_types(self):
         return (
             ('bbb-armhf-debian-stretch-4.9', 'BeagleBone Black ARM, Debian Stretch, kernel 4.9'),
@@ -83,7 +79,6 @@ class BbbClient(BaseClient):
             os.remove(image_path)
         if os.path.isfile(map_path):
             os.remove(map_path)
-
 
     def generate_image(self, config_context):
         config_context['repository'] = self.metadata

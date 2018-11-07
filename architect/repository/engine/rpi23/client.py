@@ -45,10 +45,12 @@ class Rpi23Client(BaseClient):
         return data
 
     def get_image_block_map(self, image_name):
-        image_path = '{}/{}.bmap'.format(self.metadata['image_dir'],
-                                         image_name)
-        with open(image_path) as file_handler:
-            return file_handler.read()
+        map_path = '{}/{}.bmap'.format(self.metadata['image_dir'],
+                                       image_name)
+        if os.path.isfile(map_path):
+            with open(map_path) as file_handler:
+                return file_handler.read()
+        return None
 
     def get_image_location(self, image_name):
         return '{}/{}.img'.format(self.metadata['image_dir'],
@@ -78,7 +80,6 @@ class Rpi23Client(BaseClient):
         if os.path.isfile(map_path):
             os.remove(map_path)
 
-
     def generate_image(self, config_context):
         config_context['repository'] = self.metadata
         script_file = self.get_script_file(config_context)
@@ -90,8 +91,8 @@ class Rpi23Client(BaseClient):
         try:
             start = time.time()
             cmd_output = subprocess.check_output(script_file,
-                                                shell=True,
-                                                stderr=subprocess.STDOUT).decode('UTF-8')
+                                                 shell=True,
+                                                 stderr=subprocess.STDOUT).decode('UTF-8')
             end = time.time()
             duration = end - start
         except subprocess.CalledProcessError as ex:

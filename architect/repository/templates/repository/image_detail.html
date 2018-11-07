@@ -10,13 +10,15 @@ Image "{{ image.name }}"
 
 {% block title %}
 Image "{{ image.name }}"
-{% endblock %} 
+{% endblock %}
 
 {% block actions %}
 {% if image.status == 'active' %}
-<a href="{% url 'repository:image_download' repository.name image.name %}" class="btn btn-sm btn-outline-primary">{% trans "Download" %}</a>
+<a href="{% url 'repository:image_download' repository.name image.name %}" class="btn btn-sm btn-outline-primary">{%
+    trans "Download" %}</a>
 {% endif %}
-<a href="{% url 'repository:repository_detail' repository.name %}" class="btn btn-sm btn-outline-secondary">Repository detail</a>
+<a href="{% url 'repository:repository_detail' repository.name %}" class="btn btn-sm btn-outline-secondary">Repository
+    detail</a>
 {% endblock %}
 
 {% block content %}
@@ -54,18 +56,21 @@ Image "{{ image.name }}"
         </dl>
     </div>
     <div class="tab-pane" id="config" role="tabpanel">
-        <pre class="text-light"><code>{{ image.cache.config }}</code></pre>
+        <pre class="text-light">
+            <code>{{ image.cache.config }}</code>
+        </pre>
     </div>
     <div class="tab-pane" id="command" role="tabpanel">
-        <pre class="text-light"><code>
-{{ image.cache.command }}</code></pre>
+        <pre class="text-light">
+            <code>{{ image.cache.command }}</code>
+        </pre>
     </div>
-     {% if image.cache.block_map %}
+    {% if image.cache.block_map %}
     <div class="tab-pane" id="blockmap" role="tabpanel">
-        <pre class="text-light"><code>
-{{ image.cache.block_map }}</code></pre>
+        <pre class="text-light">
+            <code>{{ image.cache.block_map }}</code>
+        </pre>
     </div>
     {% endif %}
 </div>
-
 {% endblock %}

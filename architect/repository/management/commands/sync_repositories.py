@@ -14,6 +14,7 @@ class Command(BaseCommand):
                 repository = Repository(**{
                     'name': engine_name,
                     'engine': engine_kind,
+                    'status': 'active',
                     'metadata': engine
                 })
                 repository.save()

@@ -53,8 +53,10 @@ class Repository(models.Model):
         if self.metadata is None:
             return '-'
         elif self.engine in ['rpi23', 'bbb']:
-            return mark_safe('Manager: {}<br>Inventory: {}'.format(
-            self.metadata.get('manager', '-'), self.metadata.get('inventory', '-')))
+            return mark_safe('Manager: {}<br>Inventories: {}'.format(
+                self.metadata.get('manager', '-'),
+                ', '.join(self.metadata.get('inventories', [])))
+            )
         else:
             return '-'
 
@@ -70,8 +72,8 @@ class Resource(models.Model):
     uid = models.CharField(max_length=511)
     name = models.CharField(max_length=511)
     repository = models.ForeignKey(Repository,
-                                  on_delete=models.CASCADE,
-                                  related_name='images')
+                                   on_delete=models.CASCADE,
+                                   related_name='images')
     kind = models.CharField(max_length=32)
     size = models.IntegerField(default=0)
     metadata = JSONField(blank=True, null=True)

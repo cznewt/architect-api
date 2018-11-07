@@ -17,6 +17,7 @@ DEFAULT_RESOURCES = [
     # 'salt_job',
 ]
 
+
 class SaltStackClient(BaseClient):
 
     def __init__(self, **kwargs):
@@ -215,10 +216,10 @@ class SaltStackClient(BaseClient):
                             logger.error('Salt service {} parsing problem: '
                                          '{} on {}'.format(service_name, service, minion_id))
                             continue
-                            self._create_resource('{}|{}'.format(minion_id, service_name),
-                                                    service_key,
-                                                    'salt_service',
-                                                    metadata={'pillar': {service_name: {role_name: role}}})
+                        self._create_resource('{}|{}'.format(minion_id, service_name),
+                                              service_name,
+                                              'salt_service',
+                                              metadata={'pillar': service})
 
     def process_relation_metadata(self):
         # Define relationships between minions and master
@@ -245,7 +246,7 @@ class SaltStackClient(BaseClient):
                 'state_of_service',
                 resource_id,
                 '{}|{}'.format(resource['metadata']['minion'],
-                                  split_service[0]))
+                               split_service[0]))
 
         for resource_id, resource in self.resources.get('salt_job',
                                                         {}).items():

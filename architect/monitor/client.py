@@ -65,7 +65,6 @@ class BaseClient(object):
             'metadata': metadata,
         })
 
-
     def save(self):
         monitor = Monitor.objects.get(name=self.name)
         for resource_type, resources in self.resources.items():
@@ -133,7 +132,6 @@ class BaseClient(object):
                     res = Relationship.objects.create(**resource)
                     res.save()
 
-
     def log_error(self, flag, message):
         logger.error('Prometheus API replied with '
                      'error {}: {}'.format(flag, message))
@@ -179,8 +177,8 @@ class BaseClient(object):
 
     def get_range(self):
         data = json.loads(requests.get(self._url(),
-                          cert=self.cert,
-                          verify=self.verify).text)
+                                       cert=self.cert,
+                                       verify=self.verify).text)
         return self.process_range(data)
 
     def get_instant_params(self):

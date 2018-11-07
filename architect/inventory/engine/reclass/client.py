@@ -49,9 +49,9 @@ class ReclassClient(BaseClient):
                               self.metadata['node_dir'],
                               self.metadata['class_dir'])
         settings = Settings({'no_refs': False,
-            'pretty_print': True,
-            'output': 'yaml'
-        })
+                             'pretty_print': True,
+                             'output': 'yaml'
+                             })
         reclass = Core(storage, None, settings)
         if resource is None:
             return reclass.inventory()["nodes"]
@@ -70,7 +70,11 @@ class ReclassClient(BaseClient):
     def parameter_list(self, resource=None):
         resource_list = {}
         for node_name, node in self.inventory().items():
-            resource_list[node_name] = node['parameters']
+            parameters = {}
+            for param_name, param in node['parameters'].items():
+                if param_name not in self.metadata.get('filter_node_params', []):
+                    parameters[param_name] = param
+            resource_list[node_name] = parameters
         if resource is None:
             return resource_list
         else:

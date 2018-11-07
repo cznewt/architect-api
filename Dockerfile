@@ -29,7 +29,7 @@ ENV STATIC_URL ${STATIC_URL:-/static/}
 
 RUN \
     apt-get update && \
-    apt-get install -y libyaml-dev libssl1.1 git python3-dev python3-pip libxml2-dev libxslt1-dev libffi-dev graphviz libpq-dev libssl-dev libffi-dev shared-mime-info mime-support rubygems ruby-dev debootstrap debian-archive-keyring qemu-user-static binfmt-support dosfstools bmap-tools whois bc crossbuild-essential-armhf m4 bmap-tools dosfstools rsync git-core kpartx wget parted pv && \
+    apt-get install -y libyaml-dev libssl1.1 git python3-dev python3-pip libxml2-dev libxslt1-dev libffi-dev graphviz libpq-dev libssl-dev libffi-dev shared-mime-info mime-support rubygems ruby-dev debootstrap debian-archive-keyring qemu-user-static binfmt-support dosfstools bmap-tools whois bc crossbuild-essential-armhf m4 bmap-tools dosfstools rsync git-core kpartx wget parted pv sudo && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
     gem install sass --no-user-install && \
@@ -51,15 +51,12 @@ RUN SECRET_KEY=dummy \
 RUN useradd --system architect && \
     mkdir -p /app/media /app/static && \
     chmod 777 /app/entrypoint.sh && \
+    chmod 777 /srv -R && \
     chown -R architect:architect /app/
 
 USER architect
 
-#EXPOSE 8181
-#ENV PORT 8181
-
 ENV PYTHONUNBUFFERED 1
 ENV PROCESSES 4
 
-#CMD ["uwsgi", "/app/architect/wsgi/uwsgi.ini"]
 CMD ["/app/entrypoint.sh"]

@@ -95,5 +95,3 @@ class ImageDeleteView(FormView):
     def form_valid(self, form):
         form.handle()
         return super().form_valid(form)
-
-

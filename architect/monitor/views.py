@@ -56,6 +56,7 @@ class MonitorSyncView(LoginRequiredMixin, RedirectView):
         sync_monitor_resources_task.apply_async((kwargs.get('monitor_name'),))
         return super().get_redirect_url(*args, **kwargs)
 
+
 class MonitorDetailView(LoginRequiredMixin, TemplateView):
     template_name = "monitor/monitor_detail.html"
 

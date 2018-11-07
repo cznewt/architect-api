@@ -3,6 +3,7 @@ import os
 import uuid
 import time
 import datetime
+from urllib.parse import urlparse
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Div, Submit, HTML
 from django import forms
@@ -18,9 +19,11 @@ from architect.manager.tasks import process_resource_action_task
 class SlugField(forms.CharField):
     default_validators = [validators.validate_slug]
 
-KEY_CHOICES=[('keep', "Reuse keypair from last image build"),
-             ('generate','Generate and only accept new keypair'),
-             ('force_generate','Generate and force accept new keypair')]
+
+KEY_CHOICES = [('keep', "Reuse keypair from last image build"),
+               ('generate', 'Generate and only accept new keypair'),
+               ('force_generate', 'Generate and force accept new keypair')]
+
 
 class ImageCreateForm(forms.Form):
 
@@ -108,13 +111,13 @@ class ImageCreateForm(forms.Form):
                 force = False
             salt_master = ManagerResource.objects.get(manager=manager, kind='salt_master')
             keys = process_resource_action_task.apply((manager.name,
-                                                    salt_master.uid,
-                                                    'generate_key',
-                                                    {'minion_id': data['hostname'],
-                                                     'force': force}))
+                                                       salt_master.uid,
+                                                       'generate_key',
+                                                       {'minion_id': data['hostname'],
+                                                        'force': force}))
             try:
                 data['config'] = {
-                    'master': '127.0.0.1',
+                    'master': 'salt-master',  # urlparse(salt_master.metadata['auth_url']).hostname,
                     'pub_key': keys.result['pub'],
                     'priv_key': keys.result['priv']
                 }
@@ -129,6 +132,7 @@ class ImageCreateForm(forms.Form):
 
         generate_image_task.apply_async((repository_name,
                                          data))
+
 
 class ImageDeleteForm(forms.Form):
 
