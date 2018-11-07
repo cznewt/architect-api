@@ -197,6 +197,7 @@ class ResourceClassifyView(View):
         }
         return HttpResponse('OK')
 
+
 class ClassGenerateView(LoginRequiredMixin, FormView):
     template_name = "base_form.html"
     form_class = ResourceCreateForm
@@ -321,4 +322,4 @@ class ClassGenerateWizardView(InventorySessionWizardView):
         return context
 
     def done(self, form_list, **kwargs):
-        return ""#HttpResponseRedirect(reverse_lazy('inventory:inventory_detail', kwargs['inventory_name']))
+        return ""  # HttpResponseRedirect(reverse_lazy('inventory:inventory_detail', kwargs['inventory_name']))

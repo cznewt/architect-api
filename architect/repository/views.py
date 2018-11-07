@@ -9,6 +9,7 @@ from django.views.generic.detail import SingleObjectMixin
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import FormView
 from django.views.generic.base import RedirectView
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from architect.views import DownloadView
@@ -16,7 +17,7 @@ from .models import Repository, Resource
 from .forms import ImageCreateForm, ImageDeleteForm
 
 
-class RepositoryListView(TemplateView):
+class RepositoryListView(LoginRequiredMixin, TemplateView):
 
     template_name = "repository/repository_list.html"
 
@@ -26,7 +27,7 @@ class RepositoryListView(TemplateView):
         return context
 
 
-class RepositoryDetailView(TemplateView):
+class RepositoryDetailView(LoginRequiredMixin, TemplateView):
 
     template_name = "repository/repository_detail.html"
 
@@ -36,7 +37,7 @@ class RepositoryDetailView(TemplateView):
         return context
 
 
-class ImageCreateView(FormView):
+class ImageCreateView(LoginRequiredMixin, FormView):
 
     template_name = "base_form.html"
     form_class = ImageCreateForm
@@ -54,7 +55,7 @@ class ImageCreateView(FormView):
         return super().form_valid(form)
 
 
-class ImageDetailView(TemplateView):
+class ImageDetailView(LoginRequiredMixin, TemplateView):
 
     template_name = "repository/image_detail.html"
 
@@ -65,7 +66,7 @@ class ImageDetailView(TemplateView):
         return context
 
 
-class ImageDownloadView(SingleObjectMixin, DownloadView):
+class ImageDownloadView(LoginRequiredMixin, SingleObjectMixin, DownloadView):
     model = Resource
     use_stream = True
     mimetype = 'application/octet-stream'
@@ -81,7 +82,7 @@ class ImageDownloadView(SingleObjectMixin, DownloadView):
         return self.get_object().name + '.img'
 
 
-class ImageDeleteView(FormView):
+class ImageDeleteView(LoginRequiredMixin, FormView):
 
     template_name = "base_form.html"
     form_class = ImageDeleteForm

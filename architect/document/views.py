@@ -2,7 +2,7 @@
 
 from django.views.generic.base import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .models import Document
+from architect.document.models import Document
 
 
 class DocumentListView(LoginRequiredMixin, TemplateView):
