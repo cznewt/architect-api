@@ -204,7 +204,7 @@ chroot_post_uenv_txt=""
 chroot_tarball="enable"
 
 ENABLE_SALT=true
-SALT_VERSION="2017.7"
+SALT_VERSION="2018.3"
 SALT_RELEASE_NUM="{{ os.release }}"
 SALT_RELEASE_CODE="{{ os.codename }}"
 CONFIGURE_SALT=true

@@ -53,7 +53,7 @@ REDUCE_SSHD=false
 REDUCE_LOCALE=false
 
 ENABLE_SALT=true
-SALT_VERSION=2017.7
+SALT_VERSION="2018.3"
 CONFIGURE_SALT=true
 SALT_MINION="{{ hostname }}"
 SALT_MASTER="{{ config.master }}"
