@@ -36,6 +36,7 @@ pandas
 numpy
 
 git+https://github.com/salt-formulas/reclass.git@master
+git+https://github.com/cznewt/kapitan.git@master
 
 Django
 django-formtools

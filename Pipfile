@@ -22,6 +22,7 @@ iso8601 = "*"
 Jinja2 = "*"
 petname = "*"
 
+kapitan = {git = "https://github.com/cznewt/kapitan.git", ref = "master"}
 reclass = {git = "https://github.com/salt-formulas/reclass.git", ref = "master"}
 python-jenkins = "*"
 elasticsearch-dsl = "*"

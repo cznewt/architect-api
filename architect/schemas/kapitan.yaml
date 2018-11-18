@@ -6,7 +6,7 @@ relation:
   using_provider:
     relation:
       default: provider
-default_resource: kapitan_targen
+default_resource: kapitan_target
 resource:
   kapitan_target:
     client: kapitan

@@ -243,6 +243,8 @@ class ManagerQueryJSONView(JSONDataView):
                 transform = 'default_hier'
                 options = query.get('hierarchy_layers', {})
                 data = transform_data(raw_data, transform, options)
+            elif layout == 'supergraph':
+                pass
             cache.set(query_cache_key,
                       data,
                       settings.RESOURCE_CACHE_DURATION)

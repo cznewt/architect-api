@@ -40,7 +40,7 @@ var QuantitativePlot = function (QuantitativePlot) {
             graph.chart = bb.generate({
                 data: {
                     x: "x",
-                    xFormat: '%Y-%m-%d %H:%M:%S',
+                  //  xFormat: '%Y-%m-%d %H:%M:%S',
                     columns: graph._data,
                     type: "radar",
                     labels: false

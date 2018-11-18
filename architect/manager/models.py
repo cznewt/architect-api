@@ -64,7 +64,7 @@ class Manager(models.Model):
             return '-'
         elif self.engine == 'amazon':
             return 'Access key: {} ({} region)'.format(self.metadata.get('aws_access_key_id', '-'),
-                                    self.metadata.get('region', '-'))
+                                                       self.metadata.get('region', '-'))
         elif self.engine in ['jenkins', 'saltstack', 'spinnaker']:
             return 'URL: {}'.format(self.metadata.get('auth_url', '-'))
         elif self.engine == 'heat':
@@ -81,6 +81,8 @@ class Manager(models.Model):
             return 'Path: {}'.format(self.metadata.get('template_path', '-'))
         elif self.engine == 'azure':
             return 'Subscription: {}'.format(self.metadata.get('subscription_id', '-'))
+        elif self.engine == 'kapitan':
+            return 'Path: {}'.format(self.metadata.get('base_dir', '-'))
         else:
             return '-'
 

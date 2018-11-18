@@ -124,10 +124,10 @@ else:
     }
 
 AUTH_PASSWORD_VALIDATORS = [
-    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',},
-    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',},
-    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',},
-    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',},
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator', },
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator', },
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator', },
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator', },
 ]
 
 LANGUAGE_CODE = 'en-us'
@@ -158,6 +158,15 @@ if STATIC_URL is None:
     STATIC_URL = WEBROOT + 'static/'
 
 RESOURCE_CACHE_DURATION = 10
+
+ARCHITECT_STORAGE = CONFIG.get('storage', {
+    'model': {
+        'kind': 'fs'
+    },
+    'images': {
+        'kind': 'fs'
+    }
+})
 
 INVENTORY_ENGINES = CONFIG.get('inventory', {})
 MANAGER_ENGINES = CONFIG.get('manager', {})
@@ -190,6 +199,7 @@ else:
         "helm": "architect.manager.engine.helm.client.HelmClient",
         "homeassistant": "architect.manager.engine.homeassistant.client.HomeAssistantClient",
         "jenkins": "architect.manager.engine.jenkins.client.JenkinsClient",
+        "kapitan": "architect.manager.engine.kapitan.client.KapitanClient",
         "kubernetes": "architect.manager.engine.kubernetes.client.KubernetesClient",
         "openstack": "architect.manager.engine.openstack.client.OpenStackClient",
         "saltstack": "architect.manager.engine.saltstack.client.SaltStackClient",
@@ -229,7 +239,7 @@ SALT_SERVICE_BLACKLIST = [
 ]
 
 if 'broker' in CONFIG:
-    BROKER_URL =  'redis://' + CONFIG['broker']['host'] + ':' + str(CONFIG['broker']['port']) + '/' + str(CONFIG['broker']['number'])
+    BROKER_URL = 'redis://' + CONFIG['broker']['host'] + ':' + str(CONFIG['broker']['port']) + '/' + str(CONFIG['broker']['number'])
 else:
     BROKER_URL = 'redis://localhost:6379'
 
