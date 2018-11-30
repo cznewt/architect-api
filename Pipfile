@@ -10,10 +10,10 @@ python_version = "3.6"
 
 python-memcached = "*"
 psycopg2-binary = "*"
-redis = "*"
+redis = "~=2.10.5"
 
 uwsgi = {version = ">=2.0.0", platform_system = "!= 'Windows'"}
-celery = {version = "*", extras = ["redis"]}
+celery = "*"
 pyaml = "*"
 pyyaml = "*"
 jsonschema = "*"

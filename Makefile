@@ -1,6 +1,6 @@
 CWD=$(shell pwd)
 
-VERSION = "0.5.3"
+VERSION = "0.5.5"
 ORGANIZATION ?= "cznewt"
 
 help:
