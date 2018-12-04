@@ -1,6 +1,6 @@
 CWD=$(shell pwd)
 
-VERSION = "0.5.5"
+VERSION = "0.5.6"
 ORGANIZATION ?= "cznewt"
 
 help:
@@ -16,9 +16,11 @@ build:
 	docker tag $(ORGANIZATION)/architect-api:$(VERSION) $(ORGANIZATION)/architect-api:latest
 
 publish:
-	docker push cznewt/architect-api:latest
 	docker push $(ORGANIZATION)/architect-api:$(VERSION)
 	docker push $(ORGANIZATION)/architect-api:latest
 
 doc:
 	cd doc && make html && cd ..; done
+
+update_pipenv:
+	pipenv lock

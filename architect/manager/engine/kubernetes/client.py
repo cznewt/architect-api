@@ -23,7 +23,7 @@ DEFAULT_RESOURCES = [
     'k8s_daemon_set',
     'k8s_deployment',
     'k8s_endpoint',
-#    'k8s_event',
+    #    'k8s_event',
     'k8s_horizontal_pod_autoscaler',
     'k8s_ingress',
     'k8s_job',
@@ -92,28 +92,28 @@ class KubernetesClient(BaseClient):
         return status
 
     def get_kubeconfig(self):
-            config_content = {
-                'apiVersion': 'v1',
-                'clusters': [{
-                    'cluster': self.metadata['cluster'],
-                    'name': self.name,
-                }],
-                'contexts': [{
-                    'context': {
-                        'cluster': self.name,
-                        'user': self.name,
-                    },
-                    'name': self.name,
-                }],
-                'current-context': self.name,
-                'kind': 'Config',
-                'preferences': {},
-                'users': [{
-                    'name': self.name,
-                    'user': self.metadata['user']
-                }]
-            }
-            return pyaml.dump(config_content)
+        config_content = {
+            'apiVersion': 'v1',
+            'clusters': [{
+                'cluster': self.metadata['cluster'],
+                'name': self.name,
+            }],
+            'contexts': [{
+                'context': {
+                    'cluster': self.name,
+                    'user': self.name,
+                },
+                'name': self.name,
+            }],
+            'current-context': self.name,
+            'kind': 'Config',
+            'preferences': {},
+            'users': [{
+                'name': self.name,
+                'user': self.metadata['user']
+            }]
+        }
+        return pyaml.dump(config_content)
 
     def update_resources(self, resources=None):
         if self.auth():
@@ -390,7 +390,7 @@ class KubernetesClient(BaseClient):
 
         for resource_id, resource in self.resources.get('k8s_pod', {}).items():
             # Define relationships between pods and nodes
-            if resource['metadata']['spec']['nodeName'] is not None:
+            if resource['metadata']['spec'].get('nodeName', None) is not None:
                 node = resource['metadata']['spec']['nodeName']
                 self._create_relation('on_k8s_node',
                                       resource_id,
@@ -402,8 +402,8 @@ class KubernetesClient(BaseClient):
                     if 'configMap' in volume:
                         if '{}-{}'.format(namespace, volume['configMap']['name']) in config_map_2_uid:
                             self._create_relation('uses_k8s_config_map',
-                                                resource_id,
-                                                config_map_2_uid['{}-{}'.format(namespace, volume['configMap']['name'])])
+                                                  resource_id,
+                                                  config_map_2_uid['{}-{}'.format(namespace, volume['configMap']['name'])])
                         else:
                             logger.error('Error creating rel {}-{}'.format(namespace, volume['configMap']['name']))
 
@@ -436,7 +436,8 @@ class KubernetesClient(BaseClient):
                 logger.error('No pods found for selectors {}, service {} {}'.format(resource['metadata']['spec'].get(
                     'selectors', {}), namespace, resource['metadata']['metadata']['name']))
             else:
-                logger.info('{} pods found for selectors {}, service {} {}'.format(len(uid_list), resource['metadata']['spec'].get('selector', {}), namespace, resource['metadata']['metadata']['name']))
+                logger.info('{} pods found for selectors {}, service {} {}'.format(len(uid_list),
+                                                                                   resource['metadata']['spec'].get('selector', {}), namespace, resource['metadata']['metadata']['name']))
 
                 for uid in uid_list:
                     self._create_relation(
@@ -447,8 +448,8 @@ class KubernetesClient(BaseClient):
         for resource_id, resource in self.resources.get('k8s_container',
                                                         {}).items():
             self._create_relation('in_k8s_pod',
-                                    resource['metadata']['pod'],
-                                    resource_id)
+                                  resource['metadata']['pod'],
+                                  resource_id)
 
     def get_resource_action_fields(self, resource, action):
         fields = {}
@@ -474,9 +475,7 @@ class KubernetesClient(BaseClient):
                                                    help_text='The actual KubeConfig to be downloaded',
                                                    widget=forms.Textarea(attrs={'style': 'font-family: monospace;'}))
 
-
         return fields
-
 
     def process_resource_action(self, resource, action, data):
         if resource.kind == 'k8s_service':

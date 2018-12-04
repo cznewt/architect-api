@@ -725,24 +725,24 @@
         },
         "billiard": {
             "hashes": [
-                "sha256:ed65448da5877b5558f19d2f7f11f8355ea76b3e63e1c0a6059f47cfae5f1c84"
+                "sha256:42d9a227401ac4fba892918bba0a0c409def5435c4b483267ebfe821afaaba0e"
             ],
-            "version": "==3.5.0.4"
+            "version": "==3.5.0.5"
         },
         "boto3": {
             "hashes": [
-                "sha256:0a0c0f0859a2be56b23823f8c1d50abf3c89d7d4d054019f24de69eeee9ad75c",
-                "sha256:b429d48b8e99a9fdd18c3aef68370f779e0aa76cfe275a55e1adff427d44ca9a"
+                "sha256:1bb0505de52201ed2f3bafe3b4b1539971a4b08ff048b9d804f6e04f017701fb",
+                "sha256:730c585f7f8031993bd6e3a4d8d0ba62a59efdff2fe38ee073349223f9d6a4b7"
             ],
             "index": "pypi",
-            "version": "==1.9.57"
+            "version": "==1.9.59"
         },
         "botocore": {
             "hashes": [
-                "sha256:6b9edd1e18436bce8b28b95b3dec582588080a90b5636abc1b3a795f5a0e6cf3",
-                "sha256:9dac7753d81e8a725b9a169fd63b43d2a3caeceb51de3fafd5e5bd10e25589cb"
+                "sha256:1bbcc9273899e1b14ab4d00660ce5c6dc23d699a391e11f421e5dff2d3a7014b",
+                "sha256:bcc4ae773091ed632eaf4a6d5bc46c6409659ce138158ec11904a931b21bd8f8"
             ],
-            "version": "==1.12.57"
+            "version": "==1.12.59"
         },
         "celery": {
             "hashes": [
@@ -865,11 +865,11 @@
         },
         "django": {
             "hashes": [
-                "sha256:1ffab268ada3d5684c05ba7ce776eaeedef360712358d6a6b340ae9f16486916",
-                "sha256:dd46d87af4c1bf54f4c926c3cfa41dc2b5c15782f15e4329752ce65f5dad1c37"
+                "sha256:068d51054083d06ceb32ce02b7203f1854256047a0d58682677dd4f81bceabd7",
+                "sha256:55409a056b27e6d1246f19ede41c6c610e4cab549c005b62cbeefabc6433356b"
             ],
             "index": "pypi",
-            "version": "==2.1.3"
+            "version": "==2.1.4"
         },
         "django-appconf": {
             "hashes": [
@@ -1016,11 +1016,11 @@
         },
         "homeassistant": {
             "hashes": [
-                "sha256:75ad4b27e755f6f23a3d92cc1a2513fde1c631aba4eade598a2496611a227fa9",
-                "sha256:9e5cfcd7ad20a2ea8f90c2be58df754e8dfdd6cf4d99bfba2727664fedfab698"
+                "sha256:0c4cde5ced78cfe257b4548e4a96ea097be30f85a559b4234230c3e2f633ef9d",
+                "sha256:1b6be470369b682ba45a3b8474bec553b3201f862650ead631c7d9da945e229e"
             ],
             "index": "pypi",
-            "version": "==0.83.2"
+            "version": "==0.83.3"
         },
         "httplib2": {
             "hashes": [
@@ -1110,7 +1110,7 @@
         },
         "kapitan": {
             "git": "https://github.com/cznewt/kapitan.git",
-            "ref": "20c2138c53075e7bf65c8e8244faea48c2689709"
+            "ref": "f7cb007795302ea6f1b55c93fc65cd13cb219474"
         },
         "keystoneauth1": {
             "hashes": [
@@ -1175,12 +1175,22 @@
         "msgpack": {
             "hashes": [
                 "sha256:102802a9433dcf36f939b632cce9dea87310b2f163bb37ffc8bc343677726e88",
+                "sha256:3055c44f39833b6edb27fd48028dc7822d1fd75bfeef8a2434caed8d62bb24ee",
+                "sha256:3b7fd45c8e9e537640f541d3699b1773cf5cb9345d4a75f93baa8f055084e59c",
                 "sha256:64abc6bf3a2ac301702f5760f4e6e227d0fd4d84d9014ef9a40faa9d43365259",
+                "sha256:6e962c4adc7970af5a3d6a4f9bb87c617b1bd041fd9ab42355a263d421017ed9",
                 "sha256:72259661a83f8b08ef6ee83927ce4937f841226735824af5b10a536d886eeb36",
+                "sha256:78e297c3996fd9f35090fbddd1c148c2a71e0d6024500bcf3af90a4b9698bc19",
                 "sha256:85f1342b9d7549dd3daf494100d47a3dc7daae703cdbfc2c9ee7bbdc8a492cba",
                 "sha256:8ce9f88b6cb75d74eda2a5522e5c2e5ec0f17fd78605d6502abb61f46b306865",
+                "sha256:8d0af8d64198e4b4f942a15ea9cb0dd9c4a0bd3e4e2ba57425e108bdbd4c3a0f",
                 "sha256:9936ce3a530ca78db60b6631003b5f4ba383cfb1d9830a27d1b5c61857226e2f",
-                "sha256:cb4e228f3d93779a1d77a1e9d72759b79dfa2975c1a5bd2a090eaa98239fa4b1"
+                "sha256:b688721df31c4bad6f508fb262719eb7e4a3532024c66d3c44ad6a4704519dda",
+                "sha256:c28478328e9cd868ce54e8465eae9fa3605790450c66cc7e8bc416526917ef6e",
+                "sha256:cb4e228f3d93779a1d77a1e9d72759b79dfa2975c1a5bd2a090eaa98239fa4b1",
+                "sha256:d03d0b6e4adf5bd1cbf7a81a20a56c883351947a57b7b85235181b057adf1120",
+                "sha256:d2b179faebd278e5f4e255a6bbc7ccb467f02ed5c4c00c8a68dc926002223a20",
+                "sha256:f1a8f7bd84be103979a73da57be3cb929d702a656162ee466597b816fa9eec97"
             ],
             "version": "==0.6.0"
         },
@@ -1341,10 +1351,10 @@
         },
         "os-service-types": {
             "hashes": [
-                "sha256:2021b68c3c16843e0c863326dcd1f3c41da8c0d5909cd29ed36897113a75f528",
-                "sha256:5790117948d1673319a2dcf4c545c2059a1a933705e8ded586add88200ac9d95"
+                "sha256:93a251556fb1994b15d1a2dbf2262d3ce34df81640de56ab78fe37f4bd5726e7",
+                "sha256:c8198e4bc8aaa3469b2cd0719cb39ed6488fc5e274720dcd59a39057fc39c514"
             ],
-            "version": "==1.3.0"
+            "version": "==1.4.0"
         },
         "osc-lib": {
             "hashes": [
@@ -1376,10 +1386,10 @@
         },
         "oslo.log": {
             "hashes": [
-                "sha256:7b345cd5b74e37d39476e1441f81b966a8f00fb8be3eec9200b2520f9fead3b3",
-                "sha256:83da538490706b38ec300a67b30a2050026bd739545b1a62ff2d7c5c2f038e84"
+                "sha256:e24b593d441a2d1d3dec878bfb8521757f14d32a147ca3320f6664af4b11cc46",
+                "sha256:e7bb326210f04829e6c3b91dac674982cd9a5adf2147c673387cc4a898a8376f"
             ],
-            "version": "==3.41.0"
+            "version": "==3.42.0"
         },
         "oslo.serialization": {
             "hashes": [
@@ -1390,10 +1400,10 @@
         },
         "oslo.utils": {
             "hashes": [
-                "sha256:374bc8f1be9969cc15b7ac70afb5bd2ec58bc1220f5196e6d53ab83c9f0b1888",
-                "sha256:f090f60081c22c5e20bb5a189392384ef1d967ba2709bbde7d5b88198a3a4e77"
+                "sha256:3fd6d40a65a2d5b56d644ca8da585d19b1afe5245ef84542e5983d0e75bafd04",
+                "sha256:54c1ed0f88b1ff6222fdc2d9076d388a245229ff4d356d3490d348c22c15e16a"
             ],
-            "version": "==3.37.1"
+            "version": "==3.38.0"
         },
         "pandas": {
             "hashes": [
@@ -1544,11 +1554,11 @@
         },
         "pydot": {
             "hashes": [
-                "sha256:33babe795de6ea2a26c18455e6d8a78b1dbbea6c41363a6136d9f95e9ce78425",
-                "sha256:dbb8c123ea6ea6cf09eca2403e597244a960b31e70c2a5c8a2a8a2e2594ce191"
+                "sha256:98195d7d01b7dac65f8307d6d8d26ebddbc1dc86528cd4f85700ce70cf14d70b",
+                "sha256:caa91aacce405b2de17c9610c8d43873731239433080d9df5f5a4221baa007f7"
             ],
             "index": "pypi",
-            "version": "==1.3.0"
+            "version": "==1.4.0"
         },
         "pyinotify": {
             "hashes": [
@@ -1789,10 +1799,10 @@
         },
         "rfc3986": {
             "hashes": [
-                "sha256:632b8fcd2ac37f24334316227f909be4f9d0738cbf409404cff6fa5f69a24093",
-                "sha256:8458571c4c57e1cf23593ad860bb601b6a604df6217f829c2bc70dc4b5af941b"
+                "sha256:5ad82677b02b88c8d24f6511b4ee9baa5e7da675599b479fbbc5c9c578b5b737",
+                "sha256:bc3ae4b7cd88a99eff2d3900fcb858d44562fd7f273fc07aeef568b9bb6fc4e1"
             ],
-            "version": "==1.1.0"
+            "version": "==1.2.0"
         },
         "rjsmin": {
             "hashes": [
@@ -1850,10 +1860,10 @@
         },
         "salt-pepper": {
             "hashes": [
-                "sha256:02cb86e5eb746216114da5ceffbc31ade47e2bcd6e971e19d198ebe0591a4cd5"
+                "sha256:14971f63ac318eb266d32b65480423407ecdcfe4f68940b2e7c7c3a1b3982c3e"
             ],
             "index": "pypi",
-            "version": "==0.7.2"
+            "version": "==0.7.3"
         },
         "simplejson": {
             "hashes": [
